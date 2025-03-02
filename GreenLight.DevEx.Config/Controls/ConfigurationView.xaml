@@ -1,0 +1,146 @@
+﻿<UserControl x:Class="GreenLight.DX.Controls.ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GreenLight.DX.Controls"
+             xmlns:viewModels="clr-namespace:GreenLight.DX.ViewModels" 
+             xmlns:converters="clr-namespace:GreenLight.DX.Converters"
+             d:DataContext="{d:DesignInstance Type=viewModels:ConfigurationViewModel, IsDesignTimeCreatable=True}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/Button.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/TextBox.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/TextBlock.xaml" />
+                <ResourceDictionary>
+                    <converters:SelectedTypeToStringConverter x:Key="SelectedTypeToStringConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:SelectedTypeToStringConverter x:Key="SelectedTypeToStringConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer Height="Auto">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Expander Grid.Row="0" Width="Auto" HorizontalContentAlignment="Stretch">
+                <Expander.Header>
+                    <BulletDecorator>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Settings" FontWeight="Bold" />
+                            <Button Content="+" Style="{StaticResource PrimaryButton}" Command="{Binding AddSettingsRowCommand}" />
+                        </StackPanel>
+                    </BulletDecorator>
+                </Expander.Header>
+                <Expander.Content>
+                    <DataGrid x:Name="dataGrid" ItemsSource="{Binding Settings}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridComboBoxColumn Header="Type" 
+                                ItemsSource="{Binding Source={x:Static viewModels:SettingRowViewModel.SupportedTypes}}"
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
+                                Converter={StaticResource SelectedTypeToStringConverter}, 
+                                ConverterParameter={x:Static viewModels:SettingRowViewModel.SupportedTypes}}" 
+                                Width="*"
+                                MinWidth="100" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Expander.Content>
+            </Expander>
+
+            <Expander Grid.Row="1" Width="Auto" HorizontalContentAlignment="Stretch">
+                <Expander.Header>
+                    <BulletDecorator>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Assets" FontWeight="Bold" />
+                            <Button Content="+" Style="{StaticResource PrimaryButton}" Command="{Binding AddAssetsRowCommand}" />
+                        </StackPanel>
+                    </BulletDecorator>
+                </Expander.Header>
+                <Expander.Content>
+                    <DataGrid ItemsSource="{Binding Assets}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridComboBoxColumn Header="Type" 
+                                ItemsSource="{Binding Source={x:Static viewModels:AssetRowViewModel.SupportedTypes}}"
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
+                                Converter={StaticResource SelectedTypeToStringConverter}, 
+                                ConverterParameter={x:Static viewModels:AssetRowViewModel.SupportedTypes}}" 
+                                DisplayMemberPath="FullName"
+                                Width="*"
+                                MinWidth="100" />
+                            <DataGridTextColumn Header="Asset Folder" Binding="{Binding AssetFolder, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Asset Name" Binding="{Binding AssetName, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Expander.Content>
+            </Expander>
+
+            <Expander Grid.Row="2" Width="Auto" HorizontalContentAlignment="Stretch">
+                <Expander.Header>
+                    <BulletDecorator>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Resources" FontWeight="Bold" />
+                            <Button Content="+" Style="{StaticResource PrimaryButton}" Command="{Binding AddResourcesRowCommand}" />
+                        </StackPanel>
+                    </BulletDecorator>
+                </Expander.Header>
+                <Expander.Content>
+                    <DataGrid ItemsSource="{Binding Resources}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridComboBoxColumn Header="Type" 
+                                ItemsSource="{Binding Source={x:Static viewModels:ResourceRowViewModel.SupportedTypes}}"
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
+                                Converter={StaticResource SelectedTypeToStringConverter}, 
+                                ConverterParameter={x:Static viewModels:ResourceRowViewModel.SupportedTypes}}" 
+                                DisplayMemberPath="FullName"
+                                Width="*"
+                                MinWidth="100" />
+                            <DataGridTextColumn Header="Path" Binding="{Binding Path, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Orchestrator Folder" Binding="{Binding Folder, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Orchestrator Bucket" Binding="{Binding Bucket, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Expander.Content>
+            </Expander>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
