@@ -5,7 +5,7 @@ using Prism.Events;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq; // Remove this using statement, it is not used anymore
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -13,11 +13,19 @@ namespace GreenLight.DX.ViewModels
 {
     public class ProjectViewModel : INotifyPropertyChanged
     {
+        #region Fields
+
         private readonly IEventAggregator _eventAggregator;
+        private ConfigurationViewModel _selectedConfig;
+
+        #endregion
+
+        #region Properties
+
         public ProjectModel Model { get; }
 
         public ObservableCollection<ConfigurationViewModel> Configurations { get; } = new ObservableCollection<ConfigurationViewModel>();
-        private ConfigurationViewModel _selectedConfig;
+
         public ConfigurationViewModel SelectedConfig
         {
             get => _selectedConfig;
@@ -30,7 +38,12 @@ namespace GreenLight.DX.ViewModels
                 }
             }
         }
+
         public ICommand AddConfigurationCommand { get; set; }
+
+        #endregion
+
+        #region Constructors
 
         public ProjectViewModel(ProjectModel project, IEventAggregator eventAggregator)
         {
@@ -53,7 +66,11 @@ namespace GreenLight.DX.ViewModels
             Initialize();
         }
 
-        public void Initialize()
+        #endregion
+
+        #region Initialization
+
+        private void Initialize()
         {
             // Initialize Configurations from the Model
             foreach (var config in Model.Configurations)
@@ -72,6 +89,10 @@ namespace GreenLight.DX.ViewModels
                 SelectedConfig = Configurations[0];
             ValidateUniqueNames();
         }
+
+        #endregion
+
+        #region Collection Changed Handlers
 
         private void Model_Configurations_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -111,25 +132,24 @@ namespace GreenLight.DX.ViewModels
             ValidateUniqueNames();
         }
 
+        #endregion
+
+        #region Command Handlers
+
         private void OnAddConfiguration()
         {
             var newConfig = new ConfigurationModel { Name = "New Configuration" };
             Model.Configurations.Add(newConfig); // Add to the Model
-            //Configurations.Add(new ConfigurationViewModel(newConfig, _eventAggregator)); // Add to the ViewModel's collection
         }
 
         private void OnConfigurationDeleted(ConfigurationViewModel configToDelete)
         {
             Model.Configurations.Remove(configToDelete.Model); // Remove from Model
-           // Configurations.Remove(configToDelete); // Remove from ViewModel collection
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            ValidateUniqueNames();
-        }
+        #endregion
+
+        #region Validation
 
         private void ValidateUniqueNames()
         {
@@ -143,32 +163,28 @@ namespace GreenLight.DX.ViewModels
             {
                 if (duplicateNames.Contains(config.Name))
                 {
-                    AddError(config, nameof(config.Name), $"Duplicate configuration name: {config.Name}");
+                    config.AddError(nameof(config.Name), $"Duplicate configuration name");
                 }
                 else
                 {
-                    RemoveError(config, nameof(config.Name));
+                    config.RemoveError(nameof(config.Name), $"Duplicate configuration name");
                 }
             }
         }
 
-        private void AddError(ConfigurationViewModel viewModel, string propertyName, string errorMessage)
+        #endregion
+
+        #region INotifyPropertyChanged Implementation
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (!viewModel._errors.ContainsKey(propertyName))
-            {
-                viewModel._errors[propertyName] = new List<string>();
-            }
-            viewModel._errors[propertyName].Add(errorMessage);
-            viewModel.OnErrorsChanged(propertyName);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ValidateUniqueNames();
         }
 
-        private void RemoveError(ConfigurationViewModel viewModel, string propertyName)
-        {
-            if (viewModel._errors.ContainsKey(propertyName))
-            {
-                viewModel._errors.Remove(propertyName);
-                viewModel.OnErrorsChanged(propertyName);
-            }
-        }
+        #endregion
     }
 }
+

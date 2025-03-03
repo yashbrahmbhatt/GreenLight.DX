@@ -9,7 +9,6 @@ namespace GreenLight.DevEx.Config.Test
         [STAThread] // Ensure STA mode for WPF
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
 
             var app = new Application();
             var window = new MainWindow();

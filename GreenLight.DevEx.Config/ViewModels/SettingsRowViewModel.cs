@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Prism.Events;
+using System.ComponentModel;
 
 namespace GreenLight.DX.ViewModels
 {
-    public class SettingRowViewModel : ConfigurationRowViewModel
+    public class SettingRowViewModel : ConfigurationRowViewModel<SettingRowModel>
     {
-        public new SettingRowModel Model { get; set; } = new SettingRowModel();
         public static ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
 
 
-        public SettingRowViewModel(IEventAggregator eventAggregator, SettingRowModel model) : base(eventAggregator, model)
+        public SettingRowViewModel(IEventAggregator eventAggregator, SettingRowModel model, PropertyChangedEventHandler propertyChanged) : base(eventAggregator, model, propertyChanged)
         {
             Model = model;
         }

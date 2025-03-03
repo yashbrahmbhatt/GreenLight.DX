@@ -4,18 +4,19 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GreenLight.DX.ViewModels
 {
-    public class AssetRowViewModel : ConfigurationRowViewModel
+    public class AssetRowViewModel : ConfigurationRowViewModel<AssetRowModel>
     {
-        public new AssetRowModel Model { get; set; } = new AssetRowModel();
         public static ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
 
-        public AssetRowViewModel(IEventAggregator eventAggregator, AssetRowModel model) : base(eventAggregator, model)
+        public AssetRowViewModel(IEventAggregator eventAggregator, AssetRowModel model, PropertyChangedEventHandler propertyChanged) 
+            : base(eventAggregator, model, propertyChanged)
         {
             Model = model;
         }

@@ -3,6 +3,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace GreenLight.DX.ViewModels
 {
-    public class ResourceRowViewModel : ConfigurationRowViewModel
+    public class ResourceRowViewModel : ConfigurationRowViewModel<ResourceRowModel>
     {
-        public new ResourceRowModel Model { get; set; } = new ResourceRowModel();
         public static ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>() {  typeof(string), typeof(DataTable), typeof(DataSet)};
 
-        public ResourceRowViewModel(IEventAggregator eventAggregator, ResourceRowModel model) : base(eventAggregator, model)
+        public ResourceRowViewModel(IEventAggregator eventAggregator, ResourceRowModel model, PropertyChangedEventHandler propertyChanged) 
+            : base(eventAggregator, model, propertyChanged)
         {
             Model = model;
         }

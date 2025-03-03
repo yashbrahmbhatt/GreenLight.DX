@@ -9,6 +9,10 @@
     <Color x:Key="InfoColor">#17a2b8</Color>
     <Color x:Key="LightColor">#f8f9fa</Color>
     <Color x:Key="DarkColor">#343a40</Color>
+    <Color x:Key="HoverColor">#DDDDDD</Color>
+    <Color x:Key="HoverBorderColor">#AAAAAA</Color>
+    <Color x:Key="PressedColor">#999999</Color>
+    <Color x:Key="PressedBorderColor">#777777</Color>
 
     <SolidColorBrush x:Key="PrimaryBrushColor" Color="{StaticResource PrimaryColor}" />
     <SolidColorBrush x:Key="SecondaryBrushColor" Color="{StaticResource SecondaryColor}" />
@@ -18,5 +22,11 @@
     <SolidColorBrush x:Key="InfoBrushColor" Color="{StaticResource InfoColor}" />
     <SolidColorBrush x:Key="LightBrushColor" Color="{StaticResource LightColor}" />
     <SolidColorBrush x:Key="DarkBrushColor" Color="{StaticResource DarkColor}" />
+    <SolidColorBrush x:Key="HoverBrushColor" Color="{StaticResource HoverColor}" />
+    <SolidColorBrush x:Key="HoverBorderBrushColor" Color="{StaticResource HoverBorderColor}" />
+    <SolidColorBrush x:Key="PressedBrushColor" Color="{StaticResource PressedColor}" />
+    <SolidColorBrush x:Key="PressedBorderBrushColor" Color="{StaticResource PressedBorderColor}" />
+    
+    
 
 </ResourceDictionary>

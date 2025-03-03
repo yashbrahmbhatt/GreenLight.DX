@@ -3,7 +3,7 @@ using GreenLight.DX.Events;
 using GreenLight.DX.Misc;
 using GreenLight.DX.Models;
 using GreenLight.DX.Windows;
-using Prism.Events; // Add this using statement
+using Prism.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,9 +18,42 @@ namespace GreenLight.DX.ViewModels
 {
     public class ConfigurationViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
-        public ConfigurationModel Model { get; }
+        #region Fields
 
         private readonly IEventAggregator _eventAggregator;
+
+        #endregion
+
+        #region Properties
+
+        public ConfigurationModel Model { get; }
+
+        public ObservableCollection<SettingRowViewModel> Settings { get; } = new ObservableCollection<SettingRowViewModel>();
+        public ObservableCollection<AssetRowViewModel> Assets { get; } = new ObservableCollection<AssetRowViewModel>();
+        public ObservableCollection<ResourceRowViewModel> Resources { get; } = new ObservableCollection<ResourceRowViewModel>();
+
+        public string Name
+        {
+            get => Model.Name;
+            set
+            {
+                if (Model.Name != value)
+                {
+                    Model.Name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ICommand AddSettingsRowCommand { get; set; }
+        public ICommand AddAssetsRowCommand { get; set; }
+        public ICommand AddResourcesRowCommand { get; set; }
+        public ICommand EditConfigurationCommand { get; set; }
+        public ICommand DeleteConfigurationCommand { get; set; }
+
+        #endregion
+
+        #region Constructors
 
         public ConfigurationViewModel(ConfigurationModel model, IEventAggregator eventAggregator)
         {
@@ -43,51 +76,24 @@ namespace GreenLight.DX.ViewModels
             Initialize();
         }
 
-        public ObservableCollection<SettingRowViewModel> Settings { get; } = new ObservableCollection<SettingRowViewModel>();
-        public ObservableCollection<AssetRowViewModel> Assets { get; } = new ObservableCollection<AssetRowViewModel>();
-        public ObservableCollection<ResourceRowViewModel> Resources { get; } = new ObservableCollection<ResourceRowViewModel>();
+        #endregion
 
-        public string Name
-        {
-            get => Model.Name;
-            set
-            {
-                if (Model.Name != value)
-                {
-                    Model.Name = value;
-                    OnPropertyChanged();
-                }
+        #region Initialization
 
-            }
-        }
-
-
-        public ICommand AddSettingsRowCommand { get; set; }
-        public ICommand AddAssetsRowCommand { get; set; }
-        public ICommand AddResourcesRowCommand { get; set; }
-        public ICommand EditConfigurationCommand { get; set; }
-        public ICommand DeleteConfigurationCommand { get; set; }
-
-        public void Initialize()
+        private void Initialize()
         {
             // Initialize the ViewModel collections from the Model
             foreach (var setting in Model.Settings)
             {
-                var vm = new SettingRowViewModel(_eventAggregator, setting);
-                vm.PropertyChanged += OnRowPropertyChanged;
-                Settings.Add(vm);
+                Settings.Add(new SettingRowViewModel(_eventAggregator, setting, OnRowPropertyChanged));
             }
             foreach (var asset in Model.Assets)
             {
-                var vm = new AssetRowViewModel(_eventAggregator, asset);
-                vm.PropertyChanged += OnRowPropertyChanged;
-                Assets.Add(new AssetRowViewModel(_eventAggregator, asset));
+                Assets.Add(new AssetRowViewModel(_eventAggregator, asset, OnRowPropertyChanged));
             }
             foreach (var resource in Model.Resources)
             {
-                var vm = new ResourceRowViewModel(_eventAggregator, resource);
-                vm.PropertyChanged += OnRowPropertyChanged;
-                Resources.Add(new ResourceRowViewModel(_eventAggregator, resource));
+                Resources.Add(new ResourceRowViewModel(_eventAggregator, resource, OnRowPropertyChanged));
             }
 
             // Subscribe to changes in the Model's collections
@@ -103,10 +109,14 @@ namespace GreenLight.DX.ViewModels
             EditConfigurationCommand = new RelayCommand(OnEditConfiguration);
 
             // Subscribe to events
-            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent>().Subscribe(OnConfigurationRowDeleted);
+            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<SettingRowModel>>().Subscribe(OnConfigurationRowDeleted);
 
             ValidateUniqueKeys();
         }
+
+        #endregion
+
+        #region Collection Changed Handlers
 
         private void Model_Settings_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -117,9 +127,7 @@ namespace GreenLight.DX.ViewModels
                     {
                         foreach (SettingRowModel newItem in e.NewItems)
                         {
-                            var vm = new SettingRowViewModel(_eventAggregator, newItem);
-                            vm.PropertyChanged += OnRowPropertyChanged;
-                            Settings.Add(vm);
+                            Settings.Add(new SettingRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged));
                         }
                     }
                     break;
@@ -140,14 +148,13 @@ namespace GreenLight.DX.ViewModels
                     Settings.Clear();
                     foreach (var setting in Model.Settings)
                     {
-                        var vm = new SettingRowViewModel(_eventAggregator, setting);
-                        vm.PropertyChanged += OnRowPropertyChanged;
-                        Settings.Add(vm);
+                        Settings.Add(new SettingRowViewModel(_eventAggregator, setting, OnRowPropertyChanged));
                     }
                     break;
             }
             ValidateUniqueKeys();
         }
+
         private void Model_Assets_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -157,9 +164,7 @@ namespace GreenLight.DX.ViewModels
                     {
                         foreach (AssetRowModel newItem in e.NewItems)
                         {
-                            var vm = new AssetRowViewModel(_eventAggregator, newItem);
-                            vm.PropertyChanged += OnRowPropertyChanged;
-                            Assets.Add(vm);
+                            Assets.Add(new AssetRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged));
                         }
                     }
                     break;
@@ -180,14 +185,13 @@ namespace GreenLight.DX.ViewModels
                     Assets.Clear();
                     foreach (var asset in Model.Assets)
                     {
-                        var vm = new AssetRowViewModel(_eventAggregator, asset);
-                        vm.PropertyChanged += OnRowPropertyChanged;
-                        Assets.Add(vm);
+                        Assets.Add(new AssetRowViewModel(_eventAggregator, asset, OnRowPropertyChanged));
                     }
                     break;
             }
             ValidateUniqueKeys();
         }
+
         private void Model_Resources_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -197,9 +201,7 @@ namespace GreenLight.DX.ViewModels
                     {
                         foreach (ResourceRowModel newItem in e.NewItems)
                         {
-                            var vm = new ResourceRowViewModel(_eventAggregator, newItem);
-                            vm.PropertyChanged += OnRowPropertyChanged;
-                            Resources.Add(vm);
+                            Resources.Add(new ResourceRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged));
                         }
                     }
                     break;
@@ -220,21 +222,17 @@ namespace GreenLight.DX.ViewModels
                     Resources.Clear();
                     foreach (var resource in Model.Resources)
                     {
-                        var vm = new ResourceRowViewModel(_eventAggregator, resource);
-                        vm.PropertyChanged += OnRowPropertyChanged;
-                        Resources.Add(vm);
+                        Resources.Add(new ResourceRowViewModel(_eventAggregator, resource, OnRowPropertyChanged));
                     }
                     break;
             }
             ValidateUniqueKeys();
         }
 
-        private void OnRowPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            Console.WriteLine($"Property Changed: {sender}");
-            ClearRowErrors((ConfigurationRowViewModel)sender);
-            ValidateUniqueKeys();
-        }
+        #endregion
+
+        #region Command Handlers
+
         private void OnSettingRowAdded()
         {
             var newSetting = new SettingRowModel(); // Create a new Model instance
@@ -253,13 +251,13 @@ namespace GreenLight.DX.ViewModels
             Model.Resources.Add(newResource);
         }
 
-        private void OnConfigurationRowDeleted(ConfigurationRowViewModel rowViewModel)
+        private void OnConfigurationRowDeleted<T>(ConfigurationRowViewModel<T> rowViewModel) where T : ConfigurationRowModel
         {
             if (rowViewModel != null)
             {
-                if (rowViewModel is SettingRowViewModel) Model.Settings.Remove(((SettingRowViewModel)rowViewModel).Model);
-                if (rowViewModel is AssetRowViewModel) Model.Assets.Remove(((AssetRowViewModel)rowViewModel).Model);
-                if (rowViewModel is ResourceRowViewModel) Model.Resources.Remove(((ResourceRowViewModel)rowViewModel).Model);
+                if (rowViewModel is SettingRowViewModel model) Model.Settings.Remove(model.Model);
+                if (rowViewModel is AssetRowViewModel model1) Model.Assets.Remove(model1.Model);
+                if (rowViewModel is ResourceRowViewModel model2) Model.Resources.Remove(model2.Model);
             }
         }
 
@@ -274,12 +272,9 @@ namespace GreenLight.DX.ViewModels
             _eventAggregator.GetEvent<ConfigurationDeletedEvent>().Publish(this);
         }
 
-        // INotifyPropertyChanged implementation
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
+
+        #region Validation
 
         private void ValidateUniqueKeys()
         {
@@ -291,44 +286,68 @@ namespace GreenLight.DX.ViewModels
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);
 
+            foreach (var setting in Settings) setting.RemoveError(nameof(setting.Key), $"Duplicate key");
+            foreach (var asset in Assets) asset.RemoveError(nameof(asset.Key), $"Duplicate key");
+            foreach (var resource in Resources) resource.RemoveError(nameof(resource.Key), $"Duplicate key");
+
             foreach (var key in duplicateKeys)
             {
                 // Add error to relevant view models
                 var settings = Settings.Where(s => s.Key == key);
-                if (settings.Count() > 0) 
-                    foreach(var setting in settings) AddRowErrors(setting, nameof(setting.Key), $"Duplicate key: {key}");
+                if (settings.Any())
+                    foreach (var setting in settings) setting.AddError(nameof(setting.Key), $"Duplicate key");
 
                 var assets = Assets.Where(a => a.Key == key);
-                if (assets.Count() > 0)
-                    foreach(var asset in assets) AddRowErrors(asset, nameof(asset.Key), $"Duplicate key: {key}");
+                if (assets.Any())
+                    foreach (var asset in assets) asset.AddError(nameof(asset.Key), $"Duplicate key");
 
                 var resources = Resources.Where(r => r.Key == key);
-                if (resources.Count() > 0)
-                    foreach(var resource in resources) AddRowErrors(resource, nameof(resource.Key), $"Duplicate key: {key}");
+                if (resources.Any())
+                    foreach (var resource in resources) resource.AddError(nameof(resource.Key), $"Duplicate key");
             }
         }
 
-        public void ClearRowErrors(ConfigurationRowViewModel model)
+        #endregion
+
+        #region INotifyPropertyChanged Implementation
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            model._errors.Clear();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // Helper method to add errors to a view model
-        public void AddRowErrors(ConfigurationRowViewModel viewModel, string propertyName, string errorMessage)
+        #endregion
+
+        #region INotifyDataErrorInfo Implementation
+
+        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        public bool HasErrors => _errors.Count != 0;
+        public void AddError(string propertyName, string error)
         {
-            if (!viewModel._errors.ContainsKey(propertyName))
+            if (!_errors.ContainsKey(propertyName))
             {
-                viewModel._errors[propertyName] = new List<string>();
+                _errors[propertyName] = new List<string>();
             }
-            viewModel._errors[propertyName].Add(errorMessage);
-            viewModel.OnErrorsChanged(propertyName);
+            _errors[propertyName].Add(error);
+            OnErrorsChanged(propertyName);
         }
 
-        public readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        public bool HasErrors => _errors.Any();
-
+        public void RemoveError(string propertyName, string error)
+        {
+            if (_errors.ContainsKey(propertyName))
+            {
+                _errors[propertyName].Remove(error);
+                if (_errors[propertyName].Count == 0)
+                {
+                    _errors.Remove(propertyName);
+                }
+                OnErrorsChanged(propertyName);
+            }
+        }
         public IEnumerable GetErrors(string? propertyName)
         {
             if (ErrorsChanged != null || !_errors.ContainsKey(propertyName)) return Enumerable.Empty<string>();
@@ -338,6 +357,22 @@ namespace GreenLight.DX.ViewModels
         public void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            OnPropertyChanged(nameof(HasErrors));
+
         }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void OnRowPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SettingRowViewModel.Key)
+                || e.PropertyName == nameof(AssetRowViewModel.Key)
+                || e.PropertyName == nameof(ResourceRowViewModel.Key)) 
+                ValidateUniqueKeys();
+        }
+
+        #endregion
     }
 }

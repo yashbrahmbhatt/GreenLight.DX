@@ -16,11 +16,11 @@
                 <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/Button.xaml" />
                 <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/TextBox.xaml" />
                 <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/TextBlock.xaml" />
-                <ResourceDictionary>
-                    <converters:SelectedTypeToStringConverter x:Key="SelectedTypeToStringConverter" />
-                </ResourceDictionary>
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/ComboBox.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/ResourceDictionaries/DataGridCell.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
-            <converters:SelectedTypeToStringConverter x:Key="SelectedTypeToStringConverter"/>
+            <converters:TypeToStringConverter x:Key="TypeToStringConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -50,9 +50,7 @@
                             <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
                             <DataGridComboBoxColumn Header="Type" 
                                 ItemsSource="{Binding Source={x:Static viewModels:SettingRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
-                                Converter={StaticResource SelectedTypeToStringConverter}, 
-                                ConverterParameter={x:Static viewModels:SettingRowViewModel.SupportedTypes}}" 
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
                                 Width="*"
                                 MinWidth="100" />
                             <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
@@ -65,6 +63,13 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasErrors}" Value="True"></DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                     </DataGrid>
                 </Expander.Content>
             </Expander>
@@ -84,9 +89,7 @@
                             <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
                             <DataGridComboBoxColumn Header="Type" 
                                 ItemsSource="{Binding Source={x:Static viewModels:AssetRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
-                                Converter={StaticResource SelectedTypeToStringConverter}, 
-                                ConverterParameter={x:Static viewModels:AssetRowViewModel.SupportedTypes}}" 
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
                                 DisplayMemberPath="FullName"
                                 Width="*"
                                 MinWidth="100" />
@@ -120,9 +123,7 @@
                             <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
                             <DataGridComboBoxColumn Header="Type" 
                                 ItemsSource="{Binding Source={x:Static viewModels:ResourceRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True, 
-                                Converter={StaticResource SelectedTypeToStringConverter}, 
-                                ConverterParameter={x:Static viewModels:ResourceRowViewModel.SupportedTypes}}" 
+                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
                                 DisplayMemberPath="FullName"
                                 Width="*"
                                 MinWidth="100" />

@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace GreenLight.DX.Converters
 {
-    public class SelectedTypeToStringConverter : IValueConverter
+    public class TypeToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

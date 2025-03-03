@@ -17,73 +17,109 @@ using System.Windows.Input;
 
 namespace GreenLight.DX.ViewModels
 {
-    public abstract class ConfigurationRowViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
+    public abstract class ConfigurationRowViewModel<T> : INotifyPropertyChanged, INotifyDataErrorInfo where T : ConfigurationRowModel
     {
         private readonly IEventAggregator _eventAggregator;
-        public ConfigurationRowModel Model { get; protected set; }
+        public T Model { get; protected set; }
+
         [Required(ErrorMessage = "Key is required.")]
         public string Key
         {
             get => Model.Key;
             set
             {
-
-                Model.Key = value;
-                OnPropertyChanged();
-
+                if (Model.Key != value)
+                {
+                    Model.Key = value;
+                    OnPropertyChanged();
+                    ValidateProperty(value, nameof(Key));
+                }
             }
         }
+
         [Required(ErrorMessage = "Description is required.")]
         public string Description
         {
             get => Model.Description;
             set
             {
-
-                Model.Description = value;
-                OnPropertyChanged();
-
+                if (Model.Description != value)
+                {
+                    Model.Description = value;
+                    OnPropertyChanged();
+                    ValidateProperty(value, nameof(Description));
+                }
             }
         }
+
         [Required(ErrorMessage = "Type is required.")]
         public Type SelectedType
         {
             get => Model.SelectedType;
             set
             {
-
-                Model.SelectedType = value;
-                OnPropertyChanged();
-
+                if (Model.SelectedType != value)
+                {
+                    Model.SelectedType = value;
+                    OnPropertyChanged();
+                    ValidateProperty(value, nameof(SelectedType));
+                }
             }
         }
 
         public ICommand DeleteRowCommand { get; }
-        protected ConfigurationRowViewModel(IEventAggregator eventAggregator, ConfigurationRowModel model)
+
+        protected ConfigurationRowViewModel(IEventAggregator eventAggregator, T model, PropertyChangedEventHandler propertyChanged)
         {
             _eventAggregator = eventAggregator;
             Model = model;
+            PropertyChanged += propertyChanged;
             DeleteRowCommand = new RelayCommand(OnDelete);
         }
 
         protected virtual void OnDelete()
         {
-            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent>().Publish(this);
+            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<T>>().Publish(this);
         }
 
-        // ... INotifyPropertyChanged implementation
+        // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         // INotifyDataErrorInfo Implementation
-        public readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-        public bool HasErrors => _errors.Any();
+        public bool HasErrors => _errors.Count != 0;
+        public void AddError(string propertyName, string error)
+        {
+            if (!_errors.TryGetValue(propertyName, out var errors))
+            {
+                errors = new List<string>();
+                _errors[propertyName] = errors;
+            }
+            if (!errors.Contains(error))
+            {
+                errors.Add(error);
+            }
+            OnErrorsChanged(propertyName);
+        }
 
+        public void RemoveError(string propertyName, string error)
+        {
+            if (_errors.TryGetValue(propertyName, out var errors) && errors.Contains(error))
+            {
+                errors.Remove(error);
+                if (errors.Count == 0)
+                {
+                    _errors.Remove(propertyName);
+                }
+                OnErrorsChanged(propertyName);
+            }
+        }
         public IEnumerable GetErrors(string? propertyName)
         {
             if (propertyName == null) return Enumerable.Empty<string>();
@@ -104,13 +140,14 @@ namespace GreenLight.DX.ViewModels
                 _errors.Remove(propertyName);
             }
 
-            OnErrorsChanged(propertyName); // Call the helper method
+            OnErrorsChanged(propertyName);
         }
 
         // Helper method to raise the ErrorsChanged event
         public void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            OnPropertyChanged(nameof(HasErrors));
         }
     }
 }
