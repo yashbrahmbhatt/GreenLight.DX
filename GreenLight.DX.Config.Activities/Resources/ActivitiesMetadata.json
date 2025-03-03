@@ -1,0 +1,13 @@
+{
+  "resourceManagerName": "GreenLight.DX.Config.Activities.Resources.Resources",
+  "activities": [
+    {
+      "fullName": "GreenLight.DX.Config.Activities.ActivityTemplate",
+      "shortName": "Template",
+      "displayNameKey": "ActivityTemplate_DisplayName",
+      "descriptionKey": "ActivityTemplate_Description",
+      "categoryKey": "Templates",
+      "viewModelType": "GreenLight.DX.Config.Activities.ViewModels.ActivityTemplateViewModel"
+    }
+  ]
+}
