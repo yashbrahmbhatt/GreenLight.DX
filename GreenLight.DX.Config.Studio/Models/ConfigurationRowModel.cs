@@ -16,7 +16,6 @@ namespace GreenLight.DX.Config.Studio.Models
     [XmlInclude(typeof(SettingRowModel))]
     [XmlInclude(typeof(AssetRowModel))]
     [XmlInclude(typeof(ResourceRowModel))]
-    [JsonConverter(typeof(TypeSerializer))] // Your custom JSON converter
     public abstract class ConfigurationRowModel : IXmlSerializable
     {
         [JsonProperty(nameof(Key))]
@@ -26,15 +25,9 @@ namespace GreenLight.DX.Config.Studio.Models
         public string Description { get; set; } = "Description";
 
         [XmlIgnore]
-        [JsonIgnore]
-        public Type SelectedType { get; set; }
+        [JsonConverter(typeof(TypeSerializer))] // Your custom JSON converter
 
-        // For JSON Serialization (and deserialization)
-        public string SelectedTypeName
-        {
-            get => SelectedType?.AssemblyQualifiedName;
-            set => SelectedType = Type.GetType(value); // Robust Type.GetType() recommended
-        }
+        public Type SelectedType { get; set; } = typeof(string);
 
         public string ToClassString(int indent = 0)
         {

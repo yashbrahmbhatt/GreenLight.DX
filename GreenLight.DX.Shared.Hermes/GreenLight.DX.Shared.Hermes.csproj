@@ -14,7 +14,7 @@
     <Authors>Yash Brahmbhatt</Authors>
     <Description>Leveraging UiPath's Studio API SDK to create a new vehicle for delivering Design-Time tools to help with the developer experience in UiPath Studio.</Description>
     <Tags>UiPath,LazyFramework,DX,Developer,Design</Tags>
-    <RootNamespace>GreenLight.DX.Config.Studio</RootNamespace>
+    <RootNamespace>GreenLight.DX.Shared.Hermes</RootNamespace>
 
     <VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
     <VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("F0"))</VersionRevision>
@@ -22,14 +22,15 @@
     <VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>GreenLight.DX.Config.Studio</PackageId>
-    <Product>GreenLight.DX.Config.Studio</Product>
+    <PackageId>GreenLight.DX.Shared.Hermes</PackageId>
+    <Product>GreenLight.DX.Shared.Hermes</Product>
     <PackageIconUrl>https://download.uipath.com/UI_icon.png?web</PackageIconUrl>
     <PackageOutputPath>..\Output\Activities\Packages\</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />
     <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13">
@@ -46,11 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj" />
+    <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
-
 </Project>

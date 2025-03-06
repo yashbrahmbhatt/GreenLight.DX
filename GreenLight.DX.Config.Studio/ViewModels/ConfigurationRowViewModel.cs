@@ -1,6 +1,7 @@
-﻿using GreenLight.DX.Config.Studio.Commands;
-using GreenLight.DX.Config.Studio.Events;
+﻿using GreenLight.DX.Config.Studio.Events;
 using GreenLight.DX.Config.Studio.Models;
+using GreenLight.DX.Shared.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
 using System.Collections;
@@ -67,13 +68,15 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         }
 
         public ICommand DeleteRowCommand { get; }
+        public int Row { get; set; }
 
-        protected ConfigurationRowViewModel(IEventAggregator eventAggregator, T model, PropertyChangedEventHandler propertyChanged)
+        protected ConfigurationRowViewModel(IServiceProvider services, T model, PropertyChangedEventHandler propertyChanged, int row)
         {
-            _eventAggregator = eventAggregator;
+            _eventAggregator = services.GetService<IEventAggregator>();
             Model = model;
             PropertyChanged += propertyChanged;
             DeleteRowCommand = new AsyncRelayCommand(OnDelete);
+            Row = row;
         }
 
         protected virtual async Task OnDelete()

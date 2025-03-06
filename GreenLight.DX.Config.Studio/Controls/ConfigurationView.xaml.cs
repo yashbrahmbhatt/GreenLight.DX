@@ -22,18 +22,9 @@ namespace GreenLight.DX.Config.Studio.Controls
 
     public partial class ConfigurationView : UserControl
     {
-        public ConfigurationViewModel ViewModel { get; set; } = new ConfigurationViewModel();
 
         public ConfigurationView()
         {
-            DataContext = ViewModel;
-            InitializeComponent();
-        }
-
-        public ConfigurationView(ConfigurationViewModel viewModel)
-        {
-            ViewModel = viewModel;
-            DataContext = ViewModel;
             InitializeComponent();
         }
     }

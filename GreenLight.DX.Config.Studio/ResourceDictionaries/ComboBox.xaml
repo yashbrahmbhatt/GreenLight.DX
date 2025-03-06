@@ -4,7 +4,9 @@
         <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/Colours.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style TargetType="{x:Type ComboBox}">
-        <Setter Property="Margin" Value="0" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="MinWidth" Value="50" />
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">
                 <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />

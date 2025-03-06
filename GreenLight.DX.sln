@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio.Test", "GreenLight.DX.Config.Studio.Test\GreenLight.DX.Config.Studio.Test.csproj", "{A0465695-A65D-479A-810D-C27753E8FD26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Hermes", "GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj", "{ABB233BE-120E-4640-96F7-BA44C40E0DA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Hermes.Test", "GreenLight.DX.Shared.Hermes.Test\GreenLight.DX.Shared.Hermes.Test.csproj", "{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared", "GreenLight.DX.Shared\GreenLight.DX.Shared.csproj", "{F164B3C7-E5DA-4A02-96B8-B10417A94F36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,18 @@ Global
 		{A0465695-A65D-479A-810D-C27753E8FD26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0465695-A65D-479A-810D-C27753E8FD26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0465695-A65D-479A-810D-C27753E8FD26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

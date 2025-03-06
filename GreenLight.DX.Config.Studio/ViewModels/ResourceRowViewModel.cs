@@ -1,4 +1,6 @@
-﻿using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Config.Studio.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -8,19 +10,26 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public class ResourceRowViewModel : ConfigurationRowViewModel<ResourceRowModel>
     {
-        public static ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>() { typeof(string), typeof(DataTable), typeof(DataSet) };
+        public ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>() { typeof(string), typeof(DataTable), typeof(DataSet) };
 
-        public ResourceRowViewModel(IEventAggregator eventAggregator, ResourceRowModel model, PropertyChangedEventHandler propertyChanged)
-            : base(eventAggregator, model, propertyChanged)
+        public ResourceRowViewModel(IServiceProvider _services, ResourceRowModel model, PropertyChangedEventHandler propertyChanged, int row)
+            : base(_services, model, propertyChanged, row)
         {
             Model = model;
         }
-
+        public ResourceRowViewModel() : this(
+            new ServiceCollection().BuildServiceProvider(),
+            new ResourceRowModel(),
+            null,
+            1
+        )
+        { }
         public string Path
         {
             get => Model.Path;

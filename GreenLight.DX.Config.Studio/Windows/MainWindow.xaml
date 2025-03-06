@@ -8,13 +8,10 @@
         xmlns:controls="clr-namespace:GreenLight.DX.Config.Studio.Controls"
         xmlns:converters="clr-namespace:GreenLight.DX.Config.Studio.Converters" 
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        d:DataContext="{d:DesignInstance Type=viewModels:ProjectViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1200">
 
-    <Window.DataContext>
-        <viewModels:ProjectViewModel />
-    </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -55,6 +52,7 @@
                 <MenuItem Header="_Config Files" Command="{Binding WriteConfigFilesCommand}" />
             </MenuItem>
             <MenuItem Header="_Help">
+                <MenuItem Header="_Logger" Command="{Binding OpenHermesCommand}" />
                 <MenuItem Header="_About" Command="{Binding OpenAboutCommand}"/>
             </MenuItem>
         </Menu>

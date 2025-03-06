@@ -1,6 +1,5 @@
 ﻿using GreenLight.DX.Config.Studio.Events;
 using GreenLight.DX.Config.Studio.Models;
-using GreenLight.DX.Config.Studio.Commands;
 using GreenLight.DX.Windows;
 using Prism.Events;
 using System;
@@ -14,6 +13,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Shared.Commands;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
@@ -22,23 +26,19 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #region Fields
 
         private readonly IEventAggregator _eventAggregator;
-        private Dictionary<string, IEnumerable<string>> AssetsMap { get; set; } = new Dictionary<string, IEnumerable<string>>()
-        {
-            { "Folder1", new List<string> { "Asset1", "Asset2", "Asset3" }},
-            { "Folder2", new List<string> { "Asset4", "Asset5", "Asset6" }},
-            { "Folder3", new List<string> { "Asset7", "Asset8", "Asset9" }}
-        };
-
+        private readonly IServiceProvider _services;
 
         #endregion
 
         #region Properties
-
+        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; }
         public ConfigurationModel Model { get; }
 
         public ObservableCollection<SettingRowViewModel> Settings { get; } = new ObservableCollection<SettingRowViewModel>();
         public ObservableCollection<AssetRowViewModel> Assets { get; } = new ObservableCollection<AssetRowViewModel>();
         public ObservableCollection<ResourceRowViewModel> Resources { get; } = new ObservableCollection<ResourceRowViewModel>();
+
+        public ObservableCollection<string> FolderNames { get; } = new ObservableCollection<string>();
 
         [Required(ErrorMessage = "A class name is required for the entire configuration")]
         public string Name
@@ -78,65 +78,13 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         #region Constructors
 
-        public ConfigurationViewModel(ConfigurationModel model, IEventAggregator eventAggregator, Dictionary<string, IEnumerable<string>> assetMap)
+        public ConfigurationViewModel(IServiceProvider services, ConfigurationModel model, ObservableCollection<KeyValuePair<string, IEnumerable<string>>> assetsMap)
         {
+            _services = services;
             Model = model;
-            _eventAggregator = eventAggregator;
-            AssetsMap = assetMap;
-            Initialize();
-        }
-        public ConfigurationViewModel(ConfigurationModel model, IEventAggregator eventAggregator)
-        {
-            Model = model;
-            _eventAggregator = eventAggregator;
-            Initialize();
-        }
-
-        public ConfigurationViewModel(IEventAggregator eventAggregator, Dictionary<string, IEnumerable<string>> assetMap)
-        {
-            _eventAggregator = eventAggregator;
-            AssetsMap = assetMap;
-            Model = new ConfigurationModel();
-            Initialize();
-        }
-        public ConfigurationViewModel(IEventAggregator eventAggregator)
-        {
-            _eventAggregator = eventAggregator;
-            Model = new ConfigurationModel();
-            Initialize();
-        }
-
-        public ConfigurationViewModel()
-        {
-            _eventAggregator = new EventAggregator();
-            Model = new ConfigurationModel();
-            Initialize();
-        }
-
-        #endregion
-
-        #region Initialization
-
-        private void Initialize()
-        {
-            // Initialize the ViewModel collections from the Model
-            foreach (var setting in Model.Settings)
-            {
-                Settings.Add(new SettingRowViewModel(_eventAggregator, setting, OnRowPropertyChanged));
-            }
-            foreach (var asset in Model.Assets)
-            {
-                Assets.Add(new AssetRowViewModel(_eventAggregator, asset, OnRowPropertyChanged, new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>(AssetsMap)));
-            }
-            foreach (var resource in Model.Resources)
-            {
-                Resources.Add(new ResourceRowViewModel(_eventAggregator, resource, OnRowPropertyChanged));
-            }
-
-            // Subscribe to changes in the Model's collections
-            Model.Settings.CollectionChanged += Model_Settings_CollectionChanged;
-            Model.Assets.CollectionChanged += Model_Assets_CollectionChanged;
-            Model.Resources.CollectionChanged += Model_Resources_CollectionChanged;
+            _eventAggregator = services.GetRequiredService<IEventAggregator>();
+            AssetsMap = assetsMap;
+            assetsMap.CollectionChanged += AssetsMap_CollectionChanged;
 
             // Initialize Commands
             DeleteConfigurationCommand = new AsyncRelayCommand(OnDeleteConfiguration);
@@ -145,10 +93,58 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             AddResourcesRowCommand = new AsyncRelayCommand(OnResourceRowAdded);
             EditConfigurationCommand = new AsyncRelayCommand(OnEditConfiguration);
 
+            // Subscribe to changes in the Model's collections
+            Model.Settings.CollectionChanged += Model_Settings_CollectionChanged;
+            Model.Assets.CollectionChanged += Model_Assets_CollectionChanged;
+            Model.Resources.CollectionChanged += Model_Resources_CollectionChanged;
+
             // Subscribe to events
             _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<SettingRowModel>>().Subscribe(OnConfigurationRowDeleted);
-
+            InitializeRows();
             ValidateUniqueKeys();
+            
+        }
+
+        public ConfigurationViewModel() : this(
+            new ServiceCollection().BuildServiceProvider(),
+            new ConfigurationModel(), 
+            new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
+            {
+                new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string>(){"Asset1", "Asset2", "Asset3"}),
+                new KeyValuePair<string, IEnumerable<string>>( "Folder2", new List<string>(){"Asset4", "Asset5", "Asset6"}),
+                new KeyValuePair<string, IEnumerable<string>>( "Folder3", new List<string>(){"Asset7", "Asset8", "Asset9"})
+            }
+        )
+        { }
+
+        #endregion
+
+        #region Initialization
+        
+
+        private void InitializeRows()
+        {
+
+
+            // Initialize the ViewModel collections from the Model
+            foreach (var setting in Model.Settings)
+            {
+                Settings.Add(new SettingRowViewModel(_services, setting, OnRowPropertyChanged, Model.Settings.IndexOf(setting) + 1));
+            }
+            foreach (var asset in Model.Assets)
+            {
+                Assets.Add(new AssetRowViewModel(_services, asset, OnRowPropertyChanged, Model.Assets.IndexOf(asset) + 1, AssetsMap));
+            }
+            foreach (var resource in Model.Resources)
+            {
+                Resources.Add(new ResourceRowViewModel(_services, resource, OnRowPropertyChanged, Model.Resources.IndexOf(resource) + 1));
+            }
+
+
+
+
+
+
         }
 
         #endregion
@@ -164,7 +160,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (SettingRowModel newItem in e.NewItems)
                         {
-                            Settings.Add(new SettingRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged));
+                            Settings.Add(new SettingRowViewModel(_services, newItem, OnRowPropertyChanged, Settings.Count + 1));
                         }
                     }
                     break;
@@ -185,7 +181,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Settings.Clear();
                     foreach (var setting in Model.Settings)
                     {
-                        Settings.Add(new SettingRowViewModel(_eventAggregator, setting, OnRowPropertyChanged));
+                        Settings.Add(new SettingRowViewModel(_services, setting, OnRowPropertyChanged, Settings.Count + 1));
                     }
                     break;
             }
@@ -201,7 +197,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (AssetRowModel newItem in e.NewItems)
                         {
-                            Assets.Add(new AssetRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged, new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>(AssetsMap)));
+                            Assets.Add(new AssetRowViewModel(_services, newItem, OnRowPropertyChanged, Assets.Count + 1, AssetsMap));
                         }
                     }
                     break;
@@ -222,7 +218,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Assets.Clear();
                     foreach (var asset in Model.Assets)
                     {
-                        Assets.Add(new AssetRowViewModel(_eventAggregator, asset, OnRowPropertyChanged, new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>(AssetsMap)));
+                        Assets.Add(new AssetRowViewModel(_services, asset, OnRowPropertyChanged, Assets.Count + 1, AssetsMap));
                     }
                     break;
             }
@@ -238,7 +234,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (ResourceRowModel newItem in e.NewItems)
                         {
-                            Resources.Add(new ResourceRowViewModel(_eventAggregator, newItem, OnRowPropertyChanged));
+                            Resources.Add(new ResourceRowViewModel(_services, newItem, OnRowPropertyChanged, Resources.Count + 1));
                         }
                     }
                     break;
@@ -259,11 +255,24 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Resources.Clear();
                     foreach (var resource in Model.Resources)
                     {
-                        Resources.Add(new ResourceRowViewModel(_eventAggregator, resource, OnRowPropertyChanged));
+                        Resources.Add(new ResourceRowViewModel(_services, resource, OnRowPropertyChanged, Resources.Count + 1));
                     }
                     break;
             }
             ValidateUniqueKeys();
+        }
+
+        public void AssetsMap_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (sender != null)
+            {
+                var map = (ObservableCollection<KeyValuePair<string, IEnumerable<string>>>)sender;
+                FolderNames.Clear();
+                foreach (var kvp in map)
+                {
+                    FolderNames.Add(kvp.Key);
+                }
+            }
         }
 
         #endregion
@@ -401,15 +410,14 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #endregion
 
         #region Event Handlers
-
         private void OnRowPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SettingRowViewModel.Key)
                 || e.PropertyName == nameof(AssetRowViewModel.Key)
                 || e.PropertyName == nameof(ResourceRowViewModel.Key))
                 ValidateUniqueKeys();
-        }
 
+        }
         #endregion
     }
 }

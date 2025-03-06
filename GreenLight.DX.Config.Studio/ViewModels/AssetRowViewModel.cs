@@ -1,5 +1,6 @@
 ﻿using GreenLight.DX.Config.Studio.Misc;
 using GreenLight.DX.Config.Studio.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -10,40 +11,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public class AssetRowViewModel : ConfigurationRowViewModel<AssetRowModel>
     {
-        public static ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
-        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; set; }
-        public ListCollectionView Folders { get; set; }
-        public ListCollectionView AssetNames { get; set; }
-
-
-
-        public AssetRowViewModel(IEventAggregator eventAggregator, AssetRowModel model, PropertyChangedEventHandler propertyChanged, ObservableCollection<KeyValuePair<string, IEnumerable<string>>> assetMap)
-            : base(eventAggregator, model, propertyChanged)
+        private ObservableCollection<Type> _supportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
+        private readonly ObservableCollection<KeyValuePair<string, IEnumerable<string>>> _assetsMap;
+        public ObservableCollection<Type> SupportedTypes
         {
-            AssetsMap = assetMap;
-            Folders = new ListCollectionView(AssetsMap.Select(a => a.Key).ToList());
-            OnAssetsMapUpdated(null, null);
-            assetMap.CollectionChanged += OnAssetsMapUpdated;
-            Model = model;
-        }
-        public AssetRowViewModel() : base(new EventAggregator(), new AssetRowModel(), null)
-        {
-            
-            AssetsMap = new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
+            get => _supportedTypes;
+            set
             {
-                { new KeyValuePair<string, IEnumerable<string>>("Folder1", new List<string> { "Asset1", "Asset2" }) },
-                { new KeyValuePair<string, IEnumerable<string>>("Folder2", new List<string> { "Asset3", "Asset4" }) }
-            };
-            Folders = new ListCollectionView(AssetsMap.Select(a => a.Key).ToList()); ;
-            OnAssetsMapUpdated(null, null);
-            AssetsMap.CollectionChanged += OnAssetsMapUpdated;
-            Model = new AssetRowModel();
+                if (_supportedTypes != value)
+                {
+                    _supportedTypes = value;
+                    OnPropertyChanged();
+                }
+            }
         }
+        public ObservableCollection<string> AssetFolders { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> AssetNames { get; } = new ObservableCollection<string>();
 
         public string AssetName
         {
@@ -66,49 +55,59 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.AssetFolder != value)
                 {
                     Model.AssetFolder = value;
-                    OnAssetFolderUpdated();
                     OnPropertyChanged();
                 }
             }
         }
-
-        public void OnAssetsMapUpdated(object? sender, NotifyCollectionChangedEventArgs? args)
+        public AssetRowViewModel(IServiceProvider _services, AssetRowModel model, PropertyChangedEventHandler propertyChanged, int row,
+            ObservableCollection<KeyValuePair<string, IEnumerable<string>>> map)
+            : base(_services, model, propertyChanged, row)
         {
-            for (var i = 0; i < Folders.Count; i++)
-            {
-                Folders.RemoveAt(i);
-            }
-            foreach (var folder in AssetsMap)
-            {
-                Folders.AddNewItem(folder.Key);
-                Folders.CommitNew();
-            }
-            Folders.Refresh();
-            OnPropertyChanged(nameof(Folders));
+            Model = model;
+            _assetsMap = map;
+            PropertyChanged += OnFolderChanged;
+            SupportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
+            RefreshFolders();
         }
-        public void OnAssetFolderUpdated()
-        {
+        public AssetRowViewModel() : this(
+            new ServiceCollection().BuildServiceProvider(),
+            new AssetRowModel(),
+            null,
+            1,
+            new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
+            {
+                new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string>() { "Asset1", "Asset2", "Asset3" }),
+                new KeyValuePair<string, IEnumerable<string>>("Folder2", new List<string>() { "Asset4", "Asset5", "Asset6" }),
+                new KeyValuePair<string, IEnumerable<string>>("Folder3", new List<string>() { "Asset7", "Asset8", "Asset9" }),
+            }
+        )
+        { 
+            RefreshFolders();
+        }
 
-            if (!AssetsMap.Any(AssetsMap => AssetsMap.Key == AssetFolder))
+        public void RefreshFolders()
+        {
+            AssetFolders.Clear();
+            if (_assetsMap == null) return;
+            foreach (var value in _assetsMap)
             {
-                return;
+                AssetFolders.Add(value.Key);
             }
-            for (var i = 0; i < AssetNames.Count; i++)
+            OnPropertyChanged(nameof(AssetFolders));
+        }
+
+
+        public void OnFolderChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "AssetFolder")
             {
-                AssetNames.RemoveAt(i);
+                AssetNames.Clear();
+                foreach(var value in _assetsMap.First(x => x.Key == Model.AssetFolder).Value)
+                {
+                    AssetNames.Add(value);
+                }
+                OnPropertyChanged(nameof(AssetNames));
             }
-            var assets = AssetsMap.FirstOrDefault(x => x.Key == AssetFolder).Value;
-            if (assets == null)
-            {
-                return;
-            }
-            foreach (var asset in assets)
-            {
-                AssetNames.AddNewItem(asset);
-                AssetNames.CommitNew();
-            }
-            AssetNames.Refresh();
-            OnPropertyChanged(nameof(AssetNames));
         }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:GreenLight.DX.Config.Studio.Controls"
              xmlns:viewModels="clr-namespace:GreenLight.DX.Config.Studio.ViewModels" 
              xmlns:converters="clr-namespace:GreenLight.DX.Config.Studio.Converters"
+             xmlns:controls="clr-namespace:GreenLight.DX.Config.Studio.Controls"
              d:DataContext="{d:DesignInstance Type=viewModels:ConfigurationViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -16,7 +17,8 @@
                 <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/Button.xaml" />
                 <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/TextBlock.xaml" />
                 <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/TextBox.xaml" />
-                <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/DataGridCell.xaml" />                
+                <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/DataGridCell.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/ComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:TypeToStringConverter x:Key="TypeToStringConverter" />
         </ResourceDictionary>
@@ -64,32 +66,29 @@
                     </BulletDecorator>
                 </Expander.Header>
                 <Expander.Content>
-                    <DataGrid x:Name="dataGrid" ItemsSource="{Binding Settings}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridComboBoxColumn Header="Type" 
-                                ItemsSource="{Binding Source={x:Static viewModels:SettingRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
-                                Width="*"
-                                MinWidth="100" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTemplateColumn>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasErrors}" Value="True"></DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Key" Grid.Column="0" />
+                            <TextBlock Text="Type" Grid.Column="1" />
+                            <TextBlock Text="Value" Grid.Column="2" />
+                            <TextBlock Text="Description" Grid.Column="3" />
+                            <TextBlock Text="" Grid.Column="4" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Settings}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:SettingsRowControl Grid.Row="{Binding Row}" Model="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </Expander.Content>
             </Expander>
 
@@ -103,29 +102,31 @@
                     </BulletDecorator>
                 </Expander.Header>
                 <Expander.Content>
-                    <DataGrid ItemsSource="{Binding Assets}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridComboBoxColumn Header="Type" 
-                                ItemsSource="{Binding Source={x:Static viewModels:AssetRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
-                                DisplayMemberPath="FullName"
-                                Width="*"
-                                MinWidth="100" />
-                            <!-- <DataGridTextColumn Header="Asset Folder" Binding="{Binding AssetFolder, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" /> -->
-                            <DataGridComboBoxColumn Header="Folder" ItemsSource="{Binding Folders}" SelectedItemBinding="{Binding AssetFolder, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*"/>
-                            <!-- <DataGridTextColumn Header="Asset Name" Binding="{Binding AssetName, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" /> -->
-                            <DataGridComboBoxColumn Header="Name" ItemsSource="{Binding AssetNames}" SelectedItemBinding="{Binding AssetName, Mode=TwoWay, ValidatesOnDataErrors=True}" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTemplateColumn>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Key" Grid.Column="0" />
+                            <TextBlock Text="Type" Grid.Column="1" />
+                            <TextBlock Text="Folder" Grid.Column="2" />
+                            <TextBlock Text="Name" Grid.Column="3" />
+                            <TextBlock Text="Description" Grid.Column="4" />
+                            <TextBlock Text="" Grid.Column="5" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Assets}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:AssetsRowControl Grid.Row="{Binding Row}" Model="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </Expander.Content>
             </Expander>
 
@@ -139,28 +140,33 @@
                     </BulletDecorator>
                 </Expander.Header>
                 <Expander.Content>
-                    <DataGrid ItemsSource="{Binding Resources}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridComboBoxColumn Header="Type" 
-                                ItemsSource="{Binding Source={x:Static viewModels:ResourceRowViewModel.SupportedTypes}}"
-                                SelectedItemBinding="{Binding SelectedType, Mode=TwoWay, ValidatesOnDataErrors=True}" 
-                                DisplayMemberPath="FullName"
-                                Width="*"
-                                MinWidth="100" />
-                            <DataGridTextColumn Header="Path" Binding="{Binding Path, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTextColumn Header="Orchestrator Folder" Binding="{Binding Folder, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTextColumn Header="Orchestrator Bucket" Binding="{Binding Bucket, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" Width="*" />
-                            <DataGridTemplateColumn>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Key" Grid.Column="0" />
+                            <TextBlock Text="Type" Grid.Column="1" />
+                            <TextBlock Text="Path" Grid.Column="2" />
+                            <TextBlock Text="Folder" Grid.Column="3" />
+                            <TextBlock Text="Bucket" Grid.Column="4" />
+                            <TextBlock Text="Description" Grid.Column="5" />
+                            <TextBlock Text="" Grid.Column="6" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Resources}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:ResourcesRowControl Grid.Row="{Binding Row}" Model="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </Expander.Content>
             </Expander>
         </Grid>

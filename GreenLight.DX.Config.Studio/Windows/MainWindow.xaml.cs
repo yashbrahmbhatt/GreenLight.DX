@@ -1,4 +1,10 @@
-﻿using GreenLight.DX.Config.Studio.ViewModels;
+﻿using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Config.Studio.Models;
+using GreenLight.DX.Config.Studio.ViewModels;
+using GreenLight.DX.Shared.Hermes.Services;
+using GreenLight.DX.Shared.Hermes.ViewModels;
+using GreenLight.DX.Shared.Hermes.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,34 +27,18 @@ namespace GreenLight.DX.Config.Studio.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ProjectViewModel ViewModel { get; set; } 
-
-
-        public MainWindow()
+        private readonly IHermesService _logger;
+        private static readonly string _logContext = "MainWindow";
+        private void Log(string message) => _logger.Info(_logContext, message);
+        public MainWindow(ServiceProvider services, MainWindowViewModel? viewModel)
         {
             InitializeComponent();
-            ViewModel = new ProjectViewModel
-            {
-                CloseWindowAction = Close
-            };
-            DataContext = ViewModel;
-        }
-
-        public MainWindow(ProjectViewModel viewModel)
-        {
-            InitializeComponent();
-            ViewModel = viewModel;
-            ViewModel.CloseWindowAction = Close;
-            DataContext = ViewModel;
-        }
-
-        public MainWindow(ProjectViewModel viewModel, IWorkflowDesignApi workflowDesignApi)
-        {
-            InitializeComponent();
-            ViewModel = viewModel;
-            ViewModel.WorkflowDesignApi = workflowDesignApi;
-            ViewModel.CloseWindowAction = Close;
-            DataContext = ViewModel;
+            _logger = services.GetRequiredService<IHermesService>();
+            Log("Initializing window");
+            viewModel = viewModel ?? new MainWindowViewModel(services, new Models.ProjectModel());
+            viewModel.CloseWindowAction = Close;
+            DataContext = viewModel;
+            Log("Initialized window");
         }
     }
 }

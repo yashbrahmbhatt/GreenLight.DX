@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GreenLight.DX.Shared.Hermes.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,11 +46,23 @@ namespace GreenLight.DX.Config.Studio
 
         public static Activity? Run()
         {
-            if (API == null) return null;
-            var model = new Models.ProjectModel();
-            var viewModel = new ViewModels.ProjectViewModel(model, API);
-            var window = new Windows.MainWindow(viewModel, API);
-            window.Show();
+            try
+            {
+                if (API == null) throw new NullReferenceException($"WorkflowAPI was null");
+                var hermes = new HermesService(Application.Current.Dispatcher);
+                var services = new ServiceCollection()
+                    .AddSingleton<IEventAggregator>(new EventAggregator())
+                    .AddSingleton<IHermesService>(hermes)
+                    .AddSingleton<IWorkflowDesignApi>(API)
+                    .BuildServiceProvider();
+                var viewModel = new ViewModels.MainWindowViewModel(services, new Models.ProjectModel());
+                var window = new Windows.MainWindow(services, viewModel);
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
             return null;
         }
     }

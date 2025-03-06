@@ -18,6 +18,7 @@ namespace GreenLight.DX.Config.Studio.Misc
         /// </summary>
         public static readonly Dictionary<Type, Func<string, object>> Parsers = new Dictionary<Type, Func<string, object>>()
     {
+            {typeof(object), value => value },
         { typeof(string), value => value },
         { typeof(int), value => ParsePrimitive<int>(value) },
         { typeof(double), value => ParsePrimitive<double>(value) },
