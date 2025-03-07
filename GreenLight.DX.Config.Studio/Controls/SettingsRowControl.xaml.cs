@@ -39,7 +39,6 @@ namespace GreenLight.DX.Config.Studio.Controls
         {
             InitializeComponent();
             Model = model;
-            DataContext = Model;
         }
         public SettingsRowControl() : this(new SettingRowViewModel()) { }
     }

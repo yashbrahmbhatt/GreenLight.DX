@@ -64,7 +64,7 @@
                 <TextBox HorizontalAlignment="Stretch" Text="{Binding Namespace, Mode=TwoWay, ValidatesOnDataErrors=True}" />
             </DockPanel>
 
-            <ListBox ItemsSource="{Binding Configurations}" Height="Auto" SelectedItem="{Binding SelectedConfig}" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Configurations}" Height="Auto" SelectedItem="{Binding SelectedConfig, Mode=TwoWay}" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate d:DataType="viewModels:ConfigurationViewModel">
                         <DockPanel HorizontalAlignment="Stretch">
@@ -94,6 +94,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <TextBlock Text="{Binding SelectedConfig.Name, FallbackValue='No Selection'}" />
         </StackPanel>
 
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="2.5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Opacity="10" >
@@ -102,6 +103,6 @@
             </GridSplitter.Background>
         </GridSplitter>
 
-        <controls:ConfigurationView Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedConfig}" />
+        <controls:ConfigurationView Grid.Row="1" Grid.Column="2" Model="{Binding SelectedConfig}" />
     </Grid>
 </Window>

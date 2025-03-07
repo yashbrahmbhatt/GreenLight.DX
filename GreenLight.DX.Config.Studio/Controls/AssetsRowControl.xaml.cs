@@ -38,7 +38,6 @@ namespace GreenLight.DX.Config.Studio.Controls
         {
             InitializeComponent();
             Model = model;
-            DataContext = Model;
         }
         public AssetsRowControl() : this(new AssetRowViewModel()) { }
     }

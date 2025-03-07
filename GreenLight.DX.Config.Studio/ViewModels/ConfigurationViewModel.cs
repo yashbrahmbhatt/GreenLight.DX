@@ -106,7 +106,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         }
 
         public ConfigurationViewModel() : this(
-            new ServiceCollection().BuildServiceProvider(),
+            new ServiceCollection()
+                .AddSingleton<IEventAggregator>(new EventAggregator())
+                .BuildServiceProvider(),
             new ConfigurationModel(), 
             new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
             {

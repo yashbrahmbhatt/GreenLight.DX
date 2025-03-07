@@ -1,6 +1,7 @@
 ﻿using GreenLight.DX.Config.Studio.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,23 @@ namespace GreenLight.DX.Config.Studio.Controls
 
     public partial class ConfigurationView : UserControl
     {
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ConfigurationViewModel), typeof(ConfigurationView),
+            new PropertyMetadata()
+            {
+                PropertyChangedCallback = (d, e) =>
+                {
+                    if (d is ConfigurationView control)
+                    {
+                        control.DataContext = e.NewValue;
+                        MessageBox.Show($"ConfigurationView.DataContext = {e.NewValue}");
+                    }
+                }
+            });
+        public ConfigurationViewModel Model
+        {
+            get => (ConfigurationViewModel)GetValue(ModelProperty);
+            set => SetValue(ModelProperty, value);
+        }
 
         public ConfigurationView()
         {

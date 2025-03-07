@@ -28,18 +28,17 @@ namespace GreenLight.DX.Config.Studio.ViewModels
     {
         #region Fields
         private readonly IEventAggregator _eventAggregator;
-        private ConfigurationViewModel _selectedConfig;
         private readonly IServiceProvider _services;
         private readonly IWorkflowDesignApi? _workflowDesignApi;
-        private readonly IHermesService _logger;
+        private readonly IHermesService? _logger;
         private static readonly string _logContext = nameof(MainWindowViewModel);
         #endregion
 
         #region Log Functions
-        private void Info(string message, string context) => _logger.Log(message, $"{_logContext}.{context}", LogLevel.Info);
-        private void Error(string message, string context) => _logger.Log(message, $"{_logContext}.{context}", LogLevel.Error);
-        private void Warning(string message, string context) => _logger.Log(message, $"{_logContext}.{context}", LogLevel.Warning);
-        private void Debug(string message, string context) => _logger.Log(message, $"{_logContext}.{context}", LogLevel.Debug);
+        private void Info(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Info);
+        private void Error(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Error);
+        private void Warning(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Warning);
+        private void Debug(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Debug);
         #endregion
 
         #region Properties
@@ -50,7 +49,19 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             new KeyValuePair<string, IEnumerable<string>>("Folder3", new List<string> { "Asset6", "Asset7", "Asset8" })
         };
         public string RelativeRoot { get; set; } = "Configurations";
-        public ProjectModel Model { get; set; }
+        private ProjectModel _model;
+        public ProjectModel Model
+        {
+            get => _model;
+            set
+            {
+                if (_model != value)
+                {
+                    _model = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public string Namespace
         {
             get => Model.Namespace;
@@ -66,6 +77,8 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         public ObservableCollection<ConfigurationViewModel> Configurations { get; } = new ObservableCollection<ConfigurationViewModel>();
 
+        private ConfigurationViewModel _selectedConfig;
+
         public ConfigurationViewModel SelectedConfig
         {
             get => _selectedConfig;
@@ -74,6 +87,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (_selectedConfig != value)
                 {
                     _selectedConfig = value;
+                    MessageBox.Show($"Selected Configuration: {value.Name}");
                     OnPropertyChanged();
                 }
             }
@@ -343,7 +357,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
             try
             {
-                var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
+                //var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
                 Debug("Saving configurations started.", context: "SaveConfigurationsToFile");
 
 
@@ -353,22 +367,26 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     DefaultExt = ".json",
                     FileName = "Configurations.json"
                 };
-                if(SaveFileDialog.ShowDialog() != true)
+                if(SaveFileDialog.ShowDialog() == true)
                 {
                     var saveFilePath = SaveFileDialog.FileName;
                     Debug($"Saving configurations to {saveFilePath}", "SaveConfigurationsToFile");
                     var json = JsonConvert.SerializeObject(Model, Formatting.Indented);
-                    await File.WriteAllTextAsync(saveFilePath, json);
+                    File.WriteAllText(saveFilePath, json);
                     Debug($"Configurations saved to '{saveFilePath}'.", context: "SaveConfigurationsToFile");
                     return;
+                } else
+                {
+                    Debug("Save dialog cancelled", "SaveConfigurationsToFile");
                 }
 
-                await busy.DisposeAsync();
+                //await busy.DisposeAsync();
             }
             catch (Exception ex)
             {
                 Error($"Error saving configurations: {ex.Message}", context: "SaveConfigurationsToFile");
             }
+            return;
         }
 
         public async Task<bool> LoadConfigurationFromFile()

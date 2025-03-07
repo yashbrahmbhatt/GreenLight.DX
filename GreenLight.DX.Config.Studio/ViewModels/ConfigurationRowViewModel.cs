@@ -20,7 +20,19 @@ namespace GreenLight.DX.Config.Studio.ViewModels
     public abstract class ConfigurationRowViewModel<T> : INotifyPropertyChanged, INotifyDataErrorInfo where T : ConfigurationRowModel
     {
         private readonly IEventAggregator _eventAggregator;
-        public T Model { get; protected set; }
+        private T _model;
+        public T Model
+        {
+            get => _model;
+            set
+            {
+                if (_model != value)
+                {
+                    _model = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         [Required(ErrorMessage = "Key is required.")]
         public string Key
