@@ -28,16 +28,20 @@ namespace GreenLight.DX.Config.Studio.Controls
         {
             if (d is AssetsRowControl control)
             {
-                control.DataContext = e.NewValue;
+                control.Model = (AssetRowViewModel)e.NewValue;
+                control.DataContext = (AssetRowViewModel)e.NewValue;
             }
         }
     });
-        public AssetRowViewModel Model { get; set; }
+        public AssetRowViewModel Model
+        {
+            get => (AssetRowViewModel)GetValue(ModelProperty);
+            set => SetValue(ModelProperty, value);
+        }
 
         public AssetsRowControl(AssetRowViewModel model)
         {
             InitializeComponent();
-            Model = model;
         }
         public AssetsRowControl() : this(new AssetRowViewModel()) { }
     }

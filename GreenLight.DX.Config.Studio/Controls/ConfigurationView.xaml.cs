@@ -30,8 +30,8 @@ namespace GreenLight.DX.Config.Studio.Controls
                 {
                     if (d is ConfigurationView control)
                     {
-                        control.DataContext = e.NewValue;
-                        MessageBox.Show($"ConfigurationView.DataContext = {e.NewValue}");
+                        control.Model = (ConfigurationViewModel)e.NewValue;
+                        control.DataContext = (ConfigurationViewModel)e.NewValue;
                     }
                 }
             });
