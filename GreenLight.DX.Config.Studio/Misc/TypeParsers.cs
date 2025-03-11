@@ -37,7 +37,6 @@ namespace GreenLight.DX.Config.Studio.Misc
         { typeof(bool[]), value => ParseArray<bool>(value) },
         { typeof(DateTime[]), value => ParseArray<DateTime>(value) },
         { typeof(TimeSpan[]), value => ParseArray<TimeSpan>(value) },
-        { typeof(DataTable), value => JsonConvert.DeserializeObject<DataTable>(value) }
     };
 
         /// <summary>

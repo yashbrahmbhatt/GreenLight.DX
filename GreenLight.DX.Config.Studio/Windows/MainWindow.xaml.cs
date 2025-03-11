@@ -30,14 +30,16 @@ namespace GreenLight.DX.Config.Studio.Windows
         private readonly IHermesService _logger;
         private static readonly string _logContext = "MainWindow";
         private void Log(string message) => _logger.Info(_logContext, message);
-        public MainWindow(ServiceProvider services, MainWindowViewModel? viewModel)
+
+        public MainWindowViewModel Model { get; set; }
+        public MainWindow(ServiceProvider services, MainWindowViewModel viewModel)
         {
             InitializeComponent();
             _logger = services.GetRequiredService<IHermesService>();
             Log("Initializing window");
-            viewModel = viewModel ?? new MainWindowViewModel(services, new Models.ProjectModel());
             viewModel.CloseWindowAction = Close;
-            DataContext = viewModel;
+            Model = viewModel;
+            DataContext = Model;
             Log("Initialized window");
         }
     }

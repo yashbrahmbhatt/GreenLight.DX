@@ -18,15 +18,16 @@ namespace GreenLight.DX.Config.Studio.ViewModels
     {
         public ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>() { typeof(string), typeof(DataTable), typeof(DataSet) };
 
-        public ResourceRowViewModel(IServiceProvider _services, ResourceRowModel model, PropertyChangedEventHandler propertyChanged, int row)
-            : base(_services, model, propertyChanged, row)
+        public ResourceRowViewModel(IServiceProvider _services, ResourceRowModel model, int row)
+            : base(_services, model, row)
         {
             Model = model;
         }
         public ResourceRowViewModel() : this(
-            new ServiceCollection().BuildServiceProvider(),
+            new ServiceCollection()
+            .AddSingleton<IEventAggregator>(new EventAggregator())
+            .BuildServiceProvider(),
             new ResourceRowModel(),
-            null,
             1
         )
         { }

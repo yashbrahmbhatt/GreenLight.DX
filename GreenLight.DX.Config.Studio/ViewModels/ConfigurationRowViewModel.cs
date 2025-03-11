@@ -34,7 +34,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
         }
 
-        [Required(ErrorMessage = "Key is required.")]
         public string Key
         {
             get => Model.Key;
@@ -49,7 +48,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
         }
 
-        [Required(ErrorMessage = "Description is required.")]
         public string Description
         {
             get => Model.Description;
@@ -64,7 +62,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
         }
 
-        [Required(ErrorMessage = "Type is required.")]
         public Type SelectedType
         {
             get => Model.SelectedType;
@@ -82,16 +79,24 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public ICommand DeleteRowCommand { get; }
         public int Row { get; set; }
 
-        protected ConfigurationRowViewModel(IServiceProvider services, T model, PropertyChangedEventHandler propertyChanged, int row)
+        protected ConfigurationRowViewModel(IServiceProvider services, T model, int row)
         {
-            _eventAggregator = services.GetService<IEventAggregator>();
-            Model = model;
-            PropertyChanged += propertyChanged;
-            DeleteRowCommand = new AsyncRelayCommand(OnDelete);
+            _eventAggregator = services.GetRequiredService<IEventAggregator>();
+            _model = model;
+            DeleteRowCommand = new RelayCommand(RaiseRowDeletedEvent);
             Row = row;
         }
 
-        protected virtual async Task OnDelete()
+        protected virtual void RaisePropertyChangedEvent(string? propertyName)
+        {
+            _eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<T>>().Publish(new ConfigurationRowPropertyChangedEventArgs<T>()
+            {
+                ViewModel = this,
+                EventArgs = new PropertyChangedEventArgs(propertyName)
+            });
+        }
+
+        protected virtual void RaiseRowDeletedEvent()
         {
             _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<T>>().Publish(this);
         }
@@ -100,6 +105,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
+            if(propertyName == nameof(Key)) RaisePropertyChangedEvent(nameof(Key));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -110,14 +116,13 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public bool HasErrors => _errors.Count != 0;
         public void AddError(string propertyName, string error)
         {
-            if (!_errors.TryGetValue(propertyName, out var errors))
+            if (!_errors.TryGetValue(propertyName, out _))
             {
-                errors = new List<string>();
+                List<string>? errors = new List<string>();
                 _errors[propertyName] = errors;
-            }
-            if (!errors.Contains(error))
+            } else
             {
-                errors.Add(error);
+                _errors[propertyName].Add(error);
             }
             OnErrorsChanged(propertyName);
         }
@@ -142,19 +147,21 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         protected void ValidateProperty(object value, string propertyName)
         {
-            var validationResults = new List<ValidationResult>();
-            Validator.TryValidateProperty(value, new ValidationContext(this) { MemberName = propertyName }, validationResults);
+            ValidateRequired(value, propertyName);
+        }
 
-            if (validationResults.Any())
+        protected void ValidateRequired(object value, string propertyName)
+        {
+            var message = Resources.ValidationMessages.Property_Required.Replace("{PropertyName}", propertyName);
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {
-                _errors[propertyName] = validationResults.Select(vr => vr.ErrorMessage).ToList();
+                if (propertyName == nameof(Description)) return; // Description is not required
+                AddError(propertyName, message);
             }
             else
             {
-                _errors.Remove(propertyName);
+                RemoveError(propertyName, message);
             }
-
-            OnErrorsChanged(propertyName);
         }
 
         // Helper method to raise the ErrorsChanged event

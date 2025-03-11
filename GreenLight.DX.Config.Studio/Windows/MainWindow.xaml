@@ -103,6 +103,6 @@
             </GridSplitter.Background>
         </GridSplitter>
 
-        <controls:ConfigurationView Grid.Row="1" Grid.Column="2" Model="{Binding SelectedConfig}" />
+        <controls:ConfigurationView Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedConfig}" />
     </Grid>
 </Window>

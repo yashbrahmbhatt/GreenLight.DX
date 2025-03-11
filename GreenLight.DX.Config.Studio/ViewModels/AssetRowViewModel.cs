@@ -59,9 +59,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 }
             }
         }
-        public AssetRowViewModel(IServiceProvider _services, AssetRowModel model, PropertyChangedEventHandler propertyChanged, int row,
+        public AssetRowViewModel(IServiceProvider _services, AssetRowModel model, int row,
             ObservableCollection<KeyValuePair<string, IEnumerable<string>>> map)
-            : base(_services, model, propertyChanged, row)
+            : base(_services, model, row)
         {
             Model = model;
             _assetsMap = map;
@@ -70,9 +70,10 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             RefreshFolders();
         }
         public AssetRowViewModel() : this(
-            new ServiceCollection().BuildServiceProvider(),
+            new ServiceCollection()
+            .AddSingleton<IEventAggregator>(new EventAggregator())
+            .BuildServiceProvider(),
             new AssetRowModel(),
-            null,
             1,
             new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
             {
@@ -96,17 +97,23 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             OnPropertyChanged(nameof(AssetFolders));
         }
 
+        public void RefreshNames()
+        {
+            AssetNames.Clear();
+            if (_assetsMap == null) return;
+            foreach (var value in _assetsMap.First(x => x.Key == Model.AssetFolder).Value)
+            {
+                AssetNames.Add(value);
+            }
+            OnPropertyChanged(nameof(AssetNames));
+        }
+
 
         public void OnFolderChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "AssetFolder")
             {
-                AssetNames.Clear();
-                foreach(var value in _assetsMap.First(x => x.Key == Model.AssetFolder).Value)
-                {
-                    AssetNames.Add(value);
-                }
-                OnPropertyChanged(nameof(AssetNames));
+                RefreshNames();
             }
         }
     }

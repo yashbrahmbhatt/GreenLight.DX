@@ -70,8 +70,8 @@
                     <StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" MinWidth="200"/>
+                                <ColumnDefinition Width="200" MinWidth="200" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -106,8 +106,8 @@
                     <StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" MinWidth="200"/>
+                                <ColumnDefinition Width="200" MinWidth="200" />
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="*" />
@@ -144,8 +144,8 @@
                     <StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" MinWidth="200"/>
+                                <ColumnDefinition Width="200" MinWidth="200" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="*" />

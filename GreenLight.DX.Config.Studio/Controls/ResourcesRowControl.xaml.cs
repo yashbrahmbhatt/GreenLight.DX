@@ -32,13 +32,15 @@ namespace GreenLight.DX.Config.Studio.Controls
                     }
                 }
             });
-        public ResourceRowViewModel Model { get; set; }
-
-        public ResourcesRowControl(ResourceRowViewModel model)
+        public ResourceRowViewModel Model
         {
-            InitializeComponent();
-            Model = model;
+            get => (ResourceRowViewModel)GetValue(ModelProperty);
+            set => SetValue(ModelProperty, value);
         }
-        public ResourcesRowControl() : this(new ResourceRowViewModel()) { }
+
+
+        public ResourcesRowControl() {
+            InitializeComponent();
+        }
     }
 }

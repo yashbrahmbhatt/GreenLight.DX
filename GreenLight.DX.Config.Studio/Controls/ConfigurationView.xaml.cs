@@ -31,14 +31,17 @@ namespace GreenLight.DX.Config.Studio.Controls
                     if (d is ConfigurationView control)
                     {
                         control.Model = (ConfigurationViewModel)e.NewValue;
-                        control.DataContext = (ConfigurationViewModel)e.NewValue;
+                        control.DataContext = control.Model;
                     }
                 }
             });
         public ConfigurationViewModel Model
         {
             get => (ConfigurationViewModel)GetValue(ModelProperty);
-            set => SetValue(ModelProperty, value);
+            set
+            {
+                SetValue(ModelProperty, value);
+            }
         }
 
         public ConfigurationView()

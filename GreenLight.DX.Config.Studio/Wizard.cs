@@ -57,6 +57,7 @@ namespace GreenLight.DX.Config.Studio
                     .BuildServiceProvider();
                 var viewModel = new ViewModels.MainWindowViewModel(services, new Models.ProjectModel());
                 var window = new Windows.MainWindow(services, viewModel);
+                
                 window.Show();
             }
             catch (Exception ex)

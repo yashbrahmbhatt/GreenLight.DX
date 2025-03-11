@@ -39,10 +39,9 @@ namespace GreenLight.DX.Config.Studio.Controls
             set => SetValue(ModelProperty, value);
         }
 
-        public AssetsRowControl(AssetRowViewModel model)
+        public AssetsRowControl()
         {
             InitializeComponent();
         }
-        public AssetsRowControl() : this(new AssetRowViewModel()) { }
     }
 }

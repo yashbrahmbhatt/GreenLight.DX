@@ -30,16 +30,17 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
         }
 
-        public SettingRowViewModel(IServiceProvider _services, SettingRowModel model, PropertyChangedEventHandler? propertyChanged, int row) : 
-            base(_services, model, propertyChanged, row)
+        public SettingRowViewModel(IServiceProvider _services, SettingRowModel model, int row) : 
+            base(_services, model, row)
         {
             Model = model;
             SupportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
         }
         public SettingRowViewModel() : this(
-            new ServiceCollection().BuildServiceProvider(),
+            new ServiceCollection()
+            .AddSingleton<IEventAggregator>(new EventAggregator())
+            .BuildServiceProvider(),
             new SettingRowModel(), 
-            null, 
             1
         ) { }
 
@@ -52,6 +53,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Value != value)
                 {
                     Model.Value = value;
+                    ValidateProperty(value, nameof(Value));
                     OnPropertyChanged();
                 }
             }

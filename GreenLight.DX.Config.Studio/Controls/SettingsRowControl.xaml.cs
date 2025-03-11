@@ -30,16 +30,19 @@ namespace GreenLight.DX.Config.Studio.Controls
                 {
                     if (d is SettingsRowControl control)
                     {
-                        control.DataContext = e.NewValue;
+                        control.Model = (SettingRowViewModel)e.NewValue;
+                        control.DataContext = control.Model;
                     }
                 }
             });
-        public SettingRowViewModel Model { get; set; }
-        public SettingsRowControl(SettingRowViewModel model)
+        public SettingRowViewModel Model
         {
-            InitializeComponent();
-            Model = model;
+            get => (SettingRowViewModel)GetValue(ModelProperty);
+            set => SetValue(ModelProperty, value);
         }
-        public SettingsRowControl() : this(new SettingRowViewModel()) { }
+
+        public SettingsRowControl() {
+            InitializeComponent();
+        }
     }
 }

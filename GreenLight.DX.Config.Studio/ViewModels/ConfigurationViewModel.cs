@@ -49,6 +49,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Name != value)
                 {
                     Model.Name = value;
+                    ValidateProperty(value, nameof(Name));
                     OnPropertyChanged();
                 }
             }
@@ -63,11 +64,14 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Description != value)
                 {
                     Model.Description = value;
+                    ValidateProperty(value, nameof(Description));
                     OnPropertyChanged();
                 }
             }
         }
+        #endregion
 
+        #region Commands
         public ICommand AddSettingsRowCommand { get; set; }
         public ICommand AddAssetsRowCommand { get; set; }
         public ICommand AddResourcesRowCommand { get; set; }
@@ -84,7 +88,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             Model = model;
             _eventAggregator = services.GetRequiredService<IEventAggregator>();
             AssetsMap = assetsMap;
-            assetsMap.CollectionChanged += AssetsMap_CollectionChanged;
+            AssetsMap.CollectionChanged += AssetsMap_CollectionChanged;
 
             // Initialize Commands
             DeleteConfigurationCommand = new AsyncRelayCommand(OnDeleteConfiguration);
@@ -100,16 +104,22 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
             // Subscribe to events
             _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<SettingRowModel>>().Subscribe(OnConfigurationRowDeleted);
+            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<AssetRowModel>>().Subscribe(OnConfigurationRowDeleted);
+            _eventAggregator.GetEvent<ConfigurationRowDeletedEvent<ResourceRowModel>>().Subscribe(OnConfigurationRowDeleted);
+            _eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<SettingRowModel>>().Subscribe(OnRowPropertyChange);
+            _eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<AssetRowModel>>().Subscribe(OnRowPropertyChange);
+            _eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<ResourceRowModel>>().Subscribe(OnRowPropertyChange);
             InitializeRows();
+            InitializeAssetFolders();
             ValidateUniqueKeys();
-            
+
         }
 
         public ConfigurationViewModel() : this(
             new ServiceCollection()
                 .AddSingleton<IEventAggregator>(new EventAggregator())
                 .BuildServiceProvider(),
-            new ConfigurationModel(), 
+            new ConfigurationModel(),
             new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
             {
                 new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string>(){"Asset1", "Asset2", "Asset3"}),
@@ -122,31 +132,33 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #endregion
 
         #region Initialization
-        
+
 
         private void InitializeRows()
         {
-
-
             // Initialize the ViewModel collections from the Model
             foreach (var setting in Model.Settings)
             {
-                Settings.Add(new SettingRowViewModel(_services, setting, OnRowPropertyChanged, Model.Settings.IndexOf(setting) + 1));
+                Settings.Add(new SettingRowViewModel(_services, setting, Model.Settings.IndexOf(setting) + 1));
             }
             foreach (var asset in Model.Assets)
             {
-                Assets.Add(new AssetRowViewModel(_services, asset, OnRowPropertyChanged, Model.Assets.IndexOf(asset) + 1, AssetsMap));
+                Assets.Add(new AssetRowViewModel(_services, asset, Model.Assets.IndexOf(asset) + 1, AssetsMap));
             }
             foreach (var resource in Model.Resources)
             {
-                Resources.Add(new ResourceRowViewModel(_services, resource, OnRowPropertyChanged, Model.Resources.IndexOf(resource) + 1));
+                Resources.Add(new ResourceRowViewModel(_services, resource, Model.Resources.IndexOf(resource) + 1));
             }
+        }
 
-
-
-
-
-
+        private void InitializeAssetFolders()
+        {
+            FolderNames.Clear();
+            foreach (var kvp in AssetsMap)
+            {
+                FolderNames.Add(kvp.Key);
+            }
+            OnPropertyChanged(nameof(FolderNames));
         }
 
         #endregion
@@ -162,7 +174,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (SettingRowModel newItem in e.NewItems)
                         {
-                            Settings.Add(new SettingRowViewModel(_services, newItem, OnRowPropertyChanged, Settings.Count + 1));
+                            Settings.Add(new SettingRowViewModel(_services, newItem, Settings.Count + 1));
                         }
                     }
                     break;
@@ -183,7 +195,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Settings.Clear();
                     foreach (var setting in Model.Settings)
                     {
-                        Settings.Add(new SettingRowViewModel(_services, setting, OnRowPropertyChanged, Settings.Count + 1));
+                        Settings.Add(new SettingRowViewModel(_services, setting, Settings.Count + 1));
                     }
                     break;
             }
@@ -199,7 +211,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (AssetRowModel newItem in e.NewItems)
                         {
-                            Assets.Add(new AssetRowViewModel(_services, newItem, OnRowPropertyChanged, Assets.Count + 1, AssetsMap));
+                            Assets.Add(new AssetRowViewModel(_services, newItem, Assets.Count + 1, AssetsMap));
                         }
                     }
                     break;
@@ -208,7 +220,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (AssetRowModel oldItem in e.OldItems)
                         {
-                            Assets.Remove(Assets.FirstOrDefault(x => x.Model == oldItem));
+                            Assets.Remove(Assets.First(x => x.Model == oldItem));
                         }
                     }
                     break;
@@ -220,7 +232,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Assets.Clear();
                     foreach (var asset in Model.Assets)
                     {
-                        Assets.Add(new AssetRowViewModel(_services, asset, OnRowPropertyChanged, Assets.Count + 1, AssetsMap));
+                        Assets.Add(new AssetRowViewModel(_services, asset, Assets.Count + 1, AssetsMap));
                     }
                     break;
             }
@@ -236,7 +248,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (ResourceRowModel newItem in e.NewItems)
                         {
-                            Resources.Add(new ResourceRowViewModel(_services, newItem, OnRowPropertyChanged, Resources.Count + 1));
+                            Resources.Add(new ResourceRowViewModel(_services, newItem, Resources.Count + 1));
                         }
                     }
                     break;
@@ -257,7 +269,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Resources.Clear();
                     foreach (var resource in Model.Resources)
                     {
-                        Resources.Add(new ResourceRowViewModel(_services, resource, OnRowPropertyChanged, Resources.Count + 1));
+                        Resources.Add(new ResourceRowViewModel(_services, resource, Resources.Count + 1));
                     }
                     break;
             }
@@ -281,41 +293,31 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         #region Command Handlers
 
-        private async Task OnSettingRowAdded()
+        public async Task OnSettingRowAdded()
         {
             var newSetting = new SettingRowModel(); // Create a new Model instance
             Model.Settings.Add(newSetting); // Add it directly to the Model
         }
 
-        private async Task OnAssetRowAdded()
+        public async Task OnAssetRowAdded()
         {
             var newAsset = new AssetRowModel();
             Model.Assets.Add(newAsset);
         }
 
-        private async Task OnResourceRowAdded()
+        public async Task OnResourceRowAdded()
         {
             var newResource = new ResourceRowModel();
             Model.Resources.Add(newResource);
         }
 
-        private void OnConfigurationRowDeleted<T>(ConfigurationRowViewModel<T> rowViewModel) where T : ConfigurationRowModel
-        {
-            if (rowViewModel != null)
-            {
-                if (rowViewModel is SettingRowViewModel model) Model.Settings.Remove(model.Model);
-                if (rowViewModel is AssetRowViewModel model1) Model.Assets.Remove(model1.Model);
-                if (rowViewModel is ResourceRowViewModel model2) Model.Resources.Remove(model2.Model);
-            }
-        }
-
-        private async Task OnEditConfiguration()
+        public async Task OnEditConfiguration()
         {
             var editorWindow = new ConfigurationWindow(this);
             editorWindow.Show();
         }
 
-        private async Task OnDeleteConfiguration()
+        public async Task OnDeleteConfiguration()
         {
             _eventAggregator.GetEvent<ConfigurationDeletedEvent>().Publish(this);
         }
@@ -324,7 +326,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         #region Validation
 
-        private void ValidateUniqueKeys()
+        public void ValidateUniqueKeys()
         {
             var allKeys = Settings.Select(s => s.Key)
                 .Concat(Assets.Select(a => a.Key))
@@ -354,6 +356,23 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     foreach (var resource in resources) resource.AddError(nameof(resource.Key), $"Duplicate key");
             }
         }
+        protected void ValidateProperty(object value, string propertyName)
+        {
+            ValidateRequired(value, propertyName);
+        }
+
+        protected void ValidateRequired(object value, string propertyName)
+        {
+            var message = Studio.Resources.ValidationMessages.Property_Required.Replace("{PropertyName}", propertyName);
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            {
+                AddError(propertyName, message);
+            }
+            else
+            {
+                RemoveError(propertyName, message);
+            }
+        }
 
         #endregion
 
@@ -374,6 +393,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
         public bool HasErrors => _errors.Count != 0;
+
         public void AddError(string propertyName, string error)
         {
             if (!_errors.ContainsKey(propertyName))
@@ -412,13 +432,20 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #endregion
 
         #region Event Handlers
-        private void OnRowPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SettingRowViewModel.Key)
-                || e.PropertyName == nameof(AssetRowViewModel.Key)
-                || e.PropertyName == nameof(ResourceRowViewModel.Key))
-                ValidateUniqueKeys();
 
+        public void OnRowPropertyChange<T>(ConfigurationRowPropertyChangedEventArgs<T> rowViewModel) where T : ConfigurationRowModel
+        {
+            ValidateUniqueKeys();
+        }
+
+        public void OnConfigurationRowDeleted<T>(ConfigurationRowViewModel<T> rowViewModel) where T : ConfigurationRowModel
+        {
+            if (rowViewModel != null)
+            {
+                if (rowViewModel is SettingRowViewModel model) Model.Settings.Remove(model.Model);
+                if (rowViewModel is AssetRowViewModel model1) Model.Assets.Remove(model1.Model);
+                if (rowViewModel is ResourceRowViewModel model2) Model.Resources.Remove(model2.Model);
+            }
         }
         #endregion
     }

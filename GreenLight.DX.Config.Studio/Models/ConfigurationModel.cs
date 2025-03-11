@@ -25,17 +25,17 @@ namespace GreenLight.DX.Config.Studio.Models
         [JsonProperty(nameof(Settings))] // Use nameof
         [XmlArray(nameof(Settings))] // Use nameof
         [XmlArrayItem("Setting")] // Use nameof
-        public ObservableCollection<SettingRowModel> Settings { get; set; } = new ObservableCollection<SettingRowModel>() { new SettingRowModel() };
+        public ObservableCollection<SettingRowModel> Settings { get; set; } = new ObservableCollection<SettingRowModel>() { };
 
         [JsonProperty(nameof(Assets))] // Use nameof
         [XmlArray(nameof(Assets))] // Use nameof
         [XmlArrayItem("Asset")] // Use nameof
-        public ObservableCollection<AssetRowModel> Assets { get; set; } = new ObservableCollection<AssetRowModel>() { new AssetRowModel() };
+        public ObservableCollection<AssetRowModel> Assets { get; set; } = new ObservableCollection<AssetRowModel>() { };
 
         [JsonProperty(nameof(Resources))] // Use nameof
         [XmlArray(nameof(Resources))] // Use nameof
         [XmlArrayItem("Resource")] // Use nameof
-        public ObservableCollection<ResourceRowModel> Resources { get; set; } = new ObservableCollection<ResourceRowModel>() { new ResourceRowModel() };
+        public ObservableCollection<ResourceRowModel> Resources { get; set; } = new ObservableCollection<ResourceRowModel>() { };
 
         public ConfigurationModel()
         {

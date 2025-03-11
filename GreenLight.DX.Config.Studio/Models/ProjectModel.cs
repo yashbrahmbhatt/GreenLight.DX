@@ -26,7 +26,7 @@ namespace GreenLight.DX.Config.Studio.Models
         [JsonProperty(nameof(Configurations))] // Optional: Specify JSON property name
         [XmlArray(nameof(Configurations))] // Optional: Specify XML array name
         [XmlArrayItem("Configuration")] // Optional: Specify XML item name
-        public ObservableCollection<ConfigurationModel> Configurations { get; set; } = new ObservableCollection<ConfigurationModel>() { new ConfigurationModel() };
+        public ObservableCollection<ConfigurationModel> Configurations { get; set; } = new ObservableCollection<ConfigurationModel>() {};
 
         [XmlIgnore] // Ignore this property during XML serialization
         [JsonIgnore] // Ignore this property during JSON serialization

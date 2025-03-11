@@ -40,30 +40,29 @@ using UiPath.Studio.Api.Theme;
 
 namespace GreenLight.DX.Config.Studio.Test
 {
-    public static class Program
-    {
-        [STAThread] // Ensure STA mode for WPF
-        public static void Main(string[] args)
-        {
+    //public static class Program
+    //{
+    //    [STAThread] // Ensure STA mode for WPF
+    //    public static void Main(string[] args)
+    //    {
 
-            var app = new Application();
-            var hermes = new HermesService(app.Dispatcher);
-            var services = new ServiceCollection()
-                .AddSingleton<IEventAggregator>(new EventAggregator())
-                .AddSingleton<IWorkflowDesignApi>(new MockWorkflowDesignApi())
-                .AddSingleton<IHermesService>(hermes)
-                .BuildServiceProvider();
-
-
-
-            var window = new MainWindow(services, new MainWindowViewModel(services, new Models.ProjectModel()));
-            //var window = new ConfigurationWindow();
-
-            app.Run(window); // Starts the WPF message loop
-        }
+    //        var app = new Application();
+    //        var hermes = new HermesService(app.Dispatcher);
+    //        var services = new ServiceCollection()
+    //            .AddSingleton<IEventAggregator>(new EventAggregator())
+    //            .AddSingleton<IWorkflowDesignApi>(new MockWorkflowDesignApi())
+    //            .AddSingleton<IHermesService>(hermes)
+    //            .BuildServiceProvider();
 
 
-    }
+
+    //        var window = new MainWindow(services, new MainWindowViewModel(services, new Models.ProjectModel()));
+    //        //var window = new ConfigurationWindow();
+
+    //        app.Run(window); // Starts the WPF message loop
+    //    }
+
+    //}
 
     
 }

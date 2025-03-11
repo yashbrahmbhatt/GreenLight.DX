@@ -24,7 +24,7 @@ using GreenLight.DX.Shared.Commands;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         #region Fields
         private readonly IEventAggregator _eventAggregator;
@@ -42,13 +42,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; set; } = new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
-        {
-            new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string> { "Asset1", "Asset2", "Asset3" }),
-            new KeyValuePair<string, IEnumerable<string>>("Folder2", new List<string> { "Asset3", "Asset4", "Asset5" }),
-            new KeyValuePair<string, IEnumerable<string>>("Folder3", new List<string> { "Asset6", "Asset7", "Asset8" })
-        };
-        public string RelativeRoot { get; set; } = "Configurations";
+        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; set; } = new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>() { };
         private ProjectModel _model;
         public ProjectModel Model
         {
@@ -87,7 +81,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (_selectedConfig != value)
                 {
                     _selectedConfig = value;
-                    MessageBox.Show($"Selected Configuration: {value.Name}");
                     OnPropertyChanged();
                 }
             }
@@ -155,11 +148,11 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
             OpenHermesCommand = new RelayCommand(ShowLogs);
             AddConfigurationCommand = new AsyncRelayCommand(OnAddConfiguration);
-            SaveConfigurationsCommand = new AsyncRelayCommand(SaveConfigurationsToFile);
-            WriteConfigClassesCommand = new AsyncRelayCommand(WriteAllConfigurations);
+            SaveConfigurationsCommand = new AsyncRelayCommand(() => SaveConfigurationsToFile(null));
+            WriteConfigClassesCommand = new AsyncRelayCommand(() => WriteAllConfigurations(null));
             ExitCommand = new AsyncRelayCommand(OnExit);
             LoadAssetsCommand = new AsyncRelayCommand(LoadAssets);
-            LoadConfigurationsCommand = new AsyncRelayCommand(LoadConfigurationFromFile);
+            LoadConfigurationsCommand = new AsyncRelayCommand(() => LoadConfigurationFromFile());
 
             // Subscribe to Model.Configurations changes
             Model.Configurations.CollectionChanged += Model_Configurations_CollectionChanged;
@@ -251,14 +244,38 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             CloseWindowAction?.Invoke();
             Debug("Exiting", "OnExit");
         }
-        private async Task WriteAllConfigurations()
+        private async Task WriteAllConfigurations(string? folderPath = null)
         {
             Info("Writing all configurations", "WriteAllConfigurations");
+            var busy = await _workflowDesignApi.BusyService.Begin("Writing configurations...");
+            if (folderPath == null)
+            {
+                busy.SetStatus("Select a folder to write configurations");
+                var SaveFileDialog = new Microsoft.Win32.OpenFileDialog()
+                {
+                    ValidateNames = false,
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    FileName = "Select Folder",
+                    Filter = "Folder|*.",
+                };
+                if (SaveFileDialog.ShowDialog() == true)
+                {
+                    folderPath = Path.GetDirectoryName(SaveFileDialog.FileName);
+                }
+                else
+                {
+                    Debug("Write dialog cancelled", "WriteAllConfigurations");
+                    return;
+                }
+            }
+            Debug($"Writing configurations to {folderPath}", "WriteAllConfigurations");
             foreach (var config in Configurations)
             {
-                await WriteClass(config.Model);
+                await WriteClass(config.Model, folderPath);
             }
             Info("All configurations written", "WriteAllConfigurations");
+
         }
 
         private async Task OnAddConfiguration()
@@ -277,7 +294,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         }
 
-        private void OnConfigurationDeleted(ConfigurationViewModel configToDelete)
+        public void OnConfigurationDeleted(ConfigurationViewModel configToDelete)
         {
             try
             {
@@ -319,7 +336,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
         }
 
-        public async Task WriteClass(ConfigurationModel configuration)
+        public async Task WriteClass(ConfigurationModel configuration, string folderPath)
         {
             if (_workflowDesignApi == null)
             {
@@ -328,8 +345,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
             try
             {
-                var projectPath = _workflowDesignApi.ProjectPropertiesService.GetProjectDirectory();
-                var configFilePath = Path.Combine(projectPath, RelativeRoot, configuration.Name.Replace(" ", "") + "Config.cs");
+                var configFilePath = Path.Combine(folderPath, configuration.Name.Replace(" ", "") + "Config.cs");
                 var configDir = Path.GetDirectoryName(configFilePath) ?? throw new Exception("Could not get config directory path");
 
                 if (!Directory.Exists(configDir))
@@ -349,47 +365,42 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
 
 
-        public async Task SaveConfigurationsToFile()
+        public async Task SaveConfigurationsToFile(string? filePath = null)
         {
             if (_workflowDesignApi == null)
             {
                 throw new InvalidOperationException("WorkflowDesignApi is null");
             }
-            try
+            var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
+            Debug("Saving configurations started.", context: "SaveConfigurationsToFile");
+
+            if (filePath == null)
             {
-                //var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
-                Debug("Saving configurations started.", context: "SaveConfigurationsToFile");
-
-
                 var SaveFileDialog = new Microsoft.Win32.SaveFileDialog
                 {
                     Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*",
                     DefaultExt = ".json",
                     FileName = "Configurations.json"
                 };
-                if(SaveFileDialog.ShowDialog() == true)
+                if (SaveFileDialog.ShowDialog() == true)
                 {
-                    var saveFilePath = SaveFileDialog.FileName;
-                    Debug($"Saving configurations to {saveFilePath}", "SaveConfigurationsToFile");
-                    var json = JsonConvert.SerializeObject(Model, Formatting.Indented);
-                    File.WriteAllText(saveFilePath, json);
-                    Debug($"Configurations saved to '{saveFilePath}'.", context: "SaveConfigurationsToFile");
-                    return;
-                } else
-                {
-                    Debug("Save dialog cancelled", "SaveConfigurationsToFile");
+                    filePath = SaveFileDialog.FileName;
                 }
+            }
 
-                //await busy.DisposeAsync();
-            }
-            catch (Exception ex)
-            {
-                Error($"Error saving configurations: {ex.Message}", context: "SaveConfigurationsToFile");
-            }
+
+            Debug($"Saving configurations to {filePath}", "SaveConfigurationsToFile");
+            var json = JsonConvert.SerializeObject(Model, Formatting.Indented);
+            File.WriteAllText(filePath, json);
+            Debug($"Configurations saved to '{filePath}'.", context: "SaveConfigurationsToFile");
+            await busy.DisposeAsync();
             return;
+
+
         }
 
-        public async Task<bool> LoadConfigurationFromFile()
+
+        public async Task<bool> LoadConfigurationFromFile(string? filePath = null)
         {
             if (_workflowDesignApi == null)
             {
@@ -399,21 +410,34 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             try
             {
                 Debug("Loading configurations started.", context: "LoadConfigurationFromFile");
-
-                var projectPath = _workflowDesignApi.ProjectPropertiesService.GetProjectDirectory();
-                var loadFilePath = Path.Combine(projectPath, RelativeRoot, "Configurations.json");
-
-                if (!File.Exists(loadFilePath))
+                if (filePath == null)
                 {
-                    await busy.DisposeAsync();
-                    Warning($"No configuration file found at '{loadFilePath}'.", context: "LoadConfigurationFromFile");
-                    return false;
+                    await busy.SetStatus("Select a configuration file to load");
+                    var openDialog = new Microsoft.Win32.OpenFileDialog
+                    {
+                        Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*",
+                        DefaultExt = ".json",
+                        FileName = "Configurations.json"
+                    };
+                    if (openDialog.ShowDialog() == true)
+                    {
+                        filePath = openDialog.FileName;
+                    }
+                    else
+                    {
+                        Debug("Load dialog cancelled", "LoadConfigurationFromFile");
+                        await busy.DisposeAsync();
+                        return false;
+                    }
                 }
 
-                Model = JsonConvert.DeserializeObject<ProjectModel>(await File.ReadAllTextAsync(loadFilePath)) ?? throw new Exception("Could not deserialize model from file");
+                Debug($"Loading configurations from {filePath}", "LoadConfigurationFromFile");
+                Model = JsonConvert.DeserializeObject<ProjectModel>(await File.ReadAllTextAsync(filePath)) ?? throw new Exception("Could not deserialize model from file");
                 await busy.DisposeAsync();
-                Debug($"Configurations loaded from '{loadFilePath}'.", context: "LoadConfigurationFromFile");
+                Debug($"Configurations loaded from '{filePath}'.", context: "LoadConfigurationFromFile");
                 return true;
+
+
             }
             catch (Exception ex)
             {
@@ -445,7 +469,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     config.RemoveError(nameof(config.Name), $"Duplicate configuration name");
                 }
             }
-            
+
         }
 
         #endregion
@@ -458,48 +482,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             ValidateUniqueNames();
-        }
-
-        #endregion
-
-        #region INotifyDataErrorInfo Implementation
-        private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
-        public bool HasErrors => _errors.Count != 0;
-        public void AddError(string propertyName, string error)
-        {
-            if (!_errors.ContainsKey(propertyName))
-            {
-                _errors[propertyName] = new List<string>();
-            }
-            _errors[propertyName].Add(error);
-            OnErrorsChanged(propertyName);
-        }
-
-        public void RemoveError(string propertyName, string error)
-        {
-            if (_errors.ContainsKey(propertyName))
-            {
-                _errors[propertyName].Remove(error);
-                if (_errors[propertyName].Count == 0)
-                {
-                    _errors.Remove(propertyName);
-                }
-                OnErrorsChanged(propertyName);
-            }
-        }
-        public IEnumerable GetErrors(string? propertyName)
-        {
-            if (ErrorsChanged != null || !_errors.ContainsKey(propertyName)) return Enumerable.Empty<string>();
-            return _errors[propertyName];
-        }
-
-        public void OnErrorsChanged(string propertyName)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-            OnPropertyChanged(nameof(HasErrors));
-
         }
         #endregion
     }
