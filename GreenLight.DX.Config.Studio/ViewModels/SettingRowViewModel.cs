@@ -53,8 +53,8 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Value != value)
                 {
                     Model.Value = value;
-                    ValidateProperty(value, nameof(Value));
                     OnPropertyChanged();
+                    ValidateRequired(value, nameof(Value));
                 }
             }
         }

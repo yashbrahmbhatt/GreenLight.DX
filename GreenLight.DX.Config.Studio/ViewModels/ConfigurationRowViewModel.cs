@@ -43,7 +43,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.Key = value;
                     OnPropertyChanged();
-                    ValidateProperty(value, nameof(Key));
+                    ValidateRequired(value, nameof(Key));
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.Description = value;
                     OnPropertyChanged();
-                    ValidateProperty(value, nameof(Description));
+                    ValidateRequired(value, nameof(Description));
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.SelectedType = value;
                     OnPropertyChanged();
-                    ValidateProperty(value, nameof(SelectedType));
+                    ValidateRequired(value, nameof(SelectedType));
                 }
             }
         }
@@ -116,10 +116,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public bool HasErrors => _errors.Count != 0;
         public void AddError(string propertyName, string error)
         {
-            if (!_errors.TryGetValue(propertyName, out _))
+            if (!_errors.TryGetValue(propertyName, out var errors))
             {
-                List<string>? errors = new List<string>();
-                _errors[propertyName] = errors;
+                _errors[propertyName] = new List<string> { error };
             } else
             {
                 _errors[propertyName].Add(error);
@@ -145,13 +144,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             return _errors.ContainsKey(propertyName) ? _errors[propertyName] : new List<string>();
         }
 
-        protected void ValidateProperty(object value, string propertyName)
+        protected void ValidateRequired(object value, [CallerMemberName] string? propertyName = null)
         {
-            ValidateRequired(value, propertyName);
-        }
-
-        protected void ValidateRequired(object value, string propertyName)
-        {
+            if (propertyName == null) return;
             var message = Resources.ValidationMessages.Property_Required.Replace("{PropertyName}", propertyName);
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {

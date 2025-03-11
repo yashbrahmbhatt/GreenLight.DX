@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:GreenLight.DX.Config.Studio.Controls"
         xmlns:converters="clr-namespace:GreenLight.DX.Config.Studio.Converters" 
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=false}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="1200">
 
@@ -21,6 +21,7 @@
                 <ResourceDictionary Source="/GreenLight.DX.Config.Studio;component/ResourceDictionaries/DataGridCell.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:MathOperationConverter x:Key="MathOperationConverter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -94,7 +95,6 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBlock Text="{Binding SelectedConfig.Name, FallbackValue='No Selection'}" />
         </StackPanel>
 
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="2.5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Opacity="10" >
@@ -103,6 +103,21 @@
             </GridSplitter.Background>
         </GridSplitter>
 
-        <controls:ConfigurationView Grid.Row="1" Grid.Column="2" DataContext="{Binding SelectedConfig}" />
+        <Grid Grid.Row="1" Grid.Column="2">
+            <controls:ConfigurationView Model="{Binding SelectedConfig, Mode=TwoWay, NotifyOnValidationError=True}"
+                                  Visibility="{Binding ., Converter={StaticResource NullToVisibilityConverter}}" />
+
+            <TextBox Text="Please select a configuration"
+             IsReadOnly="True"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Visibility="{Binding SelectedConfig, Converter={StaticResource NullToVisibilityConverter}}"
+             TextAlignment="Center"
+             VerticalContentAlignment="Center"
+             FontStyle="Italic"
+             Foreground="Gray"
+             Background="Transparent"
+             BorderThickness="0" />
+        </Grid>
     </Grid>
 </Window>

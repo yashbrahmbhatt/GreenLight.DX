@@ -39,6 +39,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Path != value)
                 {
                     Model.Path = value;
+                    ValidateRequired(value);
                     OnPropertyChanged();
                 }
             }
@@ -52,6 +53,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Folder != value)
                 {
                     Model.Folder = value;
+                    ValidateRequired(value);
                     OnPropertyChanged();
                 }
             }
@@ -65,6 +67,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Bucket != value)
                 {
                     Model.Bucket = value;
+                    ValidateRequired(value);
                     OnPropertyChanged();
                 }
             }

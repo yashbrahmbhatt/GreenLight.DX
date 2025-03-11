@@ -80,6 +80,10 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             mockOrchestratorApiService.Setup(api => api.AssetApiService).Returns(mockAssetApiService.Object);
             mockOrchestratorApiService.Setup(api => api.AssetApiService).Returns(mockAssetApiService.Object);
 
+            mockAssetApiService.Setup(api => api.GetAssetFolders(It.IsAny<int>())).ReturnsAsync(new List<string>() { "Folder1", "Folder2"});
+            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder1")).ReturnsAsync(new List<string>() { "Asset1", "Asset2" });
+            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder2")).ReturnsAsync(new List<string>() { "Asset3", "Asset4" });
+
             mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationDeletedEvent>()).Returns(mockConfigDeletedEvent.Object);
             mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowDeletedEvent<SettingRowModel>>()).Returns(mockSettingRowDeletedEvent.Object);
             mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowDeletedEvent<AssetRowModel>>()).Returns(mockAssetRowDeletedEvent.Object);

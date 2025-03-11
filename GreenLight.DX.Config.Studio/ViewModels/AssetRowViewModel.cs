@@ -43,6 +43,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.AssetName = value;
                     OnPropertyChanged();
+                    ValidateRequired(value);
                 }
             }
         }
@@ -56,6 +57,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.AssetFolder = value;
                     OnPropertyChanged();
+                    ValidateRequired(value);
                 }
             }
         }

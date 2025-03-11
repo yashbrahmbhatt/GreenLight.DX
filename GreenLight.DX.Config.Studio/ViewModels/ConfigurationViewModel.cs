@@ -49,7 +49,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Name != value)
                 {
                     Model.Name = value;
-                    ValidateProperty(value, nameof(Name));
+                    ValidateRequired(value, nameof(Name));
                     OnPropertyChanged();
                 }
             }
@@ -64,7 +64,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 if (Model.Description != value)
                 {
                     Model.Description = value;
-                    ValidateProperty(value, nameof(Description));
+                    ValidateRequired(value, nameof(Description));
                     OnPropertyChanged();
                 }
             }
@@ -356,10 +356,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     foreach (var resource in resources) resource.AddError(nameof(resource.Key), $"Duplicate key");
             }
         }
-        protected void ValidateProperty(object value, string propertyName)
-        {
-            ValidateRequired(value, propertyName);
-        }
 
         protected void ValidateRequired(object value, string propertyName)
         {
@@ -372,6 +368,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             {
                 RemoveError(propertyName, message);
             }
+            OnPropertyChanged(nameof(HasErrors));
         }
 
         #endregion

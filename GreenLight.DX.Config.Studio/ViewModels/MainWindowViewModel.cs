@@ -156,8 +156,8 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
             // Subscribe to Model.Configurations changes
             Model.Configurations.CollectionChanged += Model_Configurations_CollectionChanged;
-
             ValidateUniqueNames();
+            LoadAssets().Await();
             Initialized += (sender, args) => InitializeConfigurations();
             Initialized?.Invoke(this, EventArgs.Empty);
             Info("MainWindowViewModel initialized", "Constructor");
@@ -326,6 +326,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     var assets = await _workflowDesignApi.OrchestratorApiService.AssetApiService.GetAssets(new AssetRequestParameters() { }, folder);
                     AssetsMap.Add(new KeyValuePair<string, IEnumerable<string>>(folder, assets));
                 }
+                OnPropertyChanged(nameof(AssetsMap));
                 await busy.DisposeAsync();
                 Debug($"{AssetsMap.Aggregate(0, (acc, curr) => acc + curr.Value.Count())} assets loaded.", context: "LoadAssets");
 
