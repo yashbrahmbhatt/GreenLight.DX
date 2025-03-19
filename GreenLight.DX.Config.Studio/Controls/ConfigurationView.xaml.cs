@@ -32,6 +32,9 @@ namespace GreenLight.DX.Config.Studio.Controls
                     {
                         control.Model = (ConfigurationViewModel)e.NewValue;
                         control.DataContext = control.Model;
+                    } else
+                    {
+                        throw new Exception("Invalid DataContext");
                     }
                 }
             });

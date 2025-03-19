@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Config.Studio.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
 namespace GreenLight.DX.Config.Studio.Test.Services
 {
-
     [TestClass]
     public class ParserTests
     {
@@ -83,11 +82,11 @@ namespace GreenLight.DX.Config.Studio.Test.Services
         public void TestListCollectionParser()
         {
             var primitiveParsers = new List<ITypeParser>
-        {
-            new StringPrimitiveParser(),
-            new IntPrimitiveParser(),
-            new DateTimePrimitiveParser()
-        };
+            {
+                new StringPrimitiveParser(),
+                new IntPrimitiveParser(),
+                new DateTimePrimitiveParser()
+            };
 
             var stringListParser = new ListCollectionParser<string>();
             List<string> expectedStringList = new List<string> { "a", "b", "c" };
@@ -109,11 +108,11 @@ namespace GreenLight.DX.Config.Studio.Test.Services
         public void TestArrayCollectionParser()
         {
             var primitiveParsers = new List<ITypeParser>
-        {
-            new StringPrimitiveParser(),
-            new DoublePrimitiveParser(),
-            new DateTimePrimitiveParser()
-        };
+            {
+                new StringPrimitiveParser(),
+                new DoublePrimitiveParser(),
+                new DateTimePrimitiveParser()
+            };
 
             var stringArrayParser = new ArrayCollectionParser<string>();
             string[] expectedStringArray = new string[] { "a", "b", "c" };

@@ -1,5 +1,6 @@
-﻿using GreenLight.DX.Config.Studio.Events;
-using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.Events;
+using GreenLight.DX.Config.Studio.Services;
 using GreenLight.DX.Shared.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
@@ -12,14 +13,30 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
-    public abstract class ConfigurationRowViewModel<T> : INotifyPropertyChanged, INotifyDataErrorInfo where T : ConfigurationRowModel
+    public abstract class ConfigurationRowViewModel<T> : INotifyPropertyChanged, INotifyDataErrorInfo where T : ConfigItem
     {
-        private readonly IEventAggregator _eventAggregator;
+        public readonly IEventAggregator _eventAggregator;
+        public readonly ITypeParserService _typeParserService;
+
+        private ObservableCollection<Type> _supportedTypes;
+        public ObservableCollection<Type> SupportedTypes
+        {
+            get => _supportedTypes;
+            set
+            {
+                if (_supportedTypes != value)
+                {
+                    _supportedTypes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         private T _model;
         public T Model
         {
@@ -61,17 +78,32 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 }
             }
         }
+        public string Value
+        {
+            get => Model.Value;
+            set
+            {
+                if (Model.Value != value)
+                {
+                    Model.Value = value;
+                    OnPropertyChanged();
+                    ValidateRequired(value, nameof(Value));
+                    ValidateValueAndType();
+                }
+            }
+        }
 
         public Type SelectedType
         {
-            get => Model.SelectedType;
+            get => Model.ValueType;
             set
             {
-                if (Model.SelectedType != value)
+                if (Model.ValueType != value)
                 {
-                    Model.SelectedType = value;
+                    Model.ValueType = value;
                     OnPropertyChanged();
                     ValidateRequired(value, nameof(SelectedType));
+                    ValidateValueAndType();
                 }
             }
         }
@@ -82,6 +114,8 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         protected ConfigurationRowViewModel(IServiceProvider services, T model, int row)
         {
             _eventAggregator = services.GetRequiredService<IEventAggregator>();
+            _typeParserService = services.GetRequiredService<ITypeParserService>();
+            SupportedTypes = new ObservableCollection<Type>(_typeParserService.GetSupportedTypes());
             _model = model;
             DeleteRowCommand = new RelayCommand(RaiseRowDeletedEvent);
             Row = row;
@@ -89,6 +123,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         protected virtual void RaisePropertyChangedEvent(string? propertyName)
         {
+            if(_eventAggregator == null) return;
             _eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<T>>().Publish(new ConfigurationRowPropertyChangedEventArgs<T>()
             {
                 ViewModel = this,
@@ -105,7 +140,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if(propertyName == nameof(Key)) RaisePropertyChangedEvent(nameof(Key));
+            if(propertyName != null && propertyName != nameof(HasErrors)) RaisePropertyChangedEvent(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -128,14 +163,30 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         public void RemoveError(string propertyName, string error)
         {
-            if (_errors.TryGetValue(propertyName, out var errors) && errors.Contains(error))
+            if (_errors.TryGetValue(propertyName, out var errors))
             {
-                errors.Remove(error);
+                // Construct a regular expression from the error template
+                string regexPattern = "^" + Regex.Replace(Regex.Escape(error).Replace("\\{","{").Replace("\\}","}"), @"\{[^}]*\}", ".*") +"$"; // Replace anything between {} with .*
+
+                Regex regex = new Regex(regexPattern);
+
+                // Find and remove matching errors
+                var matchingErrors = errors.Where(e => regex.IsMatch(e)).ToList();
+
+                foreach (var matchingError in matchingErrors)
+                {
+                    errors.Remove(matchingError);
+                }
+
                 if (errors.Count == 0)
                 {
                     _errors.Remove(propertyName);
                 }
-                OnErrorsChanged(propertyName);
+
+                if (matchingErrors.Count > 0) // Only raise event if any errors were removed.
+                {
+                    OnErrorsChanged(propertyName);
+                }
             }
         }
         public IEnumerable GetErrors(string? propertyName)
@@ -155,7 +206,24 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
             else
             {
-                RemoveError(propertyName, message);
+                RemoveError(propertyName, Resources.ValidationMessages.Property_Required);
+            }
+        }
+
+        protected void ValidateValueAndType()
+        {
+            if (SelectedType == null || Value == null) return;
+            _typeParserService.TryParse(Value, SelectedType, out var result);
+            var message = Resources.ValidationMessages.Value_Type_Mismatch.Replace("{Value}", Value).Replace("{Type}", SelectedType.FullName);
+            if (result == null)
+            {
+                AddError(nameof(Value), message);
+                AddError(nameof(SelectedType), message);
+            }
+            else
+            {
+                RemoveError(nameof(Value), Resources.ValidationMessages.Value_Type_Mismatch);
+                RemoveError(nameof(SelectedType), Resources.ValidationMessages.Value_Type_Mismatch);
             }
         }
 

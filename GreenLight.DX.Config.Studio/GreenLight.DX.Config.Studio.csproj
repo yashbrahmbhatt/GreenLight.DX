@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <RepositoryType>GitHub</RepositoryType>
     <RepositoryUrl>https://github.com/yashbrahmbhatt/LazyFramework.DX</RepositoryUrl>
     <Authors>Yash Brahmbhatt</Authors>
@@ -46,11 +46,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Config.Shared\GreenLight.DX.Config.Shared.csproj" />
     <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
   </ItemGroup>
 
   <ItemGroup>

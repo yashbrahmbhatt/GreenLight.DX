@@ -1,4 +1,4 @@
-﻿<Window x:Class="GreenLight.DX.Config.Studio.Windows.MainWindow"
+﻿<Window x:Name="window" x:Class="GreenLight.DX.Config.Studio.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -65,7 +65,7 @@
                 <TextBox HorizontalAlignment="Stretch" Text="{Binding Namespace, Mode=TwoWay, ValidatesOnDataErrors=True}" />
             </DockPanel>
 
-            <ListBox ItemsSource="{Binding Configurations}" Height="Auto" SelectedItem="{Binding SelectedConfig, Mode=TwoWay}" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Configurations}" Height="Auto" SelectedItem="{Binding SelectedConfig}" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate d:DataType="viewModels:ConfigurationViewModel">
                         <DockPanel HorizontalAlignment="Stretch">
@@ -80,12 +80,12 @@
                                     </Binding>
                                 </MultiBinding>
                             </DockPanel.MaxWidth>
-                            <TextBlock DockPanel.Dock="Left" Text="{Binding Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             <Button DockPanel.Dock="Right" 
                                     Content="X" Style="{StaticResource DangerButton}" 
                                     Command="{Binding DeleteConfigurationCommand}" 
                                     CommandParameter="{Binding}"/>
-                            <TextBlock Text="{Binding Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding Description}" 
                                        FontWeight="ExtraLight" FontSize="10" 
                                        TextTrimming="CharacterEllipsis" 
                                        Margin="5,5,5,5" Width="Auto" 
@@ -104,8 +104,8 @@
         </GridSplitter>
 
         <Grid Grid.Row="1" Grid.Column="2">
-            <controls:ConfigurationView Model="{Binding SelectedConfig, Mode=TwoWay, NotifyOnValidationError=True}"
-                                  Visibility="{Binding ., Converter={StaticResource NullToVisibilityConverter}}" />
+            <controls:ConfigurationView DataContext="{Binding SelectedConfig,Mode=TwoWay, NotifyOnValidationError=True}"
+                                  Visibility="{Binding ., ConverterParameter='Invert', Converter={StaticResource NullToVisibilityConverter}}" />
 
             <TextBox Text="Please select a configuration"
              IsReadOnly="True"

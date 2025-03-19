@@ -20,8 +20,4 @@
     <ProjectReference Include="..\GreenLight.DX.Config.Studio\GreenLight.DX.Config.Studio.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mocks\" />
-  </ItemGroup>
-
 </Project>

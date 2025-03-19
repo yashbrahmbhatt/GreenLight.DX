@@ -8,55 +8,30 @@ using System.Windows.Input;
 using Prism.Events;
 using System.ComponentModel;
 using GreenLight.DX.Config.Studio.Misc;
-using GreenLight.DX.Config.Studio.Models;
 using Microsoft.Extensions.DependencyInjection;
 using UiPath.Studio.Activities.Api;
+using GreenLight.DX.Config.Studio.Services;
+using GreenLight.DX.Config.Studio.Events;
+using GreenLight.DX.Config.Shared.Models;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
-    public class SettingRowViewModel : ConfigurationRowViewModel<SettingRowModel>
+    public class SettingRowViewModel : ConfigurationRowViewModel<SettingItem>
     {
-        private ObservableCollection<Type> _supportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
-        public ObservableCollection<Type> SupportedTypes
-        {
-            get => _supportedTypes;
-            set
-            {
-                if (_supportedTypes != value)
-                {
-                    _supportedTypes = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
-        public SettingRowViewModel(IServiceProvider _services, SettingRowModel model, int row) : 
+
+        public SettingRowViewModel(IServiceProvider _services, SettingItem model, int row) : 
             base(_services, model, row)
         {
-            Model = model;
-            SupportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
         }
         public SettingRowViewModel() : this(
             new ServiceCollection()
             .AddSingleton<IEventAggregator>(new EventAggregator())
+            .AddSingleton<ITypeParserService>(new TypeParserService())
             .BuildServiceProvider(),
-            new SettingRowModel(), 
+            new SettingItem(), 
             1
-        ) { }
-
-
-        public string Value
-        {
-            get => Model.Value;
-            set
-            {
-                if (Model.Value != value)
-                {
-                    Model.Value = value;
-                    OnPropertyChanged();
-                    ValidateRequired(value, nameof(Value));
-                }
-            }
-        }
+        ) {
+        }        
     }
 }

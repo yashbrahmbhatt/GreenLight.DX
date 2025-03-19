@@ -121,4 +121,7 @@
     <value>A {PropertyName} is required.</value>
     <comment>Error message for when a property is null or empty.</comment>
   </data>
+  <data name="Value_Type_Mismatch" xml:space="preserve">
+    <value>The value '{Value}' cannot be parsed to a type of '{Type}'.</value>
+  </data>
 </root>

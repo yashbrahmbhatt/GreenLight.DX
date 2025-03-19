@@ -48,11 +48,11 @@
                         </Grid.ColumnDefinitions>
                         <DockPanel  Grid.Column="0" LastChildFill="True" HorizontalAlignment="Stretch">
                             <TextBlock DockPanel.Dock="Left" Text="Name" FontWeight="Bold" />
-                            <TextBox Text="{Binding Name, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" />
+                            <TextBox Text="{Binding Name, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" HorizontalAlignment="Stretch" />
                         </DockPanel>
                         <DockPanel  Grid.Column="1" LastChildFill="True" HorizontalAlignment="Stretch">
                             <TextBlock DockPanel.Dock="Left" Text="Description" FontWeight="Bold" />
-                            <TextBox Text="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" />
+                            <TextBox Text="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" />
                         </DockPanel>
                     </Grid>
                 </Expander.Content>

@@ -1,6 +1,4 @@
-﻿using GreenLight.DX.Config.Studio.Models;
-using GreenLight.DX.Config.Studio.ViewModels;
-using GreenLight.DX.Shared.Hermes.Services;
+﻿using GreenLight.DX.Shared.Hermes.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prism.Events;
@@ -17,84 +15,28 @@ using UiPath.Studio.Activities.Api.BusyService;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.IO;
+using GreenLight.DX.Config.Studio.Test.Mocks;
+using Microsoft.Extensions.DependencyInjection;
+using GreenLight.DX.Config.Studio.ViewModels;
+using GreenLight.DX.Config.Shared.Models;
 
 namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
 {
     [TestClass]
     public class MainWindowViewModelTests
     {
-        private Mock<IEventAggregator> mockEventAggregator;
-        private Mock<IServiceProvider> mockServiceProvider;
-        private Mock<IWorkflowDesignApi> mockWorkflowDesignApi;
-        private Mock<IOrchestratorApiService> mockOrchestratorApiService;
-        private Mock<IAssetApiService> mockAssetApiService;
-        private Mock<IProjectPropertiesService> mockProjectPropertiesService;
-        private Mock<IHermesService> mockHermesService;
-        private Mock<IStudioBusyService> mockBusyService;
-        private Mock<IStudioBusyScope> mockBusyScope;
-
-        private Mock<ConfigurationDeletedEvent> mockConfigDeletedEvent;
-        private Mock<ConfigurationRowDeletedEvent<SettingRowModel>> mockSettingRowDeletedEvent;
-        private Mock<ConfigurationRowDeletedEvent<AssetRowModel>> mockAssetRowDeletedEvent;
-        private Mock<ConfigurationRowDeletedEvent<ResourceRowModel>> mockResourceRowDeletedEvent;
-        private Mock<ConfigurationRowPropertyChangedEvent<SettingRowModel>> mockSettingRowPropertyChangedEvent;
-        private Mock<ConfigurationRowPropertyChangedEvent<AssetRowModel>> mockAssetRowPropertyChangedEvent;
-        private Mock<ConfigurationRowPropertyChangedEvent<ResourceRowModel>> mockResourceRowPropertyChangedEvent;
-
+        private MockServices mockServices;
         private MainWindowViewModel viewModel;
-        private ProjectModel model;
+        private Project model;
+        private IServiceProvider serviceProvider;
 
         [TestInitialize]
         public void Setup()
         {
-            mockEventAggregator = new Mock<IEventAggregator>();
-            mockServiceProvider = new Mock<IServiceProvider>();
-            mockWorkflowDesignApi = new Mock<IWorkflowDesignApi>();
-            mockOrchestratorApiService = new Mock<IOrchestratorApiService>();
-            mockAssetApiService = new Mock<IAssetApiService>();
-            mockProjectPropertiesService = new Mock<IProjectPropertiesService>();
-            mockHermesService = new Mock<IHermesService>();
-            mockBusyService = new Mock<IStudioBusyService>();
-            mockBusyScope = new Mock<IStudioBusyScope>();
-
-            mockConfigDeletedEvent = new Mock<ConfigurationDeletedEvent>();
-            mockSettingRowDeletedEvent = new Mock<ConfigurationRowDeletedEvent<SettingRowModel>>();
-            mockAssetRowDeletedEvent = new Mock<ConfigurationRowDeletedEvent<AssetRowModel>>();
-            mockResourceRowDeletedEvent = new Mock<ConfigurationRowDeletedEvent<ResourceRowModel>>();
-            mockSettingRowPropertyChangedEvent = new Mock<ConfigurationRowPropertyChangedEvent<SettingRowModel>>();
-            mockAssetRowPropertyChangedEvent = new Mock<ConfigurationRowPropertyChangedEvent<AssetRowModel>>();
-            mockResourceRowPropertyChangedEvent = new Mock<ConfigurationRowPropertyChangedEvent<ResourceRowModel>>();
-
-            mockBusyScope.Setup(bs => bs.SetStatus(It.IsAny<string>())).Returns(Task.CompletedTask);
-            mockBusyScope.Setup(bs => bs.DisposeAsync()).Returns(ValueTask.CompletedTask);
-            mockBusyService.Setup(bs => bs.Begin(It.IsAny<string>())).ReturnsAsync(mockBusyScope.Object);
-
-            mockServiceProvider.Setup(sp => sp.GetService(typeof(IEventAggregator))).Returns(mockEventAggregator.Object);
-            mockServiceProvider.Setup(sp => sp.GetService(typeof(IWorkflowDesignApi))).Returns(mockWorkflowDesignApi.Object);
-            mockServiceProvider.Setup(sp => sp.GetService(typeof(IHermesService))).Returns(mockHermesService.Object);
-
-            mockWorkflowDesignApi.Setup(api => api.OrchestratorApiService).Returns(mockOrchestratorApiService.Object);
-            mockWorkflowDesignApi.Setup(api => api.ProjectPropertiesService).Returns(mockProjectPropertiesService.Object);
-            mockWorkflowDesignApi.Setup(api => api.BusyService).Returns(mockBusyService.Object);
-
-            mockOrchestratorApiService.Setup(api => api.AssetApiService).Returns(mockAssetApiService.Object);
-            mockOrchestratorApiService.Setup(api => api.AssetApiService).Returns(mockAssetApiService.Object);
-
-            mockAssetApiService.Setup(api => api.GetAssetFolders(It.IsAny<int>())).ReturnsAsync(new List<string>() { "Folder1", "Folder2"});
-            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder1")).ReturnsAsync(new List<string>() { "Asset1", "Asset2" });
-            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder2")).ReturnsAsync(new List<string>() { "Asset3", "Asset4" });
-
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationDeletedEvent>()).Returns(mockConfigDeletedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowDeletedEvent<SettingRowModel>>()).Returns(mockSettingRowDeletedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowDeletedEvent<AssetRowModel>>()).Returns(mockAssetRowDeletedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowDeletedEvent<ResourceRowModel>>()).Returns(mockResourceRowDeletedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowPropertyChangedEvent<SettingRowModel>>()).Returns(mockSettingRowPropertyChangedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowPropertyChangedEvent<AssetRowModel>>()).Returns(mockAssetRowPropertyChangedEvent.Object);
-            mockEventAggregator.Setup(ea => ea.GetEvent<ConfigurationRowPropertyChangedEvent<ResourceRowModel>>()).Returns(mockResourceRowPropertyChangedEvent.Object);
-
-
-            model = new ProjectModel();
-            viewModel = new MainWindowViewModel(mockServiceProvider.Object, model);
+            mockServices = new MockServices();
+            model = new Project();
+            serviceProvider = mockServices.ServiceProvider.Object;
+            viewModel = new MainWindowViewModel(serviceProvider, model);
         }
 
         [TestMethod]
@@ -140,11 +82,10 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void OnConfigurationDeleted_RemovesConfigurationFromModelAndViewModel()
         {
-            var configModel = new ConfigurationModel { Name = "ToDelete" };
+            var configModel = new Configuration { Name = "ToDelete" };
             model.Configurations.Add(configModel);
             var configViewModel = viewModel.Configurations.FirstOrDefault(c => c.Model == configModel);
             Assert.IsNotNull(configViewModel);
-            //mockConfigDeletedEvent.Setup(e => e.Publish(viewModel.Configurations[0]));
             viewModel.OnConfigurationDeleted(configViewModel);
             Assert.AreEqual(0, viewModel.Configurations.Count);
             Assert.AreEqual(0, model.Configurations.Count);
@@ -157,11 +98,11 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             var assets1 = new List<string> { "Asset1", "Asset2" };
             var assets2 = new List<string> { "Asset3", "Asset4" };
 
-            mockAssetApiService.Setup(api => api.GetAssetFolders(It.IsAny<int>()))
+            mockServices.AssetApiService.Setup(api => api.GetAssetFolders(It.IsAny<int>()))
                 .ReturnsAsync(folders);
-            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder1"))
+            mockServices.AssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder1"))
                 .ReturnsAsync(assets1);
-            mockAssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder2"))
+            mockServices.AssetApiService.Setup(api => api.GetAssets(It.IsAny<AssetRequestParameters>(), "Folder2"))
                 .ReturnsAsync(assets2);
 
             await ((dynamic)viewModel.LoadAssetsCommand).ExecuteAsync(null);
@@ -171,30 +112,30 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             Assert.AreEqual(assets1, viewModel.AssetsMap[0].Value);
             Assert.AreEqual("Folder2", viewModel.AssetsMap[1].Key);
             Assert.AreEqual(assets2, viewModel.AssetsMap[1].Value);
-            mockBusyService.Verify(bs => bs.Begin(It.IsAny<string>()), Times.Once);
+            mockServices.BusyService.Verify(bs => bs.Begin(It.IsAny<string>()), Times.Once);
         }
 
         [TestMethod]
         public async Task SaveConfigurationsToFile_SavesConfigurations()
         {
-            var testModel = new ProjectModel
+            var testModel = new Project
             {
-                Configurations = new ObservableCollection<ConfigurationModel>
+                Configurations = new ObservableCollection<Configuration>
                 {
-                    new ConfigurationModel { Name = "TestConfig" }
+                    new Configuration { Name = "TestConfig" }
                 }
             };
 
             viewModel.Model = testModel;
 
             string filePath = "testConfig.json";
-            mockBusyService.Setup(bs => bs.Begin(It.IsAny<string>())).ReturnsAsync(mockBusyScope.Object);
+            mockServices.BusyService.Setup(bs => bs.Begin(It.IsAny<string>())).ReturnsAsync(mockServices.BusyScope.Object);
 
             await viewModel.SaveConfigurationsToFile(filePath);
 
             Assert.IsTrue(File.Exists(filePath));
             var savedJson = File.ReadAllText(filePath);
-            var savedModel = JsonConvert.DeserializeObject<ProjectModel>(savedJson);
+            var savedModel = JsonConvert.DeserializeObject<Project>(savedJson);
             Assert.AreEqual(testModel.Configurations[0].Name, savedModel.Configurations[0].Name);
             File.Delete(filePath);
         }
@@ -202,11 +143,11 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public async Task LoadConfigurationFromFile_LoadsConfigurations()
         {
-            var testModel = new ProjectModel
+            var testModel = new Project
             {
-                Configurations = new ObservableCollection<ConfigurationModel>
+                Configurations = new ObservableCollection<Configuration>
                 {
-                    new ConfigurationModel { Name = "TestConfig" }
+                    new Configuration { Name = "TestConfig" }
                 }
             };
             string filePath = "testConfig.json";
@@ -221,7 +162,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public async Task WriteClass_WritesClassToFile()
         {
-            var configModel = new ConfigurationModel { Name = "TestClass" };
+            var configModel = new Configuration { Name = "TestClass" };
             string folderPath = "TestFolder";
             if (!Directory.Exists(folderPath))
             {
@@ -237,8 +178,8 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void ValidateUniqueNames_AddsErrorForDuplicateNames()
         {
-            model.Configurations.Add(new ConfigurationModel { Name = "Duplicate" });
-            model.Configurations.Add(new ConfigurationModel { Name = "Duplicate" });
+            model.Configurations.Add(new Configuration { Name = "Duplicate" });
+            model.Configurations.Add(new Configuration { Name = "Duplicate" });
             viewModel.InitializeConfigurations();
 
             Assert.IsTrue(viewModel.Configurations[0].HasErrors);
@@ -248,8 +189,8 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void ValidateUniqueNames_RemovesErrorForUniqueNames()
         {
-            model.Configurations.Add(new ConfigurationModel { Name = "Unique1" });
-            model.Configurations.Add(new ConfigurationModel { Name = "Unique2" });
+            model.Configurations.Add(new Configuration { Name = "Unique1" });
+            model.Configurations.Add(new Configuration { Name = "Unique2" });
             viewModel.InitializeConfigurations();
 
             Assert.IsFalse(viewModel.Configurations[0].HasErrors);
@@ -259,21 +200,14 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void OnPropertyChanged_CallsValidateUniqueNames()
         {
-            model.Configurations.Add(new ConfigurationModel { Name = "Duplicate" });
-            model.Configurations.Add(new ConfigurationModel { Name = "Duplicate" });
-            viewModel.InitializeConfigurations();
+            model.Configurations.Add(new Configuration { Name = "Duplicate" });
+            model.Configurations.Add(new Configuration { Name = "Duplicate" });
+            //viewModel.InitializeConfigurations();
 
             viewModel.Namespace = "NewNamespace";
 
             Assert.IsTrue(viewModel.Configurations[0].HasErrors);
             Assert.IsTrue(viewModel.Configurations[1].HasErrors);
         }
-    }
-
-    public interface IFileWrapper
-    {
-        Task WriteAllTextAsync(string path, string contents);
-        void WriteAllText(string path, string contents);
-        Task<string> ReadAllTextAsync(string path);
     }
 }

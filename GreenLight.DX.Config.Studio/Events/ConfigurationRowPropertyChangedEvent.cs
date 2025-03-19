@@ -1,4 +1,4 @@
-﻿using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
 using GreenLight.DX.Config.Studio.ViewModels;
 using Prism.Events;
 using System;
@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace GreenLight.DX.Config.Studio.Events
 {
-    public class ConfigurationRowPropertyChangedEvent<T> : PubSubEvent<ConfigurationRowPropertyChangedEventArgs<T>> where T : ConfigurationRowModel
+    public class ConfigurationRowPropertyChangedEvent<T> : PubSubEvent<ConfigurationRowPropertyChangedEventArgs<T>> where T : ConfigItem
     { }
 
-    public class  ConfigurationRowPropertyChangedEventArgs<T> where T : ConfigurationRowModel 
+    public class  ConfigurationRowPropertyChangedEventArgs<T> where T : ConfigItem 
     {
         public ConfigurationRowViewModel<T> ViewModel { get; set; }
         public PropertyChangedEventArgs EventArgs { get; set; }

@@ -1,5 +1,4 @@
-﻿using GreenLight.DX.Config.Studio.Models;
-using GreenLight.DX.Config.Studio.ViewModels;
+﻿using GreenLight.DX.Config.Studio.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

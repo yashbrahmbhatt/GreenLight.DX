@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
-namespace GreenLight.DX.Config.Studio.Models
+namespace GreenLight.DX.Config.Shared.Models
 {
     [Serializable]
-    [XmlType(nameof(AssetRowModel))] // For XML serialization of derived type
-    public class AssetRowModel : ConfigurationRowModel
+    [XmlType(nameof(AssetItem))] // For XML serialization of derived type
+    public class AssetItem : ConfigItem
     {
         [JsonProperty(nameof(AssetName))]
         public string AssetName { get; set; } = "AssetName";
@@ -18,7 +18,7 @@ namespace GreenLight.DX.Config.Studio.Models
         [JsonProperty(nameof(AssetFolder))]
         public string AssetFolder { get; set; } = "AssetFolder";
 
-        public AssetRowModel() : base()
+        public AssetItem() : base()
         {
         }
 

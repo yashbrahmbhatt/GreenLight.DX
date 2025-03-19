@@ -68,5 +68,14 @@ namespace GreenLight.DX.Config.Studio.Resources {
                 return ResourceManager.GetString("Property_Required", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value &apos;{Value}&apos; cannot be parsed to a type of &apos;{Type}&apos;..
+        /// </summary>
+        internal static string Value_Type_Mismatch {
+            get {
+                return ResourceManager.GetString("Value_Type_Mismatch", resourceCulture);
+            }
+        }
     }
 }

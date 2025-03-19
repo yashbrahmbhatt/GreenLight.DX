@@ -1,5 +1,4 @@
 ﻿using GreenLight.DX.Config.Studio.Misc;
-using GreenLight.DX.Config.Studio.Models;
 using GreenLight.DX.Config.Studio.ViewModels;
 using GreenLight.DX.Shared.Hermes.Services;
 using GreenLight.DX.Shared.Hermes.ViewModels;

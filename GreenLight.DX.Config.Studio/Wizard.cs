@@ -1,4 +1,5 @@
-﻿using GreenLight.DX.Shared.Hermes.Services;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Shared.Hermes.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
@@ -55,8 +56,9 @@ namespace GreenLight.DX.Config.Studio
                     .AddSingleton<IHermesService>(hermes)
                     .AddSingleton<IWorkflowDesignApi>(API)
                     .BuildServiceProvider();
-                var viewModel = new ViewModels.MainWindowViewModel(services, new Models.ProjectModel());
+                var viewModel = new ViewModels.MainWindowViewModel(services, new Project());
                 var window = new Windows.MainWindow(services, viewModel);
+
                 
                 window.Show();
             }

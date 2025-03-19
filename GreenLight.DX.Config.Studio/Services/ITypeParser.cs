@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenLight.DX.Config.Studio.Misc
+namespace GreenLight.DX.Config.Studio.Services
 {
     public interface ITypeParser
     {

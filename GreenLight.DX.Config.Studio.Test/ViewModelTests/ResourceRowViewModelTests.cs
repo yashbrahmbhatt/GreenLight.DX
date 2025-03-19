@@ -1,5 +1,5 @@
-﻿using GreenLight.DX.Config.Studio.Events;
-using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.Events;
 using GreenLight.DX.Config.Studio.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,7 +16,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
     public class ResourceRowViewModelTests
     {
         private IServiceProvider serviceProvider;
-        private ResourceRowModel model;
+        private ResourceItem model;
         private ResourceRowViewModel viewModel;
 
         [TestInitialize]
@@ -25,7 +25,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             serviceProvider = new ServiceCollection()
                 .AddSingleton<IEventAggregator>(new EventAggregator())
                 .BuildServiceProvider();
-            model = new ResourceRowModel();
+            model = new ResourceItem();
             viewModel = new ResourceRowViewModel(serviceProvider, model, 1);
         }
 
@@ -165,7 +165,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
 
             // Assert
             Assert.IsTrue(propertyChangedRaised);
-            Assert.AreEqual(typeof(int), model.SelectedType);
+            Assert.AreEqual(typeof(int), model.ValueType);
             Assert.IsFalse(viewModel.HasErrors);
         }
 
@@ -175,7 +175,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             // Arrange
             var eventAggregator = serviceProvider.GetRequiredService<IEventAggregator>();
             var publishedEvent = false;
-            eventAggregator.GetEvent<ConfigurationRowDeletedEvent<ResourceRowModel>>().Subscribe((vm) => { publishedEvent = true; });
+            eventAggregator.GetEvent<ConfigurationRowDeletedEvent<ResourceItem>>().Subscribe((vm) => { publishedEvent = true; });
 
             // Act
             viewModel.DeleteRowCommand.Execute(null);
@@ -190,7 +190,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             // Arrange
             var eventAggregator = serviceProvider.GetRequiredService<IEventAggregator>();
             var publishedEvent = false;
-            eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<ResourceRowModel>>().Subscribe((args) => { publishedEvent = true; });
+            eventAggregator.GetEvent<ConfigurationRowPropertyChangedEvent<ResourceItem>>().Subscribe((args) => { publishedEvent = true; });
 
             // Act
             viewModel.Key = "TestKey";

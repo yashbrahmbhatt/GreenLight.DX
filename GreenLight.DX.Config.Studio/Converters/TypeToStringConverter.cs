@@ -1,4 +1,5 @@
-﻿using GreenLight.DX.Config.Studio.ViewModels;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,15 +26,15 @@ namespace GreenLight.DX.Config.Studio.Converters
             {
                 if(rowType == "Setting")
                 {
-                    return new SettingRowViewModel(null, new Models.SettingRowModel(), 1).SupportedTypes.First(t => FormatTypeName(t) == value);
+                    return new SettingRowViewModel(null, new SettingItem(), 1).SupportedTypes.First(t => FormatTypeName(t) == value);
                 }
                 else if (rowType == "Asset")
                 {
-                    return new AssetRowViewModel(null, new Models.AssetRowModel(), 1, null).SupportedTypes.First(t => FormatTypeName(t) == value);
+                    return new AssetRowViewModel(null, new AssetItem(), 1, null).SupportedTypes.First(t => FormatTypeName(t) == value);
                 }
                 else if (rowType == "Resource")
                 {
-                    return new ResourceRowViewModel(null, new Models.ResourceRowModel(), 1).SupportedTypes.First(t => FormatTypeName(t) == value);
+                    return new ResourceRowViewModel(null, new ResourceItem(), 1).SupportedTypes.First(t => FormatTypeName(t) == value);
                 }
             }
             return null;

@@ -1,5 +1,6 @@
-﻿using GreenLight.DX.Config.Studio.Misc;
-using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Config.Studio.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
@@ -15,22 +16,10 @@ using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
-    public class AssetRowViewModel : ConfigurationRowViewModel<AssetRowModel>
+    public class AssetRowViewModel : ConfigurationRowViewModel<AssetItem>
     {
-        private ObservableCollection<Type> _supportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
         private readonly ObservableCollection<KeyValuePair<string, IEnumerable<string>>> _assetsMap;
-        public ObservableCollection<Type> SupportedTypes
-        {
-            get => _supportedTypes;
-            set
-            {
-                if (_supportedTypes != value)
-                {
-                    _supportedTypes = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+
         public ObservableCollection<string> AssetFolders { get; } = new ObservableCollection<string>();
         public ObservableCollection<string> AssetNames { get; } = new ObservableCollection<string>();
 
@@ -61,21 +50,21 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 }
             }
         }
-        public AssetRowViewModel(IServiceProvider _services, AssetRowModel model, int row,
+        public AssetRowViewModel(IServiceProvider _services, AssetItem model, int row,
             ObservableCollection<KeyValuePair<string, IEnumerable<string>>> map)
             : base(_services, model, row)
         {
             Model = model;
             _assetsMap = map;
             PropertyChanged += OnFolderChanged;
-            SupportedTypes = new ObservableCollection<Type>(TypeParsers.Parsers.Keys);
             RefreshFolders();
         }
         public AssetRowViewModel() : this(
             new ServiceCollection()
             .AddSingleton<IEventAggregator>(new EventAggregator())
+            .AddSingleton<ITypeParserService>(new TypeParserService())
             .BuildServiceProvider(),
-            new AssetRowModel(),
+            new AssetItem(),
             1,
             new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
             {

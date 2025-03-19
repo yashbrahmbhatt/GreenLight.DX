@@ -1,5 +1,5 @@
-﻿using GreenLight.DX.Config.Studio.Events;
-using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.Events;
 using GreenLight.DX.Config.Studio.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +17,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
     public class ConfigurationViewModelTests
     {
         private IServiceProvider serviceProvider;
-        private ConfigurationModel model;
+        private Configuration model;
         private ConfigurationViewModel viewModel;
         private ObservableCollection<KeyValuePair<string, IEnumerable<string>>> assetsMap;
 
@@ -27,7 +27,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             serviceProvider = new ServiceCollection()
                 .AddSingleton<IEventAggregator>(new EventAggregator())
                 .BuildServiceProvider();
-            model = new ConfigurationModel();
+            model = new Configuration();
             assetsMap = new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
             {
                 new KeyValuePair<string, IEnumerable<string>>("Folder1", new List<string>() { "Asset1", "Asset2", "Asset3" }),
@@ -131,7 +131,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void Model_Settings_CollectionChanged_AddsViewModel()
         {
-            var newSetting = new SettingRowModel();
+            var newSetting = new SettingItem();
             model.Settings.Add(newSetting);
             Assert.AreEqual(1, viewModel.Settings.Count);
         }
@@ -139,7 +139,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void Model_Assets_CollectionChanged_AddsViewModel()
         {
-            var newAsset = new AssetRowModel();
+            var newAsset = new AssetItem();
             model.Assets.Add(newAsset);
             Assert.AreEqual(1, viewModel.Assets.Count);
         }
@@ -147,7 +147,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void Model_Resources_CollectionChanged_AddsViewModel()
         {
-            var newResource = new ResourceRowModel();
+            var newResource = new ResourceItem();
             model.Resources.Add(newResource);
             Assert.AreEqual(1, viewModel.Resources.Count);
         }
@@ -155,7 +155,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void OnConfigurationRowDeleted_RemovesViewModel()
         {
-            var settingViewModel = new SettingRowViewModel(serviceProvider, new SettingRowModel(), 1);
+            var settingViewModel = new SettingRowViewModel(serviceProvider, new SettingItem(), 1);
             model.Settings.Add(settingViewModel.Model);
             viewModel.OnConfigurationRowDeleted(settingViewModel);
             Assert.AreEqual(0, viewModel.Settings.Count);
@@ -165,8 +165,8 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         [TestMethod]
         public void ValidateUniqueKeys_AddsErrorsForDuplicates()
         {
-            var setting1Model = new SettingRowModel { Key = "DuplicateKey" };
-            var setting2Model = new SettingRowModel { Key = "DuplicateKey" };
+            var setting1Model = new SettingItem { Key = "DuplicateKey" };
+            var setting2Model = new SettingItem { Key = "DuplicateKey" };
             model.Settings.Add(setting1Model);
             model.Settings.Add(setting2Model);
             viewModel.ValidateUniqueKeys();

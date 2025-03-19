@@ -1,4 +1,5 @@
 ﻿extern alias SAM;
+
 using SAM::System.Activities.Presentation.Metadata;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace GreenLight.DX.Config.Studio
                 {
                     Wizard.Create(api);
                 }
+
 
             }
             catch (Exception ex)

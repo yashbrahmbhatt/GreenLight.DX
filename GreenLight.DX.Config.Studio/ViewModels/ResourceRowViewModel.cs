@@ -1,5 +1,6 @@
-﻿using GreenLight.DX.Config.Studio.Misc;
-using GreenLight.DX.Config.Studio.Models;
+﻿using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Config.Studio.Misc;
+using GreenLight.DX.Config.Studio.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
@@ -14,11 +15,10 @@ using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
-    public class ResourceRowViewModel : ConfigurationRowViewModel<ResourceRowModel>
+    public class ResourceRowViewModel : ConfigurationRowViewModel<ResourceItem>
     {
-        public ObservableCollection<Type> SupportedTypes { get; set; } = new ObservableCollection<Type>() { typeof(string), typeof(DataTable), typeof(DataSet) };
 
-        public ResourceRowViewModel(IServiceProvider _services, ResourceRowModel model, int row)
+        public ResourceRowViewModel(IServiceProvider _services, ResourceItem model, int row)
             : base(_services, model, row)
         {
             Model = model;
@@ -26,8 +26,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         public ResourceRowViewModel() : this(
             new ServiceCollection()
             .AddSingleton<IEventAggregator>(new EventAggregator())
+            .AddSingleton<ITypeParserService>(new TypeParserService())
             .BuildServiceProvider(),
-            new ResourceRowModel(),
+            new ResourceItem(),
             1
         )
         { }
@@ -68,6 +69,19 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 {
                     Model.Bucket = value;
                     ValidateRequired(value);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ResourceRowType ResourceType
+        {
+            get => Model.ResourceType;
+            set
+            {
+                if (Model.ResourceType != value)
+                {
+                    Model.ResourceType = value;
                     OnPropertyChanged();
                 }
             }

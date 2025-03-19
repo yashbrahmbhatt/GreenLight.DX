@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenLight.DX.Config.Studio.Converters
+namespace GreenLight.DX.Config.Shared.Serializers
 {
     public class TypeSerializer : JsonConverter
     {
