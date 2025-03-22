@@ -70,14 +70,14 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
             bool propertyChangedRaised = false;
             viewModel.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == nameof(viewModel.Value))
+                if (e.PropertyName == nameof(viewModel.Model.Value))
                 {
                     propertyChangedRaised = true;
                 }
             };
 
             // Act
-            viewModel.Value = "NewValue";
+            viewModel.Model.Value = "NewValue";
 
             // Assert
             Assert.IsTrue(propertyChangedRaised);
@@ -89,7 +89,7 @@ namespace GreenLight.DX.Config.Studio.Test.ViewModelTests
         public void Value_Set_AddsErrorWhenEmpty()
         {
             // Act
-            viewModel.Value = "";
+            viewModel.Model.Value = "";
 
             // Assert
             Assert.IsTrue(viewModel.HasErrors);

@@ -1,0 +1,13 @@
+{
+  "resourceManagerName": "GreenLight.DX.Config.Activities.Resources.Resources",
+  "activities": [
+    {
+      "fullName": "GreenLight.DX.Config.Activities.REFramework",
+      "shortName": "REFramework",
+      "displayNameKey": "REFramework_DisplayName",
+      "descriptionKey": "REFramework_Description",
+      "categoryKey": "GreenLight.DX.Framework",
+      "viewModelType": "GreenLight.DX.Config.Activities.ViewModels.REFrameworkViewModel"
+    }
+  ]
+}

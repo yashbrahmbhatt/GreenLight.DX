@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GreenLight.DX.Shared.Services.Orchestrator;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,8 +13,8 @@ namespace GreenLight.DX.Config.Studio.ViewModels
     public partial class MainWindowViewModel
     {
         private IWorkflowDesignApi? _workflowDesignApi;
+        private OrchestratorService _orchestratorService;
 
-        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; set; } = new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>() { };
 
         public void InitializeStudioApis()
         {

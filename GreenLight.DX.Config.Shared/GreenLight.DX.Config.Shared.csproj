@@ -28,7 +28,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="15.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj" />
   </ItemGroup>
 
 </Project>

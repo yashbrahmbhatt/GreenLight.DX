@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GreenLight.DX.Config {
+namespace GreenLight.DX.Config.Activities.Resources {
     using System;
     
     
@@ -61,20 +61,38 @@ namespace GreenLight.DX.Config {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activity template.
+        ///   Looks up a localized string similar to Loads a configuration from a file..
         /// </summary>
-        public static string ActivityTemplate_Description {
+        public static string LoadConfig_Description {
             get {
-                return ResourceManager.GetString("ActivityTemplate_Description", resourceCulture);
+                return ResourceManager.GetString("LoadConfig_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Template.
+        ///   Looks up a localized string similar to Load Configuration.
         /// </summary>
-        public static string ActivityTemplate_DisplayName {
+        public static string LoadConfig_DisplayName {
             get {
-                return ResourceManager.GetString("ActivityTemplate_DisplayName", resourceCulture);
+                return ResourceManager.GetString("LoadConfig_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An activity that consolidates the REFramework principles..
+        /// </summary>
+        public static string REFramework_Description {
+            get {
+                return ResourceManager.GetString("REFramework_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to REFramework.
+        /// </summary>
+        public static string REFramework_DisplayName {
+            get {
+                return ResourceManager.GetString("REFramework_DisplayName", resourceCulture);
             }
         }
     }

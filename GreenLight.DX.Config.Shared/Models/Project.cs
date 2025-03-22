@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Shared.Models
 {
@@ -25,15 +27,29 @@ namespace GreenLight.DX.Config.Shared.Models
         [JsonIgnore] // Ignore this property during JSON serialization
         public Dictionary<string, IEnumerable<string>> OrchestratorAssets { get; set; }
 
+        [JsonIgnore]
+        [XmlIgnore]
+        private IWorkflowDesignApi _workflowDesignApi;
+
         public Project()
         {
         }
-        public Project(string name)
+        public Project(IServiceProvider services)
         {
-            Namespace = name;
+            InitializeServices(services);
         }
 
-        public string ToClassString(Configuration configuration)
+        public void InitializeServices(IServiceProvider services)
+        {
+            _workflowDesignApi = services.GetRequiredService<IWorkflowDesignApi>();
+            Namespace = Helpers.Strings.ToValidIdentifier(_workflowDesignApi.ProjectPropertiesService.GetProjectName());
+            foreach (Configuration config in Configurations)
+            {
+                config.InitializeRowServices(services);
+            }
+        }
+
+        public string ToNamespaceString()
         {
             List<string> usingStatements = new List<string>();
             foreach (Configuration config in Configurations)
@@ -60,7 +76,7 @@ namespace GreenLight.DX.Config.Shared.Models
             sb.AppendLine();
             sb.AppendLine($"namespace {Helpers.Strings.ToValidIdentifier(Namespace)}");
             sb.AppendLine("{");
-            sb.Append(configuration.ToClassString(1));
+            sb.Append(string.Join("\n", Configurations.Select(c => c.ToClassString(1))));
             sb.AppendLine("}");
             return sb.ToString();
         }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System;
 using Newtonsoft.Json;
+using GreenLight.DX.Config.Shared.Services;
 
 namespace GreenLight.DX.Config.Shared.Models
 {
@@ -36,6 +37,17 @@ namespace GreenLight.DX.Config.Shared.Models
 
         public Configuration()
         {
+        }
+        public Configuration(IServiceProvider services)
+        {
+            InitializeRowServices(services);
+        }
+
+        public void InitializeRowServices(IServiceProvider services)
+        {
+            foreach(var setting in Settings) setting.InitializeServices(services);
+            foreach (var asset in Assets) asset.InitializeServices(services);
+            foreach (var resource in Resources) resource.InitializeServices(services);
         }
 
         public string ToClassString(int indent = 0)

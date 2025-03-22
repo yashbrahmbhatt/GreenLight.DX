@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Xml;
 using GreenLight.DX.Config.Shared.Serializers;
+using System.Text;
+using UiPath.Studio.Activities.Api;
+using Microsoft.Extensions.DependencyInjection;
+using GreenLight.DX.Config.Studio.Services;
+using System.ComponentModel; // Assuming TypeSerializer is here
 
 namespace GreenLight.DX.Config.Shared.Models
 {
@@ -17,6 +18,11 @@ namespace GreenLight.DX.Config.Shared.Models
     [XmlInclude(typeof(ResourceItem))]
     public abstract class ConfigItem : IXmlSerializable
     {
+        [XmlIgnore]
+        [JsonIgnore]
+        public ITypeParserService _typeParserService;
+
+
         [JsonProperty(nameof(Key))]
         public string Key { get; set; } = "Key";
 
@@ -27,38 +33,28 @@ namespace GreenLight.DX.Config.Shared.Models
         [JsonConverter(typeof(TypeSerializer))] // Your custom JSON converter
         public Type ValueType { get; set; } = typeof(string);
 
-        [JsonProperty(nameof(Value))] // Use nameof
-        public string Value { get; set; } = "Value";
+        [XmlIgnore]
+        [JsonIgnore]
+        public abstract object? Value { get; set; }
+
+        public ConfigItem()
+        {
+        }
+        public ConfigItem(IServiceProvider services) : this()
+        {
+            InitializeServices(services);
+        }
+
+        public virtual void InitializeServices(IServiceProvider provider)
+        {
+
+            _typeParserService = provider.GetRequiredService<ITypeParserService>();
+        }
 
         public string ToClassString(int indent = 0)
         {
             var indents = new string(' ', indent * 4);
-            string typeName;
-
-            if (ValueType == null)
-            {
-                typeName = "object";
-            }
-            else if (ValueType.IsPrimitive)
-            {
-                typeName = ValueType.Name.ToLower(); // Primitives are lowercase in C#
-            }
-            else if (ValueType == typeof(string))
-            {
-                typeName = "string";
-            }
-            else if (ValueType == typeof(DateTime))
-            {
-                typeName = "DateTime";
-            }
-            else if (ValueType == typeof(decimal))
-            {
-                typeName = "decimal";
-            }
-            else
-            {
-                typeName = ValueType.Name; // For other types
-            }
+            string typeName = ValueType?.Name ?? "object"; // Handle null ValueType
 
             var name = Helpers.Strings.ToValidIdentifier(Key);
             var description = string.IsNullOrWhiteSpace(Description) ? "No description" : Description;
@@ -71,11 +67,11 @@ namespace GreenLight.DX.Config.Shared.Models
         }
 
         // IXmlSerializable Implementation
-        public XmlSchema GetSchema() => null; // Not used
+        public XmlSchema GetSchema() => null;
 
         public void ReadXml(XmlReader reader)
         {
-            reader.ReadStartElement(); // Move past the element start tag
+            reader.ReadStartElement();
 
             Key = reader.GetAttribute("Key");
             Description = reader.GetAttribute("Description");
@@ -83,10 +79,18 @@ namespace GreenLight.DX.Config.Shared.Models
             string typeName = reader.GetAttribute("ValueType");
             if (!string.IsNullOrEmpty(typeName))
             {
-                ValueType = Type.GetType(typeName); // Robust Type.GetType() recommended
+                ValueType = Type.GetType(typeName);
             }
 
-            reader.ReadEndElement(); // Move past the element end tag
+            // Read the value based on ValueType
+            if (ValueType != null && !reader.IsEmptyElement)
+            {
+                reader.ReadStartElement("Value"); // Read Value element
+                string valueString = reader.ReadContentAsString();
+                reader.ReadEndElement(); // End Value element
+            }
+
+            reader.ReadEndElement();
         }
 
         public void WriteXml(XmlWriter writer)

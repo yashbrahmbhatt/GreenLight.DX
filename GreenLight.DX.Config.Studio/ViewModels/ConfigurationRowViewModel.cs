@@ -78,20 +78,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 }
             }
         }
-        public string Value
-        {
-            get => Model.Value;
-            set
-            {
-                if (Model.Value != value)
-                {
-                    Model.Value = value;
-                    OnPropertyChanged();
-                    ValidateRequired(value, nameof(Value));
-                    ValidateValueAndType();
-                }
-            }
-        }
 
         public Type SelectedType
         {
@@ -103,7 +89,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Model.ValueType = value;
                     OnPropertyChanged();
                     ValidateRequired(value, nameof(SelectedType));
-                    ValidateValueAndType();
                 }
             }
         }
@@ -207,23 +192,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             else
             {
                 RemoveError(propertyName, Resources.ValidationMessages.Property_Required);
-            }
-        }
-
-        protected void ValidateValueAndType()
-        {
-            if (SelectedType == null || Value == null) return;
-            _typeParserService.TryParse(Value, SelectedType, out var result);
-            var message = Resources.ValidationMessages.Value_Type_Mismatch.Replace("{Value}", Value).Replace("{Type}", SelectedType.FullName);
-            if (result == null)
-            {
-                AddError(nameof(Value), message);
-                AddError(nameof(SelectedType), message);
-            }
-            else
-            {
-                RemoveError(nameof(Value), Resources.ValidationMessages.Value_Type_Mismatch);
-                RemoveError(nameof(SelectedType), Resources.ValidationMessages.Value_Type_Mismatch);
             }
         }
 

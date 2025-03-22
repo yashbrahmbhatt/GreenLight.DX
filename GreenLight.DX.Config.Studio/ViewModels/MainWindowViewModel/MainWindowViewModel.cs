@@ -59,6 +59,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             InitializeModelEventHandlers();
             InitializeLogger();
             InitializeStudioApis();
+            InitializeConfigurationService();
             InitializeEvents();
             InitializeCommands();
             InitializeConfigurations();

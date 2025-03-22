@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>false</UseWPF>
+    <PackageId>GreenLight.DX.Frameworks</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ActivitiesMetadata.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActivitiesMetadata.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Activities.Core.Presentation" Version="6.0.0-20231204.1" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.ViewModels" Version="1.0.0-20250124.2" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Excel.Activities" Version="2.24.4" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Workflow" Version="6.0.0-20240401-07" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <CustomToolNamespace>GreenLight.DX.Frameworks</CustomToolNamespace>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

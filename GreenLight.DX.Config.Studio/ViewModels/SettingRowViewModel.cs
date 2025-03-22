@@ -18,8 +18,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public class SettingRowViewModel : ConfigurationRowViewModel<SettingItem>
     {
-
-
         public SettingRowViewModel(IServiceProvider _services, SettingItem model, int row) : 
             base(_services, model, row)
         {

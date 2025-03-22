@@ -72,40 +72,24 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             CloseWindowAction?.Invoke();
             Debug("Exiting", "OnExit");
         }
-        private async Task WriteAllConfigurations(string? folderPath = null)
+        private async Task WriteAllConfigurations()
         {
-            Info("Writing all configurations", "WriteAllConfigurations");
+            if (_configurationService == null)
+            {
+                Warn("ConfigurationService is null", "WriteAllConfigurations");
+                return;
+            }
+            if (_workflowDesignApi == null)
+            {
+                Warn("WorkflowDesignApi is null", "WriteAllConfigurations");
+                return;
+            }
+            Debug($"Writing configurations to {_configurationService.Root}", "WriteAllConfigurations");
             var busy = await _workflowDesignApi.BusyService.Begin("Writing configurations...");
-            if (folderPath == null)
-            {
-                await busy.SetStatus("Select a folder to write configurations");
-                var SaveFileDialog = new Microsoft.Win32.OpenFileDialog()
-                {
-                    ValidateNames = false,
-                    CheckFileExists = false,
-                    CheckPathExists = true,
-                    FileName = "Select Folder",
-                    Filter = "Folder|*.",
-                };
-                if (SaveFileDialog.ShowDialog() == true)
-                {
-                    folderPath = Path.GetDirectoryName(SaveFileDialog.FileName);
-                }
-                else
-                {
-                    Debug("Write dialog cancelled", "WriteAllConfigurations");
-                    return;
-                }
-            }
-            Debug($"Writing configurations to {folderPath}", "WriteAllConfigurations");
-            foreach (var config in Configurations)
-            {
-                await busy.SetStatus($"Writing configuration '{config.Name}' {Configurations.IndexOf(config) + 1}/{Configurations.Count}");
-                await WriteClass(config.Model, folderPath);
-            }
+            _configurationService.WriteClasses();
             await busy.DisposeAsync();
             Info("All configurations written", "WriteAllConfigurations");
-
+            return;
         }
 
         private async Task OnAddConfiguration()
@@ -124,67 +108,22 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         }
 
-
-
-        
-
-        public async Task WriteClass(Configuration configuration, string folderPath)
-        {
-            if (_workflowDesignApi == null)
-            {
-                throw new InvalidOperationException("WorkflowDesignApi is null");
-            }
-
-            try
-            {
-                var configFilePath = Path.Combine(folderPath, configuration.Name.Replace(" ", "") + "Config.cs");
-                var configDir = Path.GetDirectoryName(configFilePath) ?? throw new Exception("Could not get config directory path");
-
-                if (!Directory.Exists(configDir))
-                {
-                    Directory.CreateDirectory(configDir);
-                }
-
-                await File.WriteAllTextAsync(configFilePath, Model.ToClassString(configuration));
-                Debug($"Configuration class written to '{configFilePath}'.", context: "WriteClass");
-
-            }
-            catch (Exception ex)
-            {
-                Error($"Error writing configuration class: {ex.Message}", context: "WriteClass");
-            }
-        }
-
-
-
         public async Task SaveConfigurationsToFile(string? filePath = null)
         {
+            if (_configurationService == null)
+            {
+                Warn("ConfigurationService is null", "SaveConfigurationsToFile");
+                return;
+            }
             if (_workflowDesignApi == null)
             {
-                throw new InvalidOperationException("WorkflowDesignApi is null");
+                Warn("WorkflowDesignApi is null", "SaveConfigurationsToFile");
+                return;
             }
-            var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
             Debug("Saving configurations started.", context: "SaveConfigurationsToFile");
-
-            if (filePath == null)
-            {
-                var SaveFileDialog = new Microsoft.Win32.SaveFileDialog
-                {
-                    Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*",
-                    DefaultExt = ".json",
-                    FileName = "Configurations.json"
-                };
-                if (SaveFileDialog.ShowDialog() == true)
-                {
-                    filePath = SaveFileDialog.FileName;
-                }
-            }
-
-
-            Debug($"Saving configurations to {filePath}", "SaveConfigurationsToFile");
-            var json = JsonConvert.SerializeObject(Model, Formatting.Indented);
-            File.WriteAllText(filePath, json);
-            Debug($"Configurations saved to '{filePath}'.", context: "SaveConfigurationsToFile");
+            var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
+            _configurationService.SaveConfigurations();
+            Info($"Configurations saved to '{filePath}'.", context: "SaveConfigurationsToFile");
             await busy.DisposeAsync();
             return;
 
@@ -192,49 +131,30 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         }
 
 
-        public async Task<bool> LoadConfigurationFromFile(string? filePath = null)
+        public async Task<bool> LoadConfigurationFromFile()
         {
-            var busy = await _workflowDesignApi.BusyService.Begin("Loading configurations...");
-            try
+            if (_workflowDesignApi == null)
             {
-                Debug("Loading configurations started.", context: "LoadConfigurationFromFile");
-                if (filePath == null)
-                {
-                    await busy.SetStatus("Select a configuration file to load");
-                    var openDialog = new Microsoft.Win32.OpenFileDialog
-                    {
-                        Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*",
-                        DefaultExt = ".json",
-                        FileName = "Configurations.json"
-                    };
-                    if (openDialog.ShowDialog() == true)
-                    {
-                        filePath = openDialog.FileName;
-                    }
-                    else
-                    {
-                        Debug("Load dialog cancelled", "LoadConfigurationFromFile");
-                        await busy.DisposeAsync();
-                        return false;
-                    }
-                }
-
-                Debug($"Loading configurations from {filePath}", "LoadConfigurationFromFile");
-                Model = JsonConvert.DeserializeObject<Project>(await File.ReadAllTextAsync(filePath)) ?? throw new Exception("Could not deserialize model from file");
-                InitializeModelEventHandlers();
-                InitializeConfigurations();
-                await busy.DisposeAsync();
-                Debug($"Configurations loaded from '{filePath}'.", context: "LoadConfigurationFromFile");
-                return true;
-
-
-            }
-            catch (Exception ex)
-            {
-                await busy.DisposeAsync();
-                Error($"Error loading configurations: {ex.Message}", context: "LoadConfigurationFromFile");
+                Warn("WorkflowDesignApi is null", "LoadConfigurationFromFile");
                 return false;
             }
+            if (_configurationService == null)
+            {
+                Warn("ConfigurationService is null", "LoadConfigurationFromFile");
+                return false;
+            }
+            Debug($"Loading configurations from {_configurationService.Root}", "LoadConfigurationFromFile");
+            var busy = await _workflowDesignApi.BusyService.Begin("Loading configurations...");
+
+            Model = JsonConvert.DeserializeObject<Project>(await File.ReadAllTextAsync(filePath)) ?? throw new Exception("Could not deserialize model from file");
+            InitializeModelEventHandlers();
+            InitializeConfigurations();
+            await busy.DisposeAsync();
+            Debug($"Configurations loaded from '{filePath}'.", context: "LoadConfigurationFromFile");
+            return true;
+
+
+
         }
     }
 }

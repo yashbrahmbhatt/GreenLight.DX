@@ -10,15 +10,14 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public partial class MainWindowViewModel
     {
-        private Project _model;
         public Project Model
         {
-            get => _model;
+            get => _configurationService.Project;
             set
             {
-                if (_model != value)
+                if (_configurationService.Project != value)
                 {
-                    _model = value;
+                    _configurationService.Project = value;
                     OnPropertyChanged();
                 }
             }
