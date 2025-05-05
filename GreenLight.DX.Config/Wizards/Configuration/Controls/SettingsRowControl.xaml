@@ -1,0 +1,50 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.Controls" 
+             xmlns:viewmodels="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.ViewModels" 
+             xmlns:converters="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.Converters" 
+                x:Class="GreenLight.DX.Config.Wizards.Configuration.Controls.SettingsRowControl" 
+             mc:Ignorable="d" 
+              d:DataContext="{d:DesignInstance Type=viewmodels:SettingRowViewModel}"
+             d:DesignHeight="38" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/Wizards/Configuration/ResourceDictionaries/Button.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/Wizards/Configuration/ResourceDictionaries/TextBlock.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/Wizards/Configuration/ResourceDictionaries/TextBox.xaml" />
+                <ResourceDictionary Source="/GreenLight.DX.Config;component/Wizards/Configuration/ResourceDictionaries/DataGridCell.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:TypeToStringConverter x:Key="TypeToStringConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Grid.Row="{Binding Row}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="200"/>
+            <ColumnDefinition Width="200" MinWidth="200" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox Grid.Column="0" Text="{Binding Key, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <ComboBox Grid.Column="1" 
+          ItemsSource="{Binding SupportedTypes}" 
+          SelectedItem="{Binding SelectedType, 
+                               Mode=TwoWay, 
+                               ValidatesOnDataErrors=True}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource TypeToStringConverter}, ConverterParameter='Settings'}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox Grid.Column="2" Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <TextBox Grid.Column="3" Text="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <Button Grid.Column="4" Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
+
+    </Grid>
+</UserControl>

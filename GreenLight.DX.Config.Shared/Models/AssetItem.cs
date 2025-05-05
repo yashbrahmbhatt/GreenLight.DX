@@ -23,7 +23,7 @@ namespace GreenLight.DX.Config.Shared.Models
 
         [JsonIgnore]
         [XmlIgnore]
-        private OrchestratorService _orchestratorService;
+        public OrchestratorService _orchestratorService;
 
         [JsonIgnore]
         [XmlIgnore]

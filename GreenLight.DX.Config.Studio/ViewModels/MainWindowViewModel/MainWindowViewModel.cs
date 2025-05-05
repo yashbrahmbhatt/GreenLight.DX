@@ -51,15 +51,14 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #region Constructors
 
 
-        public MainWindowViewModel(IServiceProvider services, Project model)
+        public MainWindowViewModel(IServiceProvider services)
         {
             _services = services;
             Info("Initializing MainWindowViewModel", "Constructor");
-            Model = model;
+            InitializeConfigurationService();
             InitializeModelEventHandlers();
             InitializeLogger();
             InitializeStudioApis();
-            InitializeConfigurationService();
             InitializeEvents();
             InitializeCommands();
             InitializeConfigurations();
@@ -70,8 +69,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             Info("MainWindowViewModel initialized", "Constructor");
         }
         public MainWindowViewModel() : this(
-            new ServiceCollection().BuildServiceProvider(),
-            new Project()
+            new ServiceCollection().BuildServiceProvider()
         )
         { }
 

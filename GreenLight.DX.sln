@@ -3,15 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Activities", "GreenLight.DX.Config.Activities\GreenLight.DX.Config.Activities.csproj", "{362A098A-B44F-4960-A131-F69F33E65870}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Activities.Tests", "GreenLight.DX.Config.Activities.Tests\GreenLight.DX.Config.Activities.Tests.csproj", "{78554C01-954F-4E75-91ED-A47DC0932E0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Activities.Packaging", "GreenLight.DX.Config.Activities.Packaging\GreenLight.DX.Config.Activities.Packaging.csproj", "{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio", "GreenLight.DX.Config.Studio\GreenLight.DX.Config.Studio.csproj", "{9F3AF957-415B-460E-9B2B-1328139DB5FF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio.Test", "GreenLight.DX.Config.Studio.Test\GreenLight.DX.Config.Studio.Test.csproj", "{A0465695-A65D-479A-810D-C27753E8FD26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Hermes", "GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj", "{ABB233BE-120E-4640-96F7-BA44C40E0DA5}"
 EndProject
@@ -21,13 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared", "Gre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio.Test.Integration", "GreenLight.DX.Config.Studio.Test.Integration\GreenLight.DX.Config.Studio.Test.Integration.csproj", "{8551CB60-C7A3-4C73-BF61-0150573F5B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Shared", "GreenLight.DX.Config.Shared\GreenLight.DX.Config.Shared.csproj", "{F42009ED-72F6-4848-8B9D-12D141CA68EB}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UiPath.Shared.Activities", "..\Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.shproj", "{4546856D-EA50-45C6-9419-EEEACB5A80AA}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UiPath.Shared.Activities.Design", "..\Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.shproj", "{DF9C43F0-ADD3-4FBF-995E-84B92F9CBF25}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Test", "GreenLight.DX.Shared.Test\GreenLight.DX.Shared.Test.csproj", "{5D4992B7-06AF-417E-A4F0-43345DA609DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config", "GreenLight.DX.Config\GreenLight.DX.Config.csproj", "{95999D71-6846-43A0-B68C-0F36EB25C920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{362A098A-B44F-4960-A131-F69F33E65870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{362A098A-B44F-4960-A131-F69F33E65870}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{362A098A-B44F-4960-A131-F69F33E65870}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{362A098A-B44F-4960-A131-F69F33E65870}.Release|Any CPU.Build.0 = Release|Any CPU
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,14 +33,6 @@ Global
 		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F3AF957-415B-460E-9B2B-1328139DB5FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F3AF957-415B-460E-9B2B-1328139DB5FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F3AF957-415B-460E-9B2B-1328139DB5FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F3AF957-415B-460E-9B2B-1328139DB5FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0465695-A65D-479A-810D-C27753E8FD26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0465695-A65D-479A-810D-C27753E8FD26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0465695-A65D-479A-810D-C27753E8FD26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0465695-A65D-479A-810D-C27753E8FD26}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,21 +49,16 @@ Global
 		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F42009ED-72F6-4848-8B9D-12D141CA68EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F42009ED-72F6-4848-8B9D-12D141CA68EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F42009ED-72F6-4848-8B9D-12D141CA68EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F42009ED-72F6-4848-8B9D-12D141CA68EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95999D71-6846-43A0-B68C-0F36EB25C920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95999D71-6846-43A0-B68C-0F36EB25C920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95999D71-6846-43A0-B68C-0F36EB25C920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95999D71-6846-43A0-B68C-0F36EB25C920}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{362a098a-b44f-4960-a131-f69f33e65870}*SharedItemsImports = 5
-		..\Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{4546856d-ea50-45c6-9419-eeeacb5a80aa}*SharedItemsImports = 13
-		..\Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.projitems*{df9c43f0-add3-4fbf-995e-84b92f9cbf25}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

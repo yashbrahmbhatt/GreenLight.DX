@@ -24,7 +24,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         {
             try
             {
-                Model.Configurations.Remove(configToDelete.Model); // Remove from Model
+                _configurationService.Project.Configurations.Remove(configToDelete.Model); // Remove from Model
                 Debug($"Configuration '{configToDelete.Name}' deleted.", context: "OnConfigurationDeleted");
             }
             catch (Exception ex)

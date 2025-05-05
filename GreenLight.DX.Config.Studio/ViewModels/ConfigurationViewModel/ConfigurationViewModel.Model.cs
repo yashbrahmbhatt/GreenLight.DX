@@ -41,7 +41,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             }
             foreach (var asset in Model.Assets)
             {
-                Assets.Add(new AssetRowViewModel(_services, asset, Model.Assets.IndexOf(asset) + 1, AssetsMap));
+                Assets.Add(new AssetRowViewModel(_services, asset, Model.Assets.IndexOf(asset) + 1));
             }
             foreach (var resource in Model.Resources)
             {
@@ -94,7 +94,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (AssetItem newItem in e.NewItems)
                         {
-                            Assets.Add(new AssetRowViewModel(_services, newItem, Assets.Count + 1, AssetsMap));
+                            Assets.Add(new AssetRowViewModel(_services, newItem, Assets.Count + 1));
                         }
                     }
                     break;
@@ -115,7 +115,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     Assets.Clear();
                     foreach (var asset in Model.Assets)
                     {
-                        Assets.Add(new AssetRowViewModel(_services, asset, Assets.Count + 1, AssetsMap));
+                        Assets.Add(new AssetRowViewModel(_services, asset, Assets.Count + 1));
                     }
                     break;
             }
@@ -157,19 +157,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     break;
             }
             ValidateUniqueKeys();
-        }
-
-        public void AssetsMap_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (sender != null)
-            {
-                var map = (ObservableCollection<KeyValuePair<string, IEnumerable<string>>>)sender;
-                FolderNames.Clear();
-                foreach (var kvp in map)
-                {
-                    FolderNames.Add(kvp.Key);
-                }
-            }
         }
     }
 }

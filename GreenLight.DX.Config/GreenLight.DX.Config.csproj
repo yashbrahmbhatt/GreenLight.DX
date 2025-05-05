@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <PackageId>GreenLight.DX.Config</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ActivitiesMetadata.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActivitiesMetadata.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.Core" Version="9.0.*" />
+    <PackageReference Include="System.Activities.Core.Presentation" Version="6.0.0-20231204.1" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.ViewModels" Version="1.0.0-20250124.2" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Excel.Activities" Version="2.24.4" />
+    <PackageReference Include="UiPath.Workflow" Version="6.0.0-20240401-07" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Icons\" />
+  </ItemGroup>
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj">
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ActivityMetadata.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActivityMetadata.resx</DependentUpon>
+      <CustomToolNamespace>GreenLight.DX.Config</CustomToolNamespace>
+    </Compile>
+    <Compile Update="Resources\ValidationMessages.Designer.cs">
+      <DependentUpon>ValidationMessages.resx</DependentUpon>
+      <CustomToolNamespace>GreenLight.DX.Config</CustomToolNamespace>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ActivityMetadata.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ActivityMetadata.Designer.cs</LastGenOutput>
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ValidationMessages.resx">
+      <LastGenOutput>ValidationMessages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <FileVersion>1.0.0.0</FileVersion>
@@ -32,6 +32,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" />
     <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" PrivateAssets="All" />
   </ItemGroup>
 

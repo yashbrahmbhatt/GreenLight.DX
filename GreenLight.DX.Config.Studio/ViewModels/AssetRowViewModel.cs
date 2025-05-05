@@ -1,6 +1,8 @@
 ﻿using GreenLight.DX.Config.Shared.Models;
 using GreenLight.DX.Config.Studio.Misc;
 using GreenLight.DX.Config.Studio.Services;
+using GreenLight.DX.Shared.Services.Orchestrator.GetAssets;
+using GreenLight.DX.Shared.Services.Orchestrator.GetFolders;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
@@ -18,10 +20,21 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public class AssetRowViewModel : ConfigurationRowViewModel<AssetItem>
     {
-        private readonly ObservableCollection<KeyValuePair<string, IEnumerable<string>>> _assetsMap;
 
-        public ObservableCollection<string> AssetFolders { get; } = new ObservableCollection<string>();
-        public ObservableCollection<string> AssetNames { get; } = new ObservableCollection<string>();
+        public ObservableCollection<Folder> AssetFolders
+        {
+            get
+            {
+                return Model._orchestratorService.Folders;
+            }
+        }
+        public ObservableCollection<Asset> AssetNames
+        {
+            get
+            {
+                return Model._orchestratorService.Assets.FirstOrDefault(f => f.Key.DisplayName == AssetFolder).Value;
+            }
+        }
 
         public string AssetName
         {
@@ -50,14 +63,10 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 }
             }
         }
-        public AssetRowViewModel(IServiceProvider _services, AssetItem model, int row,
-            ObservableCollection<KeyValuePair<string, IEnumerable<string>>> map)
+        public AssetRowViewModel(IServiceProvider _services, AssetItem model, int row)
             : base(_services, model, row)
         {
             Model = model;
-            _assetsMap = map;
-            PropertyChanged += OnFolderChanged;
-            RefreshFolders();
         }
         public AssetRowViewModel() : this(
             new ServiceCollection()
@@ -65,47 +74,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             .AddSingleton<ITypeParserService>(new TypeParserService())
             .BuildServiceProvider(),
             new AssetItem(),
-            1,
-            new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
-            {
-                new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string>() { "Asset1", "Asset2", "Asset3" }),
-                new KeyValuePair<string, IEnumerable<string>>("Folder2", new List<string>() { "Asset4", "Asset5", "Asset6" }),
-                new KeyValuePair<string, IEnumerable<string>>("Folder3", new List<string>() { "Asset7", "Asset8", "Asset9" }),
-            }
+            1
         )
-        { 
-            RefreshFolders();
-        }
-
-        public void RefreshFolders()
         {
-            AssetFolders.Clear();
-            if (_assetsMap == null) return;
-            foreach (var value in _assetsMap)
-            {
-                AssetFolders.Add(value.Key);
-            }
-            OnPropertyChanged(nameof(AssetFolders));
-        }
-
-        public void RefreshNames()
-        {
-            AssetNames.Clear();
-            if (_assetsMap == null) return;
-            foreach (var value in _assetsMap.First(x => x.Key == Model.AssetFolder).Value)
-            {
-                AssetNames.Add(value);
-            }
-            OnPropertyChanged(nameof(AssetNames));
-        }
-
-
-        public void OnFolderChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "AssetFolder")
-            {
-                RefreshNames();
-            }
         }
     }
 }

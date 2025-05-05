@@ -3,6 +3,7 @@ using GreenLight.DX.Shared.Services.Orchestrator.GetBucketFileReadUri;
 using GreenLight.DX.Shared.Services.Orchestrator.GetBucketFiles;
 using GreenLight.DX.Shared.Services.Orchestrator.GetBuckets;
 using GreenLight.DX.Shared.Services.Orchestrator.GetFolders;
+using GreenLight.DX.Shared.Services.Orchestrator.GetToken;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RestSharp;
@@ -24,22 +25,51 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
 
         public string BaseURL { get; set; } = "";
         public string Token { get; set; } = "";
+        public string ClientId { get; set; } = "";
+        public string ClientSecret { get; set; } = "";
+        public string[] Scopes { get; set; } = new string[] { "OR.Assets.Read", "OR.Folders.Read" };
 
         public ObservableCollection<Folder> Folders { get; set; } = new ObservableCollection<Folder>();
-        public ObservableCollection<KeyValuePair<Folder, List<Asset>>> Assets { get; set; } = new ObservableCollection<KeyValuePair<Folder, List<Asset>>>();
-        public ObservableCollection<KeyValuePair<Folder, List<Bucket>>> Buckets { get; set; } = new ObservableCollection<KeyValuePair<Folder, List<Bucket>>>();
-        public ObservableCollection<KeyValuePair<Bucket, List<BucketFile>>> BucketFiles { get; set; } = new ObservableCollection<KeyValuePair<Bucket, List<BucketFile>>>();
+        public ObservableCollection<KeyValuePair<Folder, ObservableCollection<Asset>>> Assets { get; set; } = new ObservableCollection<KeyValuePair<Folder, ObservableCollection<Asset>>>();
+        public ObservableCollection<KeyValuePair<Folder, ObservableCollection<Bucket>>> Buckets { get; set; } = new ObservableCollection<KeyValuePair<Folder, ObservableCollection<Bucket>>>();
+        public ObservableCollection<KeyValuePair<Bucket, ObservableCollection<BucketFile>>> BucketFiles { get; set; } = new ObservableCollection<KeyValuePair<Bucket, ObservableCollection<BucketFile>>>();
 
         public OrchestratorService(IServiceProvider services)
         {
             _workflowDesignApi = services.GetRequiredService<IWorkflowDesignApi>();
             BaseURL = _workflowDesignApi.AccessProvider.GetResourceUrl("OR.Assets.Read OR.Folders.Read").Result.TrimEnd('/');
-            RefreshFolders().Wait();
-            RefreshAssets().Wait();
+        }
+
+        public OrchestratorService(string baseUrl, string clientId, string clientSecret)
+        {
+            BaseURL = baseUrl;
+            ClientId = clientId;
+            ClientSecret = clientSecret;
         }
         public async Task UpdateToken(bool force = false)
         {
-            Token = await _workflowDesignApi.AccessProvider.GetAccessToken("OR.Assets.Read OR.Folders.Read", force);
+            if (_workflowDesignApi == null)
+            {
+                var url = $"{BaseURL}/identity_/connect/token";
+                var request = new RestRequest(url, Method.Post);
+                request.AddParameter("client_id", ClientId);
+                request.AddParameter("client_secret", ClientSecret);
+                request.AddParameter("grant_type", "client_credentials");
+                request.AddParameter("scope", string.Join(" ", Scopes));
+                var response = await _client.ExecuteAsync(request);
+                if (response.IsSuccessful)
+                {
+                    var token = Newtonsoft.Json.JsonConvert.DeserializeObject<GetTokenResponse>(response.Content ?? throw new Exception("API Response Error"));
+                    Token = token?.AccessToken ?? throw new Exception("Token not found in response");
+                } else
+                {
+                    throw new Exception("Failed to get token");
+                }
+            }
+            else
+            {
+                Token = await _workflowDesignApi.AccessProvider.GetAccessToken("OR.Assets.Read OR.Folders.Read", force);
+            }
         }
 
         public async Task RefreshAssets()
@@ -56,7 +86,8 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
                 if (response.IsSuccessful)
                 {
                     var assets = Newtonsoft.Json.JsonConvert.DeserializeObject<GetAssetsResponse>(response.Content ?? throw new Exception("API Response Error"));
-                    Assets.Add(new KeyValuePair<Folder, List<Asset>>(folder, assets.Assets));
+                    var assetsCollection = new ObservableCollection<Asset>(assets?.Assets ?? new List<Asset>());
+                    Assets.Add(new KeyValuePair<Folder, ObservableCollection<Asset>>(folder, assetsCollection));
                 }
 
             }
@@ -73,7 +104,8 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
             {
                 Folders.Clear();
                 var folders = Newtonsoft.Json.JsonConvert.DeserializeObject<GetFoldersResponse>(response.Content ?? throw new Exception("API Response Error"));
-                foreach (var folder in folders?.Folders ?? new List<Folder>())
+                var folderCollection = new ObservableCollection<Folder>(folders?.Folders ?? new List<Folder>());
+                foreach (var folder in folderCollection)
                 {
                     Folders.Add(folder);
                 }
@@ -94,7 +126,8 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
                 if (response.IsSuccessful)
                 {
                     var buckets = Newtonsoft.Json.JsonConvert.DeserializeObject<GetBucketsResponse>(response.Content ?? throw new Exception("API Response Error"));
-                    Buckets.Add(new KeyValuePair<Folder, List<Bucket>>(folder, buckets?.Buckets ?? new List<Bucket>()));
+                    var bucketCollection = new ObservableCollection<Bucket>(buckets?.Buckets ?? new List<Bucket>());
+                    Buckets.Add(new KeyValuePair<Folder, ObservableCollection<Bucket>>(folder, bucketCollection));
                 }
 
             }
@@ -117,7 +150,8 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
                     if (response.IsSuccessful)
                     {
                         var bucketFiles = Newtonsoft.Json.JsonConvert.DeserializeObject<GetBucketFilesResponse>(response.Content ?? throw new Exception("API Response Error"));
-                        BucketFiles.Add(new KeyValuePair<Bucket, List<BucketFile>>(bucket, bucketFiles?.BucketFiles ?? new List<BucketFile>()));
+                        var bucketCollection = new ObservableCollection<BucketFile>(bucketFiles?.BucketFiles ?? new List<BucketFile>());
+                        BucketFiles.Add(new KeyValuePair<Bucket, ObservableCollection<BucketFile>>(bucket, bucketCollection));
                     }
                 }
             }

@@ -37,10 +37,6 @@ namespace GreenLight.DX.Config.Studio
                 {
                     Wizard.Create(api);
                 }
-                if (api.HasFeature(DesignFeatureKeys.Settings))
-                {
-                    Settings.Create(api);
-                }
 
 
             }

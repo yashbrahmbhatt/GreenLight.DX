@@ -69,6 +69,7 @@ namespace GreenLight.DX.Config.Shared.Models
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine($"using {typeof(ConfigBase).Namespace};");
             foreach (string usingStatement in usingStatements)
             {
                 sb.AppendLine(usingStatement);

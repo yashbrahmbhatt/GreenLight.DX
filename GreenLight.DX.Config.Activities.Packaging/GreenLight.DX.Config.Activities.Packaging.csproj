@@ -6,49 +6,56 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<PropertyGroup>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
-		<VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("F0"))</VersionRevision>
-		<PackageId>GreenLight.DX.Config.Activities</PackageId>
-		<VersionPrefix Condition="'$(Configuration)' == 'Release'">1.0.0</VersionPrefix>
-		<VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
-		<Authors>UiPath</Authors>
-		<PackageTags>UiPathActivities</PackageTags>
-		<Product>GreenLight.DX.Config.Activities.Packaging</Product>
-		<PackageIconUrl>https://download.uipath.com/UI_icon.png?web</PackageIconUrl>
-		<PackageOutputPath>..\Output\Activities\Packages\</PackageOutputPath>
-		<TargetsForTfmSpecificBuildOutput>AddDlls</TargetsForTfmSpecificBuildOutput>
-		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
+    <VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds.ToString("F0"))</VersionRevision>
+    <PackageId>GreenLight.DX.Config.Activities</PackageId>
+    <VersionPrefix Condition="'$(Configuration)' == 'Release'">1.0.0</VersionPrefix>
+    <VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
+    <Authors>UiPath</Authors>
+    <PackageTags>UiPathActivities</PackageTags>
+    <Product>GreenLight.DX.Config.Activities.Packaging</Product>
+    <PackageIconUrl>https://download.uipath.com/UI_icon.png?web</PackageIconUrl>
+    <PackageOutputPath>..\Output\Activities\Packages\</PackageOutputPath>
+    <TargetsForTfmSpecificBuildOutput>AddDlls</TargetsForTfmSpecificBuildOutput>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
 
-	<Target Name="AddDlls">
-		<!-- PDBs for debug-->
-		<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-			<BuildOutputInPackage Include="$(OutputPath)GreenLight.DX.Config.Activities.pdb" />
-		</ItemGroup>
-		<ItemGroup>
-			<BuildOutputInPackage Include="$(OutputPath)GreenLight.DX.Config.Activities.dll" />
-		</ItemGroup>
-	</Target>
+  <ItemGroup>
+    <PackageReference Include="Prism.Core" Version="9.0.*" />
+    <PackageReference Include="UiPath.Excel.Activities" Version="2.24.4" />
+  </ItemGroup>
 
-	<Target Name="RemoveMetaDll" AfterTargets="BuiltProjectOutputGroup">
-		<ItemGroup>
-			<BuiltProjectOutputGroupOutput Remove="@(BuiltProjectOutputGroupOutput)" />
-		</ItemGroup>
-	</Target>
-	
-	<Target Name="CleanPackageFiles" BeforeTargets="Build">
-		<Message Text="Deleting packages ..." />
-		<ItemGroup>
-			<PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" />
-		</ItemGroup>
-		<Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
-	</Target>
-	
-	<ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Config.Activities\GreenLight.DX.Config.Activities.csproj">
-      <PrivateAssets>All</PrivateAssets>
+  <Target Name="AddDlls">
+    <!-- PDBs for debug-->
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+      <BuildOutputInPackage Include="$(OutputPath)GreenLight.DX.Config.pdb" />
+    </ItemGroup>
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)GreenLight.DX.Config.dll" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="RemoveMetaDll" AfterTargets="BuiltProjectOutputGroup">
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput Remove="@(BuiltProjectOutputGroupOutput)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanPackageFiles" BeforeTargets="Build">
+    <Message Text="Deleting packages ..." />
+    <ItemGroup>
+      <PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Config\GreenLight.DX.Config.csproj">
+      <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-	</ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj" />
+    <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj" />
+  </ItemGroup>
 </Project>

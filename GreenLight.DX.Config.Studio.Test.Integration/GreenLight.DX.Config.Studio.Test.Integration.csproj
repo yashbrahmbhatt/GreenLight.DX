@@ -5,12 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Config.Studio.Test\GreenLight.DX.Config.Studio.Test.csproj" />
-    <ProjectReference Include="..\GreenLight.DX.Config.Studio\GreenLight.DX.Config.Studio.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" />

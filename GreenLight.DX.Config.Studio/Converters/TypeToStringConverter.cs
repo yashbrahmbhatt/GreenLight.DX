@@ -30,7 +30,7 @@ namespace GreenLight.DX.Config.Studio.Converters
                 }
                 else if (rowType == "Asset")
                 {
-                    return new AssetRowViewModel(null, new AssetItem(), 1, null).SupportedTypes.First(t => FormatTypeName(t) == value);
+                    return new AssetRowViewModel(null, new AssetItem(), 1).SupportedTypes.First(t => FormatTypeName(t) == value);
                 }
                 else if (rowType == "Resource")
                 {

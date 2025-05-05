@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using GreenLight.DX.Config.Studio.Misc;
 using GreenLight.DX.Shared.Commands;
 using GreenLight.DX.Config.Shared.Models;
+using GreenLight.DX.Shared.Services.Orchestrator.GetFolders;
+using GreenLight.DX.Shared.Services.Orchestrator.GetAssets;
 
 namespace GreenLight.DX.Config.Studio.ViewModels
 {
@@ -30,10 +32,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<KeyValuePair<string, IEnumerable<string>>> AssetsMap { get; }
-        
-
-        public ObservableCollection<string> FolderNames { get; } = new ObservableCollection<string>();
 
         public string Name
         {
@@ -66,18 +64,15 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         #region Constructors
 
-        public ConfigurationViewModel(IServiceProvider services, Configuration model, ObservableCollection<KeyValuePair<string, IEnumerable<string>>> assetsMap)
+        public ConfigurationViewModel(IServiceProvider services, Configuration model)
         {
             _services = services;
             Model = model;
-            AssetsMap = assetsMap;
-            AssetsMap.CollectionChanged += AssetsMap_CollectionChanged;
 
             InitializeEvents();
             InitializeCommands();
             InitializeModel();
             InitializeModelRows();
-            InitializeAssetFolders();
             ValidateUniqueKeys();
 
         }
@@ -86,29 +81,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             new ServiceCollection()
                 .AddSingleton<IEventAggregator>(new EventAggregator())
                 .BuildServiceProvider(),
-            new Configuration(),
-            new ObservableCollection<KeyValuePair<string, IEnumerable<string>>>()
-            {
-                new KeyValuePair<string, IEnumerable<string>>("Folder", new List<string>(){"Asset1", "Asset2", "Asset3"}),
-                new KeyValuePair<string, IEnumerable<string>>( "Folder2", new List<string>(){"Asset4", "Asset5", "Asset6"}),
-                new KeyValuePair<string, IEnumerable<string>>( "Folder3", new List<string>(){"Asset7", "Asset8", "Asset9"})
-            }
+            new Configuration()
         )
         { }
-
-        #endregion
-
-        #region Initialization
-
-        private void InitializeAssetFolders()
-        {
-            FolderNames.Clear();
-            foreach (var kvp in AssetsMap)
-            {
-                FolderNames.Add(kvp.Key);
-            }
-            OnPropertyChanged(nameof(FolderNames));
-        }
 
         #endregion
     }

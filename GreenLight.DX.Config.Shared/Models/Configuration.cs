@@ -58,7 +58,7 @@ namespace GreenLight.DX.Config.Shared.Models
             sb.AppendLine($"{indents}/// <summary>");
             sb.AppendLine($"{indents}/// {description}");
             sb.AppendLine($"{indents}/// </summary>");
-            sb.AppendLine($"{indents}public class {Helpers.Strings.ToValidIdentifier(Name)}Config");
+            sb.AppendLine($"{indents}public class {Helpers.Strings.ToValidIdentifier(Name)}Config : ConfigBase");
             sb.AppendLine($"{indents}{{");
             foreach (var setting in Settings) sb.Append(setting.ToClassString(indent + 1));
             foreach (var asset in Assets) sb.Append(asset.ToClassString(indent + 1));

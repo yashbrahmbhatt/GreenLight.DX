@@ -10,30 +10,6 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 {
     public partial class MainWindowViewModel
     {
-        public Project Model
-        {
-            get => _configurationService.Project;
-            set
-            {
-                if (_configurationService.Project != value)
-                {
-                    _configurationService.Project = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        public string Namespace
-        {
-            get => Model.Namespace;
-            set
-            {
-                if (Model.Namespace != value)
-                {
-                    Model.Namespace = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
         public ObservableCollection<ConfigurationViewModel> Configurations { get; } = new ObservableCollection<ConfigurationViewModel>();
 
         private void Model_Configurations_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -47,7 +23,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                     {
                         foreach (Configuration newConfig in e.NewItems)
                         {
-                            Configurations.Add(new ConfigurationViewModel(_services, newConfig, AssetsMap));
+                            Configurations.Add(new ConfigurationViewModel(_services, newConfig));
                             SelectedConfig = Configurations[Configurations.Count - 1];
                         }
                     }
@@ -69,9 +45,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     Debug("Resetting configurations", "Model_Configurations_CollectionChanged");
                     Configurations.Clear();
-                    foreach (var config in Model.Configurations)
+                    foreach (var config in _configurationService.Project.Configurations)
                     {
-                        Configurations.Add(new ConfigurationViewModel(_services, config, AssetsMap));
+                        Configurations.Add(new ConfigurationViewModel(_services, config));
                     }
                     break;
             }
@@ -81,7 +57,7 @@ namespace GreenLight.DX.Config.Studio.ViewModels
 
         public void InitializeModelEventHandlers()
         {
-            Model.Configurations.CollectionChanged += Model_Configurations_CollectionChanged;
+            _configurationService.Project.Configurations.CollectionChanged += Model_Configurations_CollectionChanged;
         }
 
         public void InitializeConfigurations()
@@ -90,9 +66,9 @@ namespace GreenLight.DX.Config.Studio.ViewModels
             Info("Initializing configurations", "InitializeConfigurations");
 
             Configurations.Clear();
-            foreach (var config in Model.Configurations)
+            foreach (var config in _configurationService.Project.Configurations)
             {
-                Configurations.Add(new ConfigurationViewModel(_services, config, AssetsMap));
+                Configurations.Add(new ConfigurationViewModel(_services, config));
             }
             if (Configurations.Any())
                 SelectedConfig = Configurations[0];

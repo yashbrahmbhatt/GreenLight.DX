@@ -8,24 +8,18 @@ using System.Reflection.Emit;
 using System.Reflection;
 using UiPath.Studio.Activities.Api;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.Win32;
 
 namespace GreenLight.DX.Config.Shared.Services
 {
-    public interface IConfigurationService
-    {
-        public Project ReadConfigurations();
-        public void SaveConfigurations();
-        public void WriteClasses();
-        public T LoadConfiguration<T>(Configuration config) where T : new();
-        public Type[] GetConfigTypes();
-    }
 
-    public class ConfigurationService : IConfigurationService
+    public class ConfigurationService
     {
         public Project Project { get; set; }
-        public string Root { get; set; }
-        public static string ConfigurationsFile { get; set; } = "Configurations.json";
-        public static string ClassesFile { get; set; } = "ConfigTypes.cs";
+        public string? ConfigurationsFile { get; set; } = null;
+        public string? ClassesFile { get; set; } = null;
         private readonly IServiceProvider _services;
         private readonly ITypeParserService _typeParserService;
         private readonly IWorkflowDesignApi _workflowDesignApi;
@@ -33,144 +27,163 @@ namespace GreenLight.DX.Config.Shared.Services
 
         public ConfigurationService(IServiceProvider services)
         {
+            _services = services;
             _workflowDesignApi = services.GetRequiredService<IWorkflowDesignApi>();
             _typeParserService = services.GetRequiredService<ITypeParserService>();
-            Root = Path.Combine(_workflowDesignApi.ProjectPropertiesService.GetProjectDirectory(), "Configurations");
+            var settings = _workflowDesignApi.Settings;
+            settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
+            ConfigurationsFile = configPath;
+            settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
+            ClassesFile = classesPath;
             Project = new Project();
-            Project.Namespace = Helpers.Strings.ToValidIdentifier(_workflowDesignApi.ProjectPropertiesService.GetProjectName() + ".Configurations");
+            Project.InitializeServices(services);
+            Project.Namespace = Helpers.Strings.ToValidIdentifier(Path.GetRelativePath(_workflowDesignApi.ProjectPropertiesService.GetProjectDirectory(), ConfigurationsFile).Replace("\\", "."));
         }
 
-        public Project ReadConfigurations(string? filePath)
+        public async Task ReadConfigurations(string? filePath = null)
         {
-            if (string.IsNullOrWhiteSpace(Root))
+            var busy = await _workflowDesignApi.BusyService.Begin("Loading configurations...");
+            filePath = filePath ?? ConfigurationsFile;
+            if (filePath == null)
             {
-                throw new Exception("Root must be set before calling ReadConfigurations");
+                var openFileDialog = new OpenFileDialog
+                {
+                    Filter = "JSON files (*.json)|*.json",
+                    FilterIndex = 1,
+                };
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    filePath = openFileDialog.FileName;
+                    ConfigurationsFile = filePath;
+                    _workflowDesignApi.Settings.TrySetValue(SettingKeys.Config_ConfigurationsFilePathKey, filePath);
+                }
+                else
+                {
+                    await busy.DisposeAsync();
+                    return;
+                }
             }
-            filePath = filePath ?? Path.Combine(Root, ConfigurationsFile);
-            var project = JsonConvert.DeserializeObject<Project>(File.ReadAllText(filePath)) ?? throw new Exception("Could not parse configurations file");
-            project.InitializeServices(_services);
-            return project;
+            var raw = await File.ReadAllTextAsync(filePath);
+            Project = JsonConvert.DeserializeObject<Project>(raw) ?? throw new Exception("Could not parse configurations file");
+            Project.InitializeServices(_services);
+            await busy.DisposeAsync();
         }
 
-        public void SaveConfigurations()
+        public async Task SaveConfigurations(string? filePath = null)
         {
-            if (string.IsNullOrWhiteSpace(Root))
+            var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
+            filePath = filePath ?? ConfigurationsFile;
+            if (filePath == null)
             {
-                throw new Exception("Root must be set before calling SaveConfigurations");
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "JSON files (*.json)|*.json",
+                    FilterIndex = 1,
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    filePath = saveFileDialog.FileName;
+                    ConfigurationsFile = filePath;
+                    _workflowDesignApi.Settings.TrySetValue(SettingKeys.Config_ConfigurationsFilePathKey, filePath);
+                }
+                else
+                {
+                    await busy.DisposeAsync();
+                    return;
+                }
             }
-            var filePath = Path.Combine(Root, ConfigurationsFile);
+            var folder = Path.GetDirectoryName(filePath) ?? throw new Exception("Could not get directory path");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(Project));
+            await busy.DisposeAsync();
+        }
+
+        public async Task WriteClasses(string? filePath = null)
+        {
+            var busy = await _workflowDesignApi.BusyService.Begin("Generating config classes...");
+            filePath = filePath ?? ClassesFile;
+            if (filePath == null)
+            {
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "CSharp files (*.cs)|*.cs",
+                    FilterIndex = 1,
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    filePath = saveFileDialog.FileName;
+                    ClassesFile = filePath;
+                    _workflowDesignApi.Settings.TrySetValue(SettingKeys.Config_ConfigurationTypesFilePathKey, filePath);
+                }
+                else
+                {
+                    await busy.DisposeAsync();
+                    return;
+                }
+            }
             var configDir = Path.GetDirectoryName(filePath) ?? throw new Exception("Could not get config directory path");
             if (!Directory.Exists(configDir))
             {
                 Directory.CreateDirectory(configDir);
             }
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(Project));
+            await File.WriteAllTextAsync(filePath, Project.ToNamespaceString());
+            await busy.DisposeAsync();
+
+
         }
 
-        public void WriteClasses()
+        /// <summary>
+        /// Creates an instance of a derived DictionaryWithMembers type from a dictionary of values.
+        /// </summary>
+        /// <typeparam name="TDerived">The derived type of DictionaryWithMembers to instantiate.</typeparam>
+        /// <param name="dictionary">The dictionary containing property values.</param>
+        /// <returns>An instance of TDerived populated with values from the dictionary.</returns>
+        public TDerived FromDictionary<TDerived>(Dictionary<string, object> dictionary) where TDerived : ConfigBase, new()
         {
-            if (string.IsNullOrWhiteSpace(Root))
-            {
-                throw new Exception("Root must be set before calling SaveConfigurations");
-            }
-            var filePath = Path.Combine(Root, ClassesFile);
-            var configDir = Path.GetDirectoryName(filePath) ?? throw new Exception("Could not get config directory path");
-            if (!Directory.Exists(configDir))
-            {
-                Directory.CreateDirectory(configDir);
-            }
-            File.WriteAllText(filePath, Project.ToNamespaceString());
-        }
+            TDerived instance = new();
 
-        public T LoadConfiguration<T>(Configuration config) where T : new()
-        {
-            T instance = new T();
-            var properties = typeof(T).GetProperties();
+            // Retrieve all members (properties and fields)
+            var members = typeof(TDerived).GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field);
 
-            foreach (var property in properties)
+            foreach (var member in members)
             {
-                ConfigItem configItem = null;
-                // Search Settings
-                configItem = config.Settings.FirstOrDefault(s => Helpers.Strings.ToValidIdentifier(s.Key) == property.Name);
+                object parsedValue;
 
-                // Search Assets if not found in Settings
-                if (configItem == null)
+                // Check if the dictionary contains a matching key
+                if (!dictionary.TryGetValue(member.Name, out var rawValue))
+                    continue;
+
+                if (rawValue is string stringValue)
                 {
-                    configItem = config.Assets.FirstOrDefault(a => Helpers.Strings.ToValidIdentifier(a.Key) == property.Name);
+                    // Get the type of the member
+                    var memberType = member is PropertyInfo prop ? prop.PropertyType : ((FieldInfo)member).FieldType;
+                    parsedValue = _typeParserService.Parse(stringValue, memberType);
+                }
+                else
+                {
+                    // Directly map non-string values
+                    parsedValue = rawValue;
                 }
 
-                // Search Resources if not found in Settings or Assets
-                if (configItem == null)
+                // Set the value
+                if (member is PropertyInfo property)
                 {
-                    configItem = config.Resources.FirstOrDefault(r => Helpers.Strings.ToValidIdentifier(r.Key) == property.Name);
+                    property.SetValue(instance, parsedValue);
                 }
-                if (configItem != null && property.PropertyType == configItem.ValueType)
+                else if (member is FieldInfo field)
                 {
-                    try
-                    {
-                        property.SetValue(instance, configItem.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error setting property {property.Name}: {ex.Message}");
-                    }
+                    field.SetValue(instance, parsedValue);
                 }
+
+                // Add to the instance dictionary
+                instance[member.Name] = parsedValue;
             }
+
             return instance;
-        }
-
-        public Type[] GetConfigTypes()
-        {
-            if (Project == null || Project.Configurations == null)
-            {
-                return Array.Empty<Type>();
-            }
-
-            var types = new System.Collections.Generic.List<Type>();
-            var assemblyName = new AssemblyName("DynamicConfigAssembly");
-            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicConfigModule");
-
-            foreach (var config in Project.Configurations)
-            {
-                var className = Helpers.Strings.ToValidIdentifier(config.Name) + "Config";
-                var namespaceName = Helpers.Strings.ToValidIdentifier(Project.Namespace);
-                var fullTypeName = namespaceName + "." + className;
-
-                var typeBuilder = moduleBuilder.DefineType(fullTypeName, TypeAttributes.Public);
-
-                // Create properties for each ConfigItem
-                foreach (var item in config.Settings.ToList<ConfigItem>().Concat(config.Assets).Concat(config.Resources))
-                {
-                    var propertyName = Helpers.Strings.ToValidIdentifier(item.Key);
-                    var propertyType = item.ValueType ?? typeof(object); // Default to object if ValueType is null
-                    var propertyBuilder = typeBuilder.DefineProperty(propertyName, PropertyAttributes.None, propertyType, null);
-
-                    var fieldBuilder = typeBuilder.DefineField("_" + propertyName.ToLower(), propertyType, FieldAttributes.Private);
-
-                    // Define getter and setter methods
-                    var getMethodBuilder = typeBuilder.DefineMethod("get_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, Type.EmptyTypes);
-                    var getIlGenerator = getMethodBuilder.GetILGenerator();
-                    getIlGenerator.Emit(OpCodes.Ldarg_0);
-                    getIlGenerator.Emit(OpCodes.Ldfld, fieldBuilder);
-                    getIlGenerator.Emit(OpCodes.Ret);
-
-                    var setMethodBuilder = typeBuilder.DefineMethod("set_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { propertyType });
-                    var setIlGenerator = setMethodBuilder.GetILGenerator();
-                    setIlGenerator.Emit(OpCodes.Ldarg_0);
-                    setIlGenerator.Emit(OpCodes.Ldarg_1);
-                    setIlGenerator.Emit(OpCodes.Stfld, fieldBuilder);
-                    setIlGenerator.Emit(OpCodes.Ret);
-
-                    propertyBuilder.SetGetMethod(getMethodBuilder);
-                    propertyBuilder.SetSetMethod(setMethodBuilder);
-                }
-
-                var createdType = typeBuilder.CreateType();
-                types.Add(createdType);
-            }
-
-            return types.ToArray();
         }
     }
 }
