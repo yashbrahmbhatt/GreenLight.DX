@@ -3,15 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests", "GreenLight.DX.Config.Activities.Tests\GreenLight.DX.Config.Tests.csproj", "{78554C01-954F-4E75-91ED-A47DC0932E0C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes", "GreenLight.DX.Shared.Hermes\GreenLight.DX.Hermes.csproj", "{ABB233BE-120E-4640-96F7-BA44C40E0DA5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes.Test", "GreenLight.DX.Shared.Hermes.Test\GreenLight.DX.Hermes.Test.csproj", "{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared", "GreenLight.DX.Shared\GreenLight.DX.Shared.csproj", "{F164B3C7-E5DA-4A02-96B8-B10417A94F36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests.Integration", "GreenLight.DX.Config.Studio.Test.Integration\GreenLight.DX.Config.Tests.Integration.csproj", "{8551CB60-C7A3-4C73-BF61-0150573F5B80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Test", "GreenLight.DX.Shared.Test\GreenLight.DX.Shared.Test.csproj", "{5D4992B7-06AF-417E-A4F0-43345DA609DA}"
 EndProject
@@ -22,32 +14,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CommonBuildProps.props = CommonBuildProps.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes", "GreenLight.DX.Hermes\GreenLight.DX.Hermes.csproj", "{4992083F-AFEF-44B9-56C5-BC71774AB213}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests.Unit", "GreenLight.DX.Config.Test.Unit\GreenLight.DX.Config.Tests.Unit.csproj", "{A86A2BA2-9449-B17E-FE43-8EAE94B9C340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests.Integration", "GreenLight.DX.Config.Test.Integration\GreenLight.DX.Config.Tests.Integration.csproj", "{5FE539E5-96A4-E788-221D-76813E90A2EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes.Test", "GreenLight.DX.Hermes.Test\GreenLight.DX.Hermes.Test.csproj", "{61B3FE9E-C1CF-192C-3554-2C9205F9D784}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F164B3C7-E5DA-4A02-96B8-B10417A94F36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8551CB60-C7A3-4C73-BF61-0150573F5B80}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D4992B7-06AF-417E-A4F0-43345DA609DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +40,22 @@ Global
 		{95999D71-6846-43A0-B68C-0F36EB25C920}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95999D71-6846-43A0-B68C-0F36EB25C920}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95999D71-6846-43A0-B68C-0F36EB25C920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4992083F-AFEF-44B9-56C5-BC71774AB213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4992083F-AFEF-44B9-56C5-BC71774AB213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4992083F-AFEF-44B9-56C5-BC71774AB213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4992083F-AFEF-44B9-56C5-BC71774AB213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86A2BA2-9449-B17E-FE43-8EAE94B9C340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86A2BA2-9449-B17E-FE43-8EAE94B9C340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86A2BA2-9449-B17E-FE43-8EAE94B9C340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86A2BA2-9449-B17E-FE43-8EAE94B9C340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE539E5-96A4-E788-221D-76813E90A2EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE539E5-96A4-E788-221D-76813E90A2EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE539E5-96A4-E788-221D-76813E90A2EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE539E5-96A4-E788-221D-76813E90A2EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

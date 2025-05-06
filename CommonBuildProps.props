@@ -39,11 +39,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(OutDir)GreenLight.DX.Hermes.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
+    <None Include="$(OutDir)GreenLight.DX.Hermes.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.dll')" />
       <None Include="$(OutDir)GreenLight.DX.Hermes.pdb" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(OutDir)GreenLight.DX.Shared.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
+    <None Include="$(OutDir)GreenLight.DX.Shared.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.dll')" />
       <None Include="$(OutDir)GreenLight.DX.Shared.pdb" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Shared.pdb')" />
   </ItemGroup>
 

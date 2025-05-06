@@ -19,6 +19,7 @@ using GreenLight.DX.Config.Wizards.Configuration.Windows;
 using GreenLight.DX.Config.Settings;
 using Microsoft.Win32;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace GreenLight.DX.Config.Wizards
 {
@@ -59,7 +60,7 @@ namespace GreenLight.DX.Config.Wizards
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(JsonConvert.SerializeObject(ex));
             }
         }
 
@@ -68,9 +69,11 @@ namespace GreenLight.DX.Config.Wizards
             MessageBox.Show("Initialize");
             var API = Services.GetService<IWorkflowDesignApi>() ?? throw new NullReferenceException($"WorkflowAPI was null");
             var configService = Services.GetService<ConfigurationService>() ?? throw new NullReferenceException($"ConfigurationService was null");
+            MessageBox.Show("Loaded Services");
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
-            MessageBox.Show(configPath);
+            MessageBox.Show("Settings queried");
+
             if (configPath == null)
             {
                 var saveFileDialog = new SaveFileDialog

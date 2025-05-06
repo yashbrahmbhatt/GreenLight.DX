@@ -33,7 +33,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Hermes.csproj">
+    <ProjectReference Include="..\GreenLight.DX.Hermes\GreenLight.DX.Hermes.csproj">
       <PrivateAssets>All</PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj">
