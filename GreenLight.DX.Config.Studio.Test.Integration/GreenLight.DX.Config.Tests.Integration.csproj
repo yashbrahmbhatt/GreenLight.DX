@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mocks\**" />
+    <EmbeddedResource Remove="Mocks\**" />
+    <None Remove="Mocks\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" />
+    <PackageReference Include="System.Activities.ViewModels" Version="1.0.0-20250124.2" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" />
+  </ItemGroup>
+
+</Project>

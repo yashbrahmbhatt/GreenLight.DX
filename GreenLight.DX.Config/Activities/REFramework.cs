@@ -133,11 +133,11 @@ namespace GreenLight.DX.Config.Activities
             // Log(context, "Cleanup completed", Debug);
         }
 
-        private void // Log(NativeActivityContext context, string message, bool isDebug, TraceEventType eventType = TraceEventType.Verbose)
+        private void Log(NativeActivityContext context, string message, bool isDebug, TraceEventType eventType = TraceEventType.Verbose)
         {
             if (isDebug)
             {
-                context.GetExecutorRuntime().// LogMessage(new // LogMessage
+                context.GetExecutorRuntime().LogMessage(new LogMessage
                 {
                     EventType = eventType,
                     Message = message

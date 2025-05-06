@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenLight.DX.Shared.Hermes.Models
+namespace GreenLight.DX.Hermes.Models
 {
     public class LogMessage
     {

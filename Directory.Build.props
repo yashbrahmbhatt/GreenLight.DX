@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+	<SolutionBuildTimestamp>$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SolutionBuildTimestamp>
+  </PropertyGroup>
+</Project>

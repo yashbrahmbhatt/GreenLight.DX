@@ -39,6 +39,8 @@ namespace GreenLight.DX.Config
                 }
                 if (api.HasFeature(DesignFeatureKeys.Wizards))
                 {
+                    MessageBox.Show("Register Metadata");
+
                     Wizard.Create(api);
                 }
                 //var args = new UiPath.Studio.Activities.Api.Activities.RegisterArgs(typeof(Activities.REFramework, "REFramework");
@@ -46,7 +48,7 @@ namespace GreenLight.DX.Config
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
     }

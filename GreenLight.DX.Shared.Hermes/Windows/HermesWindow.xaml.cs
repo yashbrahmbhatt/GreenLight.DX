@@ -1,5 +1,5 @@
 ﻿using GreenLight.DX.Shared.Commands;
-using GreenLight.DX.Shared.Hermes.ViewModels;
+using GreenLight.DX.Hermes.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using UiPath.Studio.Api.Theme;
 
-namespace GreenLight.DX.Shared.Hermes.Windows
+namespace GreenLight.DX.Hermes.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

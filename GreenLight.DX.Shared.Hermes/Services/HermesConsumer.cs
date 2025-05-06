@@ -1,27 +1,27 @@
 ﻿using GreenLight.DX.Hermes.Models;
-using GreenLight.DX.Hermes.Services;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
+namespace GreenLight.DX.Hermes.Services
 {
-    public partial class MainWindowViewModel
+    public class HermesConsumer
     {
-        private IHermesService? _logger;
-        private static readonly string _logContext = nameof(MainWindowViewModel);
+        private static IHermesService? _logger;
+        private static string? _logContext;
 
         private void Info(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Info);
         private void Error(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Error);
         private void Warn(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Warning);
         private void Debug(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Debug);
 
-        public void InitializeLogger()
+        public void InitializeLogger(IServiceProvider services, string context)
         {
-            _logger = _services.GetService<IHermesService>();
+            _logContext = context;
+            _logger = services.GetService<IHermesService>();
         }
     }
 }

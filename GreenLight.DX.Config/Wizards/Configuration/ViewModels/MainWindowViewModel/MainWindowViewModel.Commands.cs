@@ -31,7 +31,7 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 
         public void InitializeCommands()
         {
-            OpenHermesCommand = new RelayCommand(Show// Logs);
+            OpenHermesCommand = new RelayCommand(ShowLogs);
             AddConfigurationCommand = new AsyncRelayCommand(OnAddConfiguration);
             SaveConfigurationsCommand = new AsyncRelayCommand(() => SaveConfigurationsToFile());
             WriteConfigClassesCommand = new AsyncRelayCommand(() => WriteAllConfigurations());
@@ -63,10 +63,10 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
         }
 
 
-        private void Show// Logs()
+        private void ShowLogs()
         {
             _logger.ShowHermesWindow();
-            Debug("Showing logs", "Show// Logs");
+            Debug("Showing logs", "ShowLogs");
         }
         private async Task OnExit()
         {

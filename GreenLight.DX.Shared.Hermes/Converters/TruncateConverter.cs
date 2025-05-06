@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace GreenLight.DX.Shared.Hermes.Converters
+namespace GreenLight.DX.Hermes.Converters
 {
     public class TruncateConverter : IValueConverter
     {

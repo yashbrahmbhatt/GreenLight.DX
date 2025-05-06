@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using GreenLight.DX.Shared.Hermes.Models;
-using GreenLight.DX.Shared.Hermes.Services;
+using GreenLight.DX.Hermes.Models;
+using GreenLight.DX.Hermes.Services;
 using GreenLight.DX.Shared.Commands;
 
 namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
@@ -54,7 +54,7 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
             Info("Initializing MainWindowViewModel", "Constructor");
             InitializeConfigurationService();
             InitializeModelEventHandlers();
-            Initialize// Logger();
+            InitializeLogger();
             InitializeStudioApis();
             InitializeEvents();
             InitializeCommands();

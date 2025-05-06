@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)CommonBuildProps.props" />
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <PackageId>GreenLight.DX.Config</PackageId>
@@ -29,14 +30,25 @@
   <ItemGroup>
     <Folder Include="Resources\Icons\" />
   </ItemGroup>
-  
+
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj">
+    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Hermes.csproj">
+      <PrivateAssets>All</PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj">
+      <PrivateAssets>All</PrivateAssets>
     </ProjectReference>
   </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>GreenLight.DX.Config</PackageId>
+    <Authors>UiPath</Authors>
+    <PackageTags>UiPathActivities</PackageTags>
+    <Product>GreenLight.DX.Config</Product>
+    <PackageIconUrl>https://download.uipath.com/UI_icon.png?web</PackageIconUrl>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Resources\ActivityMetadata.Designer.cs">

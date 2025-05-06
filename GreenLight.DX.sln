@@ -3,21 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Activities.Tests", "GreenLight.DX.Config.Activities.Tests\GreenLight.DX.Config.Activities.Tests.csproj", "{78554C01-954F-4E75-91ED-A47DC0932E0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests", "GreenLight.DX.Config.Activities.Tests\GreenLight.DX.Config.Tests.csproj", "{78554C01-954F-4E75-91ED-A47DC0932E0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Activities.Packaging", "GreenLight.DX.Config.Activities.Packaging\GreenLight.DX.Config.Activities.Packaging.csproj", "{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes", "GreenLight.DX.Shared.Hermes\GreenLight.DX.Hermes.csproj", "{ABB233BE-120E-4640-96F7-BA44C40E0DA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Hermes", "GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj", "{ABB233BE-120E-4640-96F7-BA44C40E0DA5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Hermes.Test", "GreenLight.DX.Shared.Hermes.Test\GreenLight.DX.Shared.Hermes.Test.csproj", "{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes.Test", "GreenLight.DX.Shared.Hermes.Test\GreenLight.DX.Hermes.Test.csproj", "{2C11E2B1-EB09-4B1A-A424-C84046ADD9EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared", "GreenLight.DX.Shared\GreenLight.DX.Shared.csproj", "{F164B3C7-E5DA-4A02-96B8-B10417A94F36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Studio.Test.Integration", "GreenLight.DX.Config.Studio.Test.Integration\GreenLight.DX.Config.Studio.Test.Integration.csproj", "{8551CB60-C7A3-4C73-BF61-0150573F5B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests.Integration", "GreenLight.DX.Config.Studio.Test.Integration\GreenLight.DX.Config.Tests.Integration.csproj", "{8551CB60-C7A3-4C73-BF61-0150573F5B80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Shared.Test", "GreenLight.DX.Shared.Test\GreenLight.DX.Shared.Test.csproj", "{5D4992B7-06AF-417E-A4F0-43345DA609DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config", "GreenLight.DX.Config\GreenLight.DX.Config.csproj", "{95999D71-6846-43A0-B68C-0F36EB25C920}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		CommonBuildProps.props = CommonBuildProps.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +32,6 @@ Global
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78554C01-954F-4E75-91ED-A47DC0932E0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE336BB3-F4FB-429B-B1E9-9BB150E84FF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABB233BE-120E-4640-96F7-BA44C40E0DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,5 +59,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {111681CE-E88C-4EC7-93A9-FB1E99CC2B97}
 	EndGlobalSection
 EndGlobal

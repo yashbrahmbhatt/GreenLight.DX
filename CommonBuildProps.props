@@ -1,0 +1,50 @@
+<Project>
+
+  <PropertyGroup>
+    <VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
+    <VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds.ToString("F0"))</VersionRevision>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <VersionPrefix>1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <Target Name="CleanPackageFiles" BeforeTargets="Build">
+    <Message Text="Deleting packages ..." />
+    <ItemGroup>
+      <PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
+  </Target>
+
+  <PropertyGroup>
+    <PackageVersion>$(VersionPrefix)</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(OutDir)GreenLight.DX.Hermes.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
+      <None Include="$(OutDir)GreenLight.DX.Hermes.pdb" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(OutDir)GreenLight.DX.Shared.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.pdb')" />
+      <None Include="$(OutDir)GreenLight.DX.Shared.pdb" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Shared.pdb')" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿using GreenLight.DX.Config.Wizards.Configuration.ViewModels;
-using GreenLight.DX.Shared.Hermes.Services;
-using GreenLight.DX.Shared.Hermes.ViewModels;
-using GreenLight.DX.Shared.Hermes.Windows;
+using GreenLight.DX.Hermes.Services;
+using GreenLight.DX.Hermes.ViewModels;
+using GreenLight.DX.Hermes.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

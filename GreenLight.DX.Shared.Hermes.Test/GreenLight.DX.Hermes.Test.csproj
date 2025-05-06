@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Shared.Hermes.csproj" />
+    <ProjectReference Include="..\GreenLight.DX.Shared.Hermes\GreenLight.DX.Hermes.csproj" />
   </ItemGroup>
 
 </Project>

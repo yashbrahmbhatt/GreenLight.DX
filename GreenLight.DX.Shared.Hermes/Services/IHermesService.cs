@@ -1,4 +1,4 @@
-﻿using GreenLight.DX.Shared.Hermes.Models;
+﻿using GreenLight.DX.Hermes.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenLight.DX.Shared.Hermes.Services
+namespace GreenLight.DX.Hermes.Services
 {
     public interface IHermesService
     {

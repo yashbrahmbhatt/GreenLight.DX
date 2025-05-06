@@ -1,7 +1,7 @@
 ﻿using GreenLight.DX.Config.Services.Configuration;
 using GreenLight.DX.Config.Services.TypeParser;
 using GreenLight.DX.Config.Services.Configuration.Models;
-using GreenLight.DX.Shared.Hermes.Services;
+using GreenLight.DX.Hermes.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
@@ -28,6 +28,7 @@ namespace GreenLight.DX.Config.Wizards
 
         public static void Create(IWorkflowDesignApi workflowDesignApi)
         {
+            MessageBox.Show("Create");
             try
             {
                 var hermes = new HermesService(Application.Current.Dispatcher);
@@ -51,8 +52,10 @@ namespace GreenLight.DX.Config.Wizards
                 };
                 WizardCollection collection = new WizardCollection();
                 collection.WizardDefinitions.Add(wizard);
+
                 workflowDesignApi.Wizards.Register(collection);
                 Initialize();
+
             }
             catch (Exception ex)
             {
@@ -62,10 +65,12 @@ namespace GreenLight.DX.Config.Wizards
 
         public static void Initialize()
         {
+            MessageBox.Show("Initialize");
             var API = Services.GetService<IWorkflowDesignApi>() ?? throw new NullReferenceException($"WorkflowAPI was null");
             var configService = Services.GetService<ConfigurationService>() ?? throw new NullReferenceException($"ConfigurationService was null");
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
+            MessageBox.Show(configPath);
             if (configPath == null)
             {
                 var saveFileDialog = new SaveFileDialog
@@ -104,12 +109,14 @@ namespace GreenLight.DX.Config.Wizards
                 }
                 API.Settings.TrySetValue(SettingKeys.Config_ConfigurationTypesFilePathKey, classesPath);
             }
+            MessageBox.Show("Config wizards initialized");
         }
 
         public static Activity Run()
         {
             try
             {
+                MessageBox.Show("Running");
                 var viewModel = new MainWindowViewModel(Services);
                 var window = new MainWindow(viewModel);
                 window.Show();

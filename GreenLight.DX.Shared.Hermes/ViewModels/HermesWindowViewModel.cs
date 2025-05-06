@@ -1,6 +1,6 @@
 ﻿using GreenLight.DX.Shared.Commands;
-using GreenLight.DX.Shared.Hermes.Models;
-using GreenLight.DX.Shared.Hermes.Services;
+using GreenLight.DX.Hermes.Models;
+using GreenLight.DX.Hermes.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using UiPath.Studio.Api.Theme;
 
-namespace GreenLight.DX.Shared.Hermes.ViewModels
+namespace GreenLight.DX.Hermes.ViewModels
 {
     public class HermesWindowViewModel : INotifyPropertyChanged
     {

@@ -1,4 +1,4 @@
-﻿using GreenLight.DX.Shared.Hermes.Models;
+﻿using GreenLight.DX.Hermes.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using UiPath.Studio.Api.Theme;
 
-namespace GreenLight.DX.Shared.Hermes.Converters
+namespace GreenLight.DX.Hermes.Converters
 {
     public class LogLevelToBrushConverter : IValueConverter
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenLight.DX.Shared.Hermes.ViewModels
+namespace GreenLight.DX.Hermes.ViewModels
 {
     public class SelectableItemViewModel<T> : INotifyPropertyChanged
     {

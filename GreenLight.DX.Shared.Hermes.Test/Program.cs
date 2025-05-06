@@ -1,8 +1,8 @@
-﻿using GreenLight.DX.Shared.Hermes;
-using GreenLight.DX.Shared.Hermes.Models;
-using GreenLight.DX.Shared.Hermes.Services;
-using GreenLight.DX.Shared.Hermes.ViewModels;
-using GreenLight.DX.Shared.Hermes.Windows;
+﻿using GreenLight.DX.Hermes;
+using GreenLight.DX.Hermes.Models;
+using GreenLight.DX.Hermes.Services;
+using GreenLight.DX.Hermes.ViewModels;
+using GreenLight.DX.Hermes.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;
