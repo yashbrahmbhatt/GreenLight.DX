@@ -1,0 +1,100 @@
+{
+  "Workflows": [
+    {
+      "Path": null,
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [],
+      "ArgumentsSectionElementsOrder": null,
+      "ConstantsSectionElementsOrder": [
+        "ConfigPath_ApplicationDispatcherTemplate&",
+        "ConfigPath_BasicDispatcherTemplate&",
+        "ConfigPath_BasicPerformerTemplate&",
+        "ConfigPath_BasicReporterTemplate&"
+      ],
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "Design/Modules/Dispatchers/Basic/BasicDispatcher.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "Config&Sequence_1",
+        "TextFiles&Sequence_1",
+        "QueueData&Sequence_2",
+        "Reference&Sequence_2",
+        "ItemsAdded&Sequence_2",
+        "TemplateData&Sequence_3",
+        "ScreenshotPath&Sequence_3"
+      ],
+      "ArgumentsSectionElementsOrder": [
+        "in_ConfigPath",
+        "in_IgnoreSheets",
+        "in_TestID"
+      ],
+      "ConstantsSectionElementsOrder": [
+        "ConfigPath_ApplicationDispatcherTemplate&",
+        "ConfigPath_BasicDispatcherTemplate&",
+        "ConfigPath_BasicPerformerTemplate&",
+        "ConfigPath_BasicReporterTemplate&"
+      ],
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "Design/DocumentProject.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "ProjectFolder&Sequence_1",
+        "WorkflowFiles&Sequence_1",
+        "ProjectJSONPath&Sequence_1",
+        "TemplatesPath&Sequence_1",
+        "WorkflowTemplatePath&Sequence_1",
+        "ProjectTemplatePath&Sequence_1",
+        "WorkflowTemplate&Sequence_1",
+        "ProjectName&Sequence_1",
+        "ProjectDescription&Sequence_1",
+        "dt_Dependencies&Sequence_1",
+        "dt_FileInfoCollection&Sequence_1",
+        "ProjectLanguage&Sequence_1",
+        "ProjectVersion&Sequence_1",
+        "StudioVersion&Sequence_1",
+        "ProjectType&Sequence_1",
+        "TestWorkflows&Sequence_1",
+        "WorkflowsInTest&Sequence_1",
+        "ProjectContent&Sequence_1",
+        "EntryPoints&Sequence_1",
+        "DependenciesMarkdown&Sequence_1",
+        "OutputRootFolder&Sequence_1",
+        "IgnoreDirectories&Sequence_1",
+        "WorkflowsUsedTest&Sequence_5",
+        "References&Sequence_2",
+        "DocumentClass&Sequence_2",
+        "Namespaces&Sequence_2",
+        "WorkflowName&Sequence_2",
+        "WorkflowDescription&Sequence_2",
+        "Outline&Sequence_2",
+        "OutputFilePath&Sequence_2",
+        "OutputFolderPath&Sequence_2",
+        "dt_Arguments&Sequence_2",
+        "ArgumentsMarkdown&Sequence_2",
+        "FileContent&Sequence_2",
+        "WorkflowsUsed&Sequence_2"
+      ],
+      "ArgumentsSectionElementsOrder": [
+        "ConfigPath_ApplicationDispatcherTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicDispatcherTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicPerformerTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicReporterTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3"
+      ],
+      "ConstantsSectionElementsOrder": [
+        "ConfigPath_ApplicationDispatcherTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicDispatcherTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicPerformerTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_BasicReporterTemplate&93dba82f-ed26-4d8b-8f0c-8e78f87d5df3",
+        "ConfigPath_ApplicationDispatcherTemplate&",
+        "ConfigPath_BasicDispatcherTemplate&",
+        "ConfigPath_BasicPerformerTemplate&",
+        "ConfigPath_BasicReporterTemplate&"
+      ],
+      "AddedNamespaces": null
+    }
+  ]
+}

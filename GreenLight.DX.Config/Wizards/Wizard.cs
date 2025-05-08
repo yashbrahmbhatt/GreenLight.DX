@@ -32,14 +32,6 @@ namespace GreenLight.DX.Config.Wizards
             MessageBox.Show("Create");
             try
             {
-                var hermes = new HermesService(Application.Current.Dispatcher);
-                Services = new ServiceCollection()
-                    .AddSingleton<IEventAggregator>(new EventAggregator())
-                    .AddSingleton<IHermesService>(hermes)
-                    .AddSingleton<IWorkflowDesignApi>(workflowDesignApi)
-                    .AddSingleton<ITypeParserService>(new TypeParserService())
-                    .AddSingleton<ConfigurationService>(services => new ConfigurationService(services))
-                    .BuildServiceProvider();
                 var theme = workflowDesignApi.Theme.GetThemeType();
                 var wizard = new WizardDefinition()
                 {
@@ -55,7 +47,7 @@ namespace GreenLight.DX.Config.Wizards
                 collection.WizardDefinitions.Add(wizard);
 
                 workflowDesignApi.Wizards.Register(collection);
-                Initialize();
+                Initialize(workflowDesignApi);
 
             }
             catch (Exception ex)
@@ -64,12 +56,9 @@ namespace GreenLight.DX.Config.Wizards
             }
         }
 
-        public static void Initialize()
+        public static void Initialize(IWorkflowDesignApi API)
         {
             MessageBox.Show("Initialize");
-            var API = Services.GetService<IWorkflowDesignApi>() ?? throw new NullReferenceException($"WorkflowAPI was null");
-            var configService = Services.GetService<ConfigurationService>() ?? throw new NullReferenceException($"ConfigurationService was null");
-            MessageBox.Show("Loaded Services");
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
             MessageBox.Show("Settings queried");
@@ -112,6 +101,19 @@ namespace GreenLight.DX.Config.Wizards
                 }
                 API.Settings.TrySetValue(SettingKeys.Config_ConfigurationTypesFilePathKey, classesPath);
             }
+
+            Services = new ServiceCollection()
+                .AddSingleton<IEventAggregator>(new EventAggregator())
+                .AddSingleton<IHermesService>(new HermesService(Application.Current.Dispatcher))
+                .AddSingleton<IWorkflowDesignApi>(API)
+                .AddSingleton<ITypeParserService>(new TypeParserService())
+                .AddSingleton<ConfigurationService>(services => new ConfigurationService(services))
+                .BuildServiceProvider();
+            var configService = Services.GetService<ConfigurationService>();
+            configService.SaveConfigurations();
+            configService.WriteClasses();
+
+
             MessageBox.Show("Config wizards initialized");
         }
 

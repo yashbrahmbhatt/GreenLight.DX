@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>25.5.0</VersionPrefix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
   </PropertyGroup>
 
@@ -33,6 +33,12 @@
     </ItemGroup>
     <Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0-2.22527.10" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0-2.22527.10" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.5.0-2.22527.10" />
+  </ItemGroup>
 
   <PropertyGroup>
     <PackageVersion>$(VersionPrefix)</PackageVersion>

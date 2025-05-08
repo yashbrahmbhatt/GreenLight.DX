@@ -1,0 +1,297 @@
+{
+  "name": "LazyFramework11",
+  "projectId": "9d63ffc9-96cb-45ce-9a15-d490b23b8aeb",
+  "description": "A different design approach to UiPath Project frameworks that heavily leverage templates.",
+  "main": "Dispatcher.xaml",
+  "dependencies": {
+    "Cronos": "[0.7.1]",
+    "GreenLight.DX.Docs": "[1.0.127-dev.67559]",
+    "LazyFramework.Utility": "[2023.8.22]",
+    "UiPath.Excel.Activities": "[2.20.1]",
+    "UiPath.Form.Activities": "[2.0.3]",
+    "UiPath.FormActivityLibrary": "[2.0.5]",
+    "UiPath.Mail.Activities": "[1.20.2]",
+    "UiPath.System.Activities": "[23.4.3]",
+    "UiPath.Testing.Activities": "[23.4.1]"
+  },
+  "webServices": [],
+  "entitiesStores": [],
+  "schemaVersion": "4.0",
+  "studioVersion": "24.10.6.0",
+  "projectVersion": "1.0.0",
+  "runtimeOptions": {
+    "autoDispose": false,
+    "netFrameworkLazyLoading": false,
+    "isPausable": true,
+    "isAttended": false,
+    "requiresUserInteraction": true,
+    "supportsPersistence": true,
+    "workflowSerialization": "DataContract",
+    "excludedLoggedData": [
+      "Private:*",
+      "*password*"
+    ],
+    "executionType": "Workflow",
+    "readyForPiP": false,
+    "startsInPiP": false,
+    "mustRestoreAllDependencies": true,
+    "pipType": "ChildSession"
+  },
+  "designOptions": {
+    "projectProfile": "Developement",
+    "outputType": "Process",
+    "libraryOptions": {
+      "includeOriginalXaml": false,
+      "privateWorkflows": []
+    },
+    "processOptions": {
+      "ignoredFiles": []
+    },
+    "fileInfoCollection": [
+      {
+        "templateType": "TestCase",
+        "fileName": ".templates\\Tests\\NoDataSource\\NegativeTestCase.xaml"
+      },
+      {
+        "templateType": "TestCase",
+        "fileName": ".templates\\Tests\\NoDataSource\\SuccessTestCase.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "095986c6-e9eb-4538-8629-87102db84d8e",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\DataTableToHTML\\DataTableToHTMLSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "4a9b2dc0-93dd-4861-acf8-5bccfb380215",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\GenerateDiagnosticDictionary\\GenerateDiagnosticDictionarySuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "adf5cf41-8188-49ae-91cd-ce424c0630e6",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\LoadConfig\\LoadConfigSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "f6cc7cd9-447e-4796-a5c4-36696349cdc7",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\SendEmail\\SendEmailSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "d7e7c2f5-1e6f-4468-beed-4ec38bc2f473",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\TakeScreenshot\\TakeScreenshotNoPath.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "d2080d32-9209-4efd-ae84-9d9fef6d0650",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\TakeScreenshot\\TakeScreenshotPath.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "686935cc-781b-4e16-b114-9d1addbca2d2",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\IsMaintenanceTime\\IsMaintenanceTimeFalse.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "cfe8209d-81db-45c4-bce4-ba57a87833c3",
+        "testCaseType": "TestCase",
+        "fileName": "Shared\\Tests\\IsMaintenanceTime\\IsMaintenanceTimeTrue.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "709aa7be-a364-4733-bf87-856b0050eb33",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Framework\\ApplicationDispatcherFailureTest.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "a66455b9-084b-4e7e-b3ad-b73246375e9f",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Framework\\ApplicationDispatcherMaintenanceTime.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "a489a56b-a8a1-4269-958b-ca16f066898a",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Framework\\ApplicationDispatcherSuccessTest.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "8fa9040a-b8cb-42d6-a927-bea3f3ca8c88",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Unit Tests\\CloseApplications\\CloseApplicationsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "509ca8a0-c2c6-46bd-b5a5-1dbddce06537",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Unit Tests\\InitializeApplications\\InitializeApplicationsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "8de3734d-36cf-4777-824e-b3761107d36e",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Application\\Tests\\Unit Tests\\KillProcesses\\KillProcessesSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "635a1c4e-45f3-4b26-897f-e4ae3967f365",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Basic\\Tests\\BasicDispatcherFailureTest.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "52063330-a2ec-45bc-9ef5-d98667c1b492",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Dispatchers\\Basic\\Tests\\BasicDispatcherSuccessTest.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "1218db09-be9e-4dee-8cef-9e9585f884dd",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Framework Tests\\FrameworkGetTransactionDataError.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "6d891ae6-cc06-4d5d-965d-6fc05a8f8943",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Framework Tests\\FrameworkInitializationError.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "a127cae8-80cc-4400-b8c9-b78d7cf55612",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Framework Tests\\FrameworkMaintenanceTime.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "ffeb6b7b-96e1-4897-a72d-2ebd9d937f97",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Framework Tests\\FrameworkNoData.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "bbc81a49-6408-4c12-9a23-e472ac7c8511",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Framework Tests\\FrameworkProcessError.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "fc26bbc9-f53e-4438-b95e-e58359075e43",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\CloseApplications\\CloseApplicationsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "709b084c-d393-4536-be08-a98db4c2a8e7",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\HandleTransactionOutcome\\HandleTransactionOutcomeBusEx.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "b150fdd0-54a6-4b22-a484-4ffa9ca0f82a",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\HandleTransactionOutcome\\HandleTransactionOutcomeSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "061774c9-15aa-4e7c-9e21-94d4b94d6d95",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\HandleTransactionOutcome\\HandleTransactionOutcomeSysEx.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "cd2ad85c-d9cc-4a4e-8dbd-03f445ef7cc7",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\InitializeApplications\\InitializeApplicationsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "847bad2a-d156-4a95-aab4-9c23907b421b",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\KillProcesses\\KillProcessesSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "1eb24d32-09e9-4d1e-8e82-4f34860b5488",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Performers\\Basic\\Tests\\Unit Tests\\Process\\ProcessTestTemplate.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "2fed53c4-0994-4223-9ec6-7f406a762e5b",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Logic\\AddCalculatedColumns\\AddCalculatedColumnsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "73b4929e-950b-4a99-be65-5204a5e16cc4",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Logic\\Flatten\\FlattenSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "fa912327-41cf-4954-9108-4013280d79ed",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Logic\\GetQueueData\\GetQueueDataSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "90b4a25a-47a5-4a39-ae10-2aaadbb91d10",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Logic\\WriteTableToExcel\\WriteTableToExcel.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "d3ce7822-b673-4165-988c-863c8a84d30c",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Orchestrator\\GetQueueDefinitionId\\GetQueueDefinitionIdError.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "fc610933-8bac-4a97-9654-81d1d8f689d0",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Orchestrator\\GetQueueDefinitionId\\GetQueueDefinitionIdSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "559aa75f-e91d-4e98-86e8-48608551c307",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\Orchestrator\\GetQueueItems\\GetQueueItemsSuccess.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "d81e31ae-fa5c-4973-a4df-62ba5cff700b",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\BasicReporterCRONOutput.xaml"
+      },
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "6de8b40c-06df-44e8-aab3-4ac363fd4b74",
+        "testCaseType": "TestCase",
+        "fileName": "Design\\Modules\\Reporters\\Basic\\Tests\\BasicReporterFromToNoOutput.xaml"
+      }
+    ],
+    "saveToCloud": false
+  },
+  "expressionLanguage": "CSharp",
+  "entryPoints": [
+    {
+      "filePath": "Dispatcher.xaml",
+      "uniqueId": "ffb4cc9e-8d09-4d25-8500-34ae357e44c3",
+      "input": [],
+      "output": []
+    }
+  ],
+  "isTemplate": false,
+  "templateProjectData": {},
+  "publishData": {},
+  "targetFramework": "Windows"
+}

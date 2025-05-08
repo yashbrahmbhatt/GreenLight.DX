@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)CommonBuildProps.props" />
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <PackageId>GreenLight.DX.Docs</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActivitiesMetadata.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="System.Activities.Core.Presentation" Version="6.0.0-20231204.1" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.Metadata" Version="6.0.0-20240517.13" PrivateAssets="All" />
+    <PackageReference Include="System.Activities.ViewModels" Version="1.0.0-20250124.2" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" PrivateAssets="All" />
+    <PackageReference Include="UiPath.Workflow" Version="6.0.0-20240401-07" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GreenLight.DX.Hermes\GreenLight.DX.Hermes.csproj">
+      <PrivateAssets>All</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj">
+      <PrivateAssets>All</PrivateAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>GreenLight.DX.Docs</PackageId>
+    <Authors>UiPath</Authors>
+    <PackageTags>UiPathActivities</PackageTags>
+    <Product>GreenLight.DX.Docs</Product>
+    <PackageIconUrl>https://download.uipath.com/UI_icon.png?web</PackageIconUrl>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ActivityMetadata.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActivityMetadata.resx</DependentUpon>
+      <CustomToolNamespace>GreenLight.DX.Docs</CustomToolNamespace>
+    </Compile>
+    <Compile Update="Resources\DefaultTemplates.Designer.cs">
+      <DependentUpon>DefaultTemplates.resx</DependentUpon>
+      <CustomToolNamespace>GreenLight.DX.Docs</CustomToolNamespace>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ActivityMetadata.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ActivityMetadata.Designer.cs</LastGenOutput>
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DefaultTemplates.resx">
+      <LastGenOutput>DefaultTemplates.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

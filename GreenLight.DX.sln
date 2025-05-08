@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Config.Tests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Hermes.Test", "GreenLight.DX.Hermes.Test\GreenLight.DX.Hermes.Test.csproj", "{61B3FE9E-C1CF-192C-3554-2C9205F9D784}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Docs", "GreenLight.DX.Docs\GreenLight.DX.Docs.csproj", "{70B66A1D-C6AA-4742-8A1F-D4547C39EE4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Docs.Tests", "GreenLight.DX.Docs.Tests\GreenLight.DX.Docs.Tests.csproj", "{44EB9282-F38E-431A-84AC-B4E34B3972D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +60,14 @@ Global
 		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61B3FE9E-C1CF-192C-3554-2C9205F9D784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B66A1D-C6AA-4742-8A1F-D4547C39EE4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B66A1D-C6AA-4742-8A1F-D4547C39EE4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B66A1D-C6AA-4742-8A1F-D4547C39EE4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B66A1D-C6AA-4742-8A1F-D4547C39EE4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

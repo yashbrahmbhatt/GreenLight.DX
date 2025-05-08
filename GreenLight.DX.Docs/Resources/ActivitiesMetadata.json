@@ -1,0 +1,21 @@
+{
+  "resourceManagerName": "GreenLight.DX.Docs.Resources.ActivityMetadata",
+  "activities": [
+    {
+      "fullName": "GreenLight.DX.Docs.Activities.REFramework",
+      "shortName": "REFramework",
+      "displayNameKey": "REFramework_DisplayName",
+      "descriptionKey": "REFramework_Description",
+      "categoryKey": "GreenLight.DX.Framework",
+      "viewModelType": "GreenLight.DX.Config.Activities.ViewModels.REFrameworkViewModel"
+    },
+    {
+      "fullName": "GreenLight.DX.Docs.Activities.LoadConfig",
+      "shortName": "LoadConfig",
+      "displayNameKey": "LoadConfig_DisplayName",
+      "descriptionKey": "LoadConfig_Description",
+      "categoryKey": "GreenLight.DX.Framework",
+      "viewModelType": "GreenLight.DX.Config.Activities.ViewModels.LoadConfigViewModel"
+    }
+  ]
+}
