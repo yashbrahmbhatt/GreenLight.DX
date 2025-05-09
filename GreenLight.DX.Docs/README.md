@@ -50,9 +50,38 @@ When the package is first used or the settings are accessed, default template fi
 
 ### Template Usage
 
-The documentation generation relies on Markdown templates. Within these templates, specific placeholders or syntax will be used to inject information extracted from the project and workflow files. (Note: The provided code snippets do not detail the exact templating syntax, so this section provides a general description based on the functionality.)
+The documentation generation relies on Markdown templates. Within these templates, specific variables enclosed in curly braces `{}` will be replaced with information extracted from your UiPath project and workflow files. You can modify these templates (`Project.md` and `Workflow.md`) in the configured **Templates Root** directory to customize the structure and content of your generated documentation.
 
-* **Project.md:** This template is used for the main project documentation file. It would typically include placeholders for project name, description, and potentially a list of workflows.
-* **Workflow.md:** This template is used for each individual workflow documentation file. It would likely include placeholders for the workflow file name, arguments, variables, and potentially details about the activities within the workflow.
+When the package is first used or the settings are accessed, default template files (`Project.md` and `Workflow.md`) will be created in the specified Templates Root directory if they do not already exist.
 
-Users should refer to any additional documentation or examples provided with the package for the specific syntax and available placeholders within the templates.
+Here are the variables available for each template:
+
+**Project Template Variables (`Project.md`)**
+
+| Variable        | Description                                                    |
+| :-------------- | :------------------------------------------------------------- |
+| `{Name}`        | The name of the UiPath project.                                |
+| `{Type}`        | The type of the UiPath project (e.g., Process, Library).     |
+| `{Version}`     | The version of the UiPath project.                             |
+| `{StudioVersion}`| The UiPath Studio version the project is designed for.       |
+| `{Language}`    | The programming language used in the project (e.g., C#, VB.NET).|
+| `{Description}` | The description of the project as provided in `project.json`.  |
+| `{Dependencies}`| Information about the project's dependencies (likely formatted as a list or table). |
+| `{EntryPoints}` | Information about the project's entry point workflows (likely formatted as a list). |
+
+**Workflow Template Variables (`Workflow.md`)**
+
+| Variable          | Description                                                                 |
+| :---------------- | :-------------------------------------------------------------------------- |
+| `{WorkflowName}`  | The name of the workflow file (e.g., `Main.xaml`).                          |
+| `{Class}`         | The class name associated with the workflow (if applicable).                |
+| `{Description}`   | The description of the workflow as provided in its annotations.             |
+| `{Namespaces}`    | A list of namespaces imported by the workflow.                              |
+| `{References}`    | A list of references used by the workflow.                                  |
+| `{Arguments}`     | Details about the workflow's arguments (Name, Direction, Type, Description).|
+| `{WorkflowsUsed}` | A list of other workflows invoked by this workflow.                         |
+| `{UsedByWorkflows}`| A list of workflows that invoke this workflow.                              |
+| `{Tests}`         | Information about any associated test cases for this workflow.              |
+| `{Outline}`       | A hierarchical outline of the activities within the workflow (Beta feature).|
+
+By using these variables within your Markdown templates, you can customize the generated documentation to include the specific details you need for your UiPath projects and workflows.

@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <VersionPrefix>25.5.2</VersionPrefix>
+    <VersionPrefix>25.5.3</VersionPrefix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
     <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
