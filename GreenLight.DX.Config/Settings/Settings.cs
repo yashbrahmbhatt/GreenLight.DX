@@ -11,8 +11,10 @@ namespace GreenLight.DX.Config.Settings
 {
     public static class SettingKeys
     {
-        public static string CategoryKey = "GreenLight.DX";
-        public static string ConfigSectionKey = CategoryKey + ".Config";
+        public static string CategoryKey = "GreenLight.DX.Config";
+
+        public static string ConfigSectionKey = CategoryKey + ".General";
+
         public static string Config_ConfigurationsFilePathKey = ConfigSectionKey + ".ConfigFile";
         public static string Config_ConfigurationTypesFilePathKey = ConfigSectionKey + ".ConfigTypes";
     }
@@ -21,16 +23,60 @@ namespace GreenLight.DX.Config.Settings
 
         public static SettingsCategory MainCategory = new SettingsCategory()
         {
-            Header = "GreenLight DevEx",
+            Header = "DX - Config",
             Key = SettingKeys.CategoryKey,
-            Description = "Settings for all GreenLight Developer Experience tools"
+            Description = "Settings for the config helper tool in the DX suite."
         };
         public static SettingsSection ConfigSection = new SettingsSection()
         {
             Key = SettingKeys.ConfigSectionKey,
-            Title = "Config",
-            Description = "Settings for the Configuration management tool",
+            Title = "General",
+            Description = "General settings for the config helper tool",
             IsExpanded = true
+        };
+
+        public static SingleValueEditorDescription<string> ConfigurationClassesPathSetting = new SingleValueEditorDescription<string>()
+        {
+            DefaultValue = ".config\\ConfigurationTypes.cs",
+            Description = "The file path to the auto-generated configuration types file.",
+            GetDisplayValue = (value) => value,
+            Key = SettingKeys.Config_ConfigurationTypesFilePathKey,
+            Label = "Types File FilePath",
+            IsDesignTime = true,
+            Validate = (value) =>
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "The configuration types file path cannot be empty";
+                }
+                if (!File.Exists(value))
+                {
+                    return "The configuration types file path does not exist";
+                }
+                return null;
+            }
+        };
+
+        public static SingleValueEditorDescription<string> ConfigurationJsonPathSetting = new SingleValueEditorDescription<string>()
+        {
+            DefaultValue = ".config\\Configurations.json",
+            Description = "The file path to the configuration file.",
+            GetDisplayValue = (value) => value,
+            Key = SettingKeys.Config_ConfigurationsFilePathKey,
+            Label = "Config File FilePath",
+            IsDesignTime = true,
+            Validate = (value) =>
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "The configuration file path cannot be empty";
+                }
+                if (!File.Exists(value))
+                {
+                    return "The configuration file path does not exist";
+                }
+                return null;
+            }
         };
 
 
@@ -40,58 +86,8 @@ namespace GreenLight.DX.Config.Settings
             var settingsApi = workflowDesignApi.Settings;
             settingsApi.AddCategory(MainCategory);
             settingsApi.AddSection(MainCategory, ConfigSection);
-            settingsApi.AddSetting(ConfigSection, CreateConfigurationFileSetting());
-            settingsApi.AddSetting(ConfigSection, CreateConfigurationClassesFileSetting());
-        }
-
-        public static SingleValueEditorDescription<string> CreateConfigurationFileSetting()
-        {
-            return new SingleValueEditorDescription<string>()
-            {
-                DefaultValue = null,
-                Description = "The file path to the configuration file.",
-                GetDisplayValue = (value) => value,
-                Key = SettingKeys.Config_ConfigurationsFilePathKey,
-                Label = "Config File FilePath",
-                IsDesignTime = true,
-                Validate = (value) =>
-                {
-                    if (string.IsNullOrWhiteSpace(value))
-                    {
-                        return "The configuration file path cannot be empty";
-                    }
-                    if (!File.Exists(value))
-                    {
-                        return "The configuration file path does not exist";
-                    }
-                    return null;
-                }
-            };
-        }
-
-        public static SingleValueEditorDescription<string> CreateConfigurationClassesFileSetting()
-        {
-            return new SingleValueEditorDescription<string>()
-            {
-                DefaultValue = null,
-                Description = "The file path to the auto-generated configuration types file.",
-                GetDisplayValue = (value) => value,
-                Key = SettingKeys.Config_ConfigurationTypesFilePathKey,
-                Label = "Types File FilePath",
-                IsDesignTime = true,
-                Validate = (value) =>
-                {
-                    if (string.IsNullOrWhiteSpace(value))
-                    {
-                        return "The configuration types file path cannot be empty";
-                    }
-                    if (!File.Exists(value))
-                    {
-                        return "The configuration types file path does not exist";
-                    }
-                    return null;
-                }
-            };
+            settingsApi.AddSetting(ConfigSection, ConfigurationJsonPathSetting);
+            settingsApi.AddSetting(ConfigSection, ConfigurationClassesPathSetting);
         }
     }
 }

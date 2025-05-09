@@ -63,15 +63,23 @@ namespace GreenLight.DX.Docs
 
         public void DocumentWorkflow(XamlEditor editor)
         {
-            Info($"Documenting workflow at '{editor.FilePath}'", "DocumentWorkflow");
-            var workflowTemplatePath = Path.Combine(Settings.TemplatesRoot, "Workflow.md");
-            var workflowTemplate = File.ReadAllText(workflowTemplatePath);
-            Debug($"Template used from '{workflowTemplatePath}'", "");
-            var docPath = editor.FilePath.Replace(Settings.ProjectRoot, Settings.OutputRoot).Replace(".xaml", ".md");
-            var docFolder = Path.GetDirectoryName(docPath);
-            if (!Directory.Exists(docFolder)) Directory.CreateDirectory(docFolder);
-            File.WriteAllText(docPath, editor.ToMarkdown(workflowTemplate, XamlEditors, ProjectEditor));
-            Info($"Workflow documented", "DocumentWorkflow");
+            try
+            {
+
+                Info($"Documenting workflow at '{editor.FilePath}'", "DocumentWorkflow");
+                var workflowTemplatePath = Path.Combine(Settings.TemplatesRoot, "Workflow.md");
+                var workflowTemplate = File.ReadAllText(workflowTemplatePath);
+                Debug($"Template used from '{workflowTemplatePath}'", "");
+                var docPath = editor.FilePath.Replace(Settings.ProjectRoot, Settings.OutputRoot).Replace(".xaml", ".md");
+                var docFolder = Path.GetDirectoryName(docPath);
+                if (!Directory.Exists(docFolder)) Directory.CreateDirectory(docFolder);
+                File.WriteAllText(docPath, editor.ToMarkdown(workflowTemplate, XamlEditors, ProjectEditor));
+                Info($"Workflow documented", "DocumentWorkflow");
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message, "DocumentWorkflow");
+            }
         }
 
         public void Document()

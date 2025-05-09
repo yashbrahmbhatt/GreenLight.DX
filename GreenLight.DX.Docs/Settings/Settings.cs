@@ -43,7 +43,8 @@ namespace GreenLight.DX.Docs.Settings
             Description = "The root folder to output the documentation results in. Warning: The entire directory will be recreated every time.",
             GetDisplayValue = (value) => value,
             IsDesignTime = true,
-            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the output folder for auto doc" : null
+            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the output folder for auto doc" : null,
+            RequiresPackageReload = true,
         };
         public static SingleValueEditorDescription<string> IgnoredPathsSetting = new SingleValueEditorDescription<string>()
         {
@@ -53,7 +54,8 @@ namespace GreenLight.DX.Docs.Settings
             Description = "Paths to ignore documentation on.",
             GetDisplayValue = (value) => value,
             IsDesignTime = true,
-            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the ignored folders for auto doc" : null
+            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the ignored folders for auto doc" : null,
+            RequiresPackageReload = true,
         };
         public static SingleValueEditorDescription<string> TemplatesRootSetting = new SingleValueEditorDescription<string>()
         {
@@ -63,7 +65,8 @@ namespace GreenLight.DX.Docs.Settings
             Description = "The root for the folder that contains the markdown templates. Must contain Project.md and Workflow.md files.",
             GetDisplayValue = (value) => value,
             IsDesignTime = true,
-            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the templates folder for auto doc" : null
+            Validate = (value) => string.IsNullOrWhiteSpace(value) ? "Please set the templates folder for auto doc" : null,
+            RequiresPackageReload = true,
         };
 
 
