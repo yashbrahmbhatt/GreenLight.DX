@@ -1,4 +1,6 @@
-﻿using GreenLight.DX.Config.Wizards.Configuration.Misc;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using GreenLight.DX.Config.Settings;
+using GreenLight.DX.Config.Wizards.Configuration.Misc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -43,7 +45,8 @@ namespace GreenLight.DX.Config.Services.Configuration.Models
         public void InitializeServices(IServiceProvider services)
         {
             _workflowDesignApi = services.GetRequiredService<IWorkflowDesignApi>();
-            Namespace = Helpers.Strings.ToValidIdentifier(_workflowDesignApi.ProjectPropertiesService.GetProjectName());
+            _workflowDesignApi.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesNamespaceKey, out var _namespace);
+            Namespace = _namespace ?? _workflowDesignApi.ProjectPropertiesService.GetProjectName() + "." + "Config";
             foreach (ConfigurationModel config in Configurations)
             {
                 config.InitializeRowServices(services);
@@ -76,7 +79,7 @@ namespace GreenLight.DX.Config.Services.Configuration.Models
                 sb.AppendLine(usingStatement);
             }
             sb.AppendLine();
-            sb.AppendLine($"namespace {Helpers.Strings.ToValidIdentifier(Namespace)}");
+            sb.AppendLine($"namespace {Namespace}");
             sb.AppendLine("{");
             sb.Append(string.Join("\n", Configurations.Select(c => c.ToClassString(1))));
             sb.AppendLine("}");

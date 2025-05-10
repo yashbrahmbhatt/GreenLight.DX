@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GreenLight.DX.Docs.Resources {
+namespace GreenLight.DX.Activities.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace GreenLight.DX.Docs.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class DefaultTemplates {
+    public class ActivityMetadata {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DefaultTemplates() {
+        internal ActivityMetadata() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace GreenLight.DX.Docs.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GreenLight.DX.Docs.Resources.DefaultTemplates", typeof(DefaultTemplates).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GreenLight.DX.Activities.Resources.ActivityMetadata", typeof(ActivityMetadata).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,88 +61,38 @@ namespace GreenLight.DX.Docs.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # {Name}
-        ///Type: {Type}
-        ///Version: {Version}
-        ///Studio Version: {StudioVersion}
-        ///Language: {Language}
-        ///
-        ///{Description}
-        ///
-        ///&lt;hr /&gt;
-        ///
-        ///## Project Details
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;Dependencies&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///
-        ///{Dependencies}
-        ///
-        ///&lt;/details&gt;
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;Entry Points&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///
-        ///{EntryPoints}
-        ///
-        ///&lt;/details&gt;.
+        ///   Looks up a localized string similar to Loads a configuration from a json file..
         /// </summary>
-        public static string Project {
+        public static string LoadConfig_Description {
             get {
-                return ResourceManager.GetString("Project", resourceCulture);
+                return ResourceManager.GetString("LoadConfig_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # {WorkflowName}
-        ///Class: {Class}
-        ///
-        ///{Description}
-        ///
-        ///&lt;hr /&gt;
-        ///
-        ///## Workflow Details
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;Namespaces&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///    
-        ///{Namespaces}
-        ///
-        ///&lt;/details&gt;
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;References&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///
-        ///{References}
-        ///
-        ///&lt;/details&gt;
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;Arguments&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///
-        ///{Arguments}
-        ///    
-        ///&lt;/details&gt;
-        ///&lt;details&gt;
-        ///    &lt;summary&gt;
-        ///    &lt;b&gt;Workflows Interactions&lt;/b&gt;
-        ///    &lt;/summary&gt;
-        ///
-        ///{WorkflowsUsed}
-        ///
-        ///{UsedByWorkflows}
-        ///    
-        ///&lt;/details&gt;
-        ///&lt;d [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Load Configuration.
         /// </summary>
-        public static string Workflow {
+        public static string LoadConfig_DisplayName {
             get {
-                return ResourceManager.GetString("Workflow", resourceCulture);
+                return ResourceManager.GetString("LoadConfig_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An activity that consolidates the REFramework into an activity..
+        /// </summary>
+        public static string REFramework_Description {
+            get {
+                return ResourceManager.GetString("REFramework_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to REFramework.
+        /// </summary>
+        public static string REFramework_DisplayName {
+            get {
+                return ResourceManager.GetString("REFramework_DisplayName", resourceCulture);
             }
         }
     }

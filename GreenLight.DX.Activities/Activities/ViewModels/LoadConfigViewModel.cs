@@ -1,6 +1,4 @@
-﻿using GreenLight.DX.Config.Services.Configuration;
-using GreenLight.DX.Config.Services.Configuration.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Activities;
 using System.Activities.DesignViewModels;
@@ -20,15 +18,13 @@ using UiPath.Studio.Activities.Api;
 
 namespace GreenLight.DX.Config.Activities.ViewModels
 {
-    public class LoadConfigViewModel<T> : DesignPropertiesViewModel
+    public class LoadConfigViewModel : DesignPropertiesViewModel
     {
-        private ConfigurationService _configurationService;
-        public ProjectModel _project;
         private readonly IWorkflowDesignApi _workflowDesignApi;
-        public DesignInArgument<IResource> ConfigurationPath { get; set; }
+        public DesignInArgument<ILocalResource> ConfigurationPath { get; set; }
         public DesignInArgument<string> Configuration { get; set; }
         public List<string> ConfigurationOptions { get; set; } = new List<string>();
-        public DesignOutArgument<T> ConfigurationObject { get; set; }
+        public DesignOutArgument<object> ConfigurationObject { get; set; }
 
         public LoadConfigViewModel(IDesignServices services) : base(services)
         {
@@ -56,7 +52,7 @@ namespace GreenLight.DX.Config.Activities.ViewModels
             base.InitializeModel();
             try
             {
-                _project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(Path.Combine(_workflowDesignApi.ProjectPropertiesService.GetProjectDirectory(), "Configurations\\Configurations.json")));
+                //_project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(Path.Combine(_workflowDesignApi.ProjectPropertiesService.GetProjectDirectory(), "Configurations\\Configurations.json")));
 
             }
             catch (Exception ex)

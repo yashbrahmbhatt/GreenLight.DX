@@ -34,7 +34,7 @@ namespace GreenLight.DX.Docs.Project
                     .Replace("{Version}", ProjectJSON.ProjectVersion)
                     .Replace("{StudioVersion}", ProjectJSON.StudioVersion)
                     .Replace("{Dependencies}", Helpers.GenerateMarkdownTable(depsTable))
-                    .Replace("{EntryPoints}", Helpers.GenerateMarkdownTable(ProjectJSON.EntryPoints.Select(e => e.FilePath), "Entry Points"))
+                    .Replace("{EntryPoints}", ProjectJSON.EntryPoints != null ? Helpers.GenerateMarkdownTable(ProjectJSON.EntryPoints?.Select(e => e.FilePath), "Entry Points") : "")
                     .Replace("{Language}", ProjectJSON.ExpressionLanguage);
         }
     }

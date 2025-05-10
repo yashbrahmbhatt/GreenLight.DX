@@ -17,9 +17,9 @@ namespace GreenLight.DX.Shared.Test
     [TestClass]
     public class OrchestratorServiceIntegrationTests
     {
-        private readonly string _baseUrl = "https://cloud.uipath.com/yashbdev"; // Replace with your Orchestrator URL
-        private readonly string _clientId = "806c068d-1201-4137-8484-4d440593c09c";        // Replace with your Client ID
-        private readonly string _clientSecret = "P%5Er45%25cWTU%3F%25lqFK";    // Replace with your Client Secret
+        private readonly string _baseUrl = "https://cloud.uipath.com/yourorgname"; // Replace with your Orchestrator URL
+        private readonly string _clientId = "yourClientId";        // Replace with your Client ID
+        private readonly string _clientSecret = "yourClientSecret";    // Replace with your Client Secret
 
         private OrchestratorService _orchestratorService;
 
@@ -36,12 +36,9 @@ namespace GreenLight.DX.Shared.Test
         }
 
         [TestMethod]
-        public async Task UpdateToken_WithCredentials_ShouldRetrieveToken()
+        public void UpdateToken_WithCredentials_ShouldRetrieveToken()
         {
-            // Arrange (done in TestInitialize)
-
-            // Act
-            await _orchestratorService.UpdateToken();
+            _orchestratorService.UpdateToken();
 
             // Assert
             Assert.IsNotNull(_orchestratorService.Token);
@@ -49,13 +46,10 @@ namespace GreenLight.DX.Shared.Test
         }
 
         [TestMethod]
-        public async Task RefreshFolders_ShouldPopulateFoldersCollection()
+        public void RefreshFolders_ShouldPopulateFoldersCollection()
         {
-            // Arrange
-            await _orchestratorService.UpdateToken(); // Ensure token is available
-
             // Act
-            await _orchestratorService.RefreshFolders();
+            _orchestratorService.RefreshFolders();
 
             // Assert
             Assert.IsNotNull(_orchestratorService.Folders);
@@ -64,14 +58,11 @@ namespace GreenLight.DX.Shared.Test
         }
 
         [TestMethod]
-        public async Task RefreshAssets_ShouldPopulateAssetsCollection()
+        public void RefreshAssets_ShouldPopulateAssetsCollection()
         {
-            // Arrange
-            await _orchestratorService.UpdateToken();
-            await _orchestratorService.RefreshFolders(); // Need folders to fetch assets
+            _orchestratorService.RefreshFolders(); // Need folders to fetch assets
 
-            // Act
-            await _orchestratorService.RefreshAssets();
+            _orchestratorService.RefreshAssets();
 
             // Assert
             Assert.IsNotNull(_orchestratorService.Assets);
@@ -85,14 +76,12 @@ namespace GreenLight.DX.Shared.Test
         }
 
         [TestMethod]
-        public async Task RefreshBuckets_ShouldPopulateBucketsCollection()
+        public void RefreshBuckets_ShouldPopulateBucketsCollection()
         {
-            // Arrange
-            await _orchestratorService.UpdateToken();
-            await _orchestratorService.RefreshFolders(); // Need folders to fetch buckets
+            _orchestratorService.RefreshFolders(); // Need folders to fetch buckets
 
             // Act
-            await _orchestratorService.RefreshBuckets();
+            _orchestratorService.RefreshBuckets();
 
             // Assert
             Assert.IsNotNull(_orchestratorService.Buckets);
@@ -105,15 +94,13 @@ namespace GreenLight.DX.Shared.Test
         }
 
         [TestMethod]
-        public async Task RefreshBucketFiles_ShouldPopulateBucketFilesCollection()
+        public void RefreshBucketFiles_ShouldPopulateBucketFilesCollection()
         {
-            // Arrange
-            await _orchestratorService.UpdateToken();
-            await _orchestratorService.RefreshFolders();
-            await _orchestratorService.RefreshBuckets(); // Need buckets to fetch files
+            _orchestratorService.RefreshFolders();
+            _orchestratorService.RefreshBuckets(); // Need buckets to fetch files
 
             // Act
-            await _orchestratorService.RefreshBucketFiles();
+            _orchestratorService.RefreshBucketFiles();
 
             // Assert
             Assert.IsNotNull(_orchestratorService.BucketFiles);

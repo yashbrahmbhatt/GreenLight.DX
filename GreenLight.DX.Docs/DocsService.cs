@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UiPath.Studio.Activities.Api;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using Newtonsoft.Json;
 namespace GreenLight.DX.Docs
 {
     public class DocsService : HermesConsumer
@@ -52,8 +54,9 @@ namespace GreenLight.DX.Docs
 
         public void DocumentProject()
         {
-            Info("Documenting project...", "DocumentProject");
-            var projectTemplate = Path.Combine(Settings.TemplatesRoot, "Project.md");
+            var projectTemplatePath = Path.Combine(Settings.TemplatesRoot, "Project.md");
+            Info($"Documenting project using template at '{projectTemplatePath}'", "DocumentProject");
+            var projectTemplate = File.ReadAllText(projectTemplatePath);
             var docPath = Path.Combine(Settings.OutputRoot, Settings.ProjectName + ".md");
             if (Directory.Exists(Settings.OutputRoot)) Directory.Delete(Settings.OutputRoot, true);
             Directory.CreateDirectory(Settings.OutputRoot);
@@ -66,8 +69,8 @@ namespace GreenLight.DX.Docs
             try
             {
 
-                Info($"Documenting workflow at '{editor.FilePath}'", "DocumentWorkflow");
                 var workflowTemplatePath = Path.Combine(Settings.TemplatesRoot, "Workflow.md");
+                Info($"Documenting workflow at '{editor.FilePath}' using template at '{workflowTemplatePath}'", "DocumentWorkflow");
                 var workflowTemplate = File.ReadAllText(workflowTemplatePath);
                 Debug($"Template used from '{workflowTemplatePath}'", "");
                 var docPath = editor.FilePath.Replace(Settings.ProjectRoot, Settings.OutputRoot).Replace(".xaml", ".md");

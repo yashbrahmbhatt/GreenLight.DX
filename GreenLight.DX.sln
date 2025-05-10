@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Docs", "Green
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Docs.Tests", "GreenLight.DX.Docs.Tests\GreenLight.DX.Docs.Tests.csproj", "{44EB9282-F38E-431A-84AC-B4E34B3972D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenLight.DX.Activities", "GreenLight.DX.Activities\GreenLight.DX.Activities.csproj", "{586286CC-9F4B-4C50-8520-71B39F88FEB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44EB9282-F38E-431A-84AC-B4E34B3972D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586286CC-9F4B-4C50-8520-71B39F88FEB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586286CC-9F4B-4C50-8520-71B39F88FEB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586286CC-9F4B-4C50-8520-71B39F88FEB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586286CC-9F4B-4C50-8520-71B39F88FEB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

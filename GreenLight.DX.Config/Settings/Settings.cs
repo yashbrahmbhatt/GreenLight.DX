@@ -17,6 +17,7 @@ namespace GreenLight.DX.Config.Settings
 
         public static string Config_ConfigurationsFilePathKey = ConfigSectionKey + ".ConfigFile";
         public static string Config_ConfigurationTypesFilePathKey = ConfigSectionKey + ".ConfigTypes";
+        public static string Config_ConfigurationTypesNamespaceKey = ConfigSectionKey + ".ConfigTypesNamespace";
     }
     public static class Setting
     {
@@ -42,20 +43,20 @@ namespace GreenLight.DX.Config.Settings
             GetDisplayValue = (value) => value,
             Key = SettingKeys.Config_ConfigurationTypesFilePathKey,
             Label = "Types File FilePath",
-            IsDesignTime = true,
-            Validate = (value) =>
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    return "The configuration types file path cannot be empty";
-                }
-                if (!File.Exists(value))
-                {
-                    return "The configuration types file path does not exist";
-                }
-                return null;
-            }
+            IsDesignTime = true
         };
+        public static SingleValueEditorDescription<string> CreateNamespaceSetting(IWorkflowDesignApi api)
+        {
+            return new SingleValueEditorDescription<string>()
+            {
+                DefaultValue = api.ProjectPropertiesService.GetProjectName() + "." + "Config",
+                Description = "The namespace for the configuration types",
+                GetDisplayValue = (value) => value,
+                Key = SettingKeys.Config_ConfigurationTypesNamespaceKey,
+                Label = "Config Types Namespace",
+                IsDesignTime = true,
+            };
+        }
 
         public static SingleValueEditorDescription<string> ConfigurationJsonPathSetting = new SingleValueEditorDescription<string>()
         {
@@ -64,19 +65,7 @@ namespace GreenLight.DX.Config.Settings
             GetDisplayValue = (value) => value,
             Key = SettingKeys.Config_ConfigurationsFilePathKey,
             Label = "Config File FilePath",
-            IsDesignTime = true,
-            Validate = (value) =>
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    return "The configuration file path cannot be empty";
-                }
-                if (!File.Exists(value))
-                {
-                    return "The configuration file path does not exist";
-                }
-                return null;
-            }
+            IsDesignTime = true
         };
 
 
@@ -88,6 +77,7 @@ namespace GreenLight.DX.Config.Settings
             settingsApi.AddSection(MainCategory, ConfigSection);
             settingsApi.AddSetting(ConfigSection, ConfigurationJsonPathSetting);
             settingsApi.AddSetting(ConfigSection, ConfigurationClassesPathSetting);
+            settingsApi.AddSetting(ConfigSection, CreateNamespaceSetting(workflowDesignApi));
         }
     }
 }

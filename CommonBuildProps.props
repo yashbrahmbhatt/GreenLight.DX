@@ -1,38 +1,46 @@
 <Project>
 
-  <PropertyGroup>
-    <VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
-    <VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds.ToString("F0"))</VersionRevision>
-  </PropertyGroup>
+   <PropertyGroup>
+        <VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
+        <VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds.ToString("F0"))</VersionRevision>
+    <PackageIconUrl>https://www.greenlightconsulting.com/app/uploads/2024/06/Frame-63.png</PackageIconUrl>
+    <PackageTags>GreenLight;DX;Developer;Experience;UiPath</PackageTags>
+    <Authors>GreenLight Consulting</Authors>
+     
+  </PropertyGroup>
 
-  <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-  </PropertyGroup>
+   <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+     
+  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <VersionPrefix>25.5.3</VersionPrefix>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
-    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
-    <FileVersion>$(VersionPrefix)</FileVersion>
-  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <VersionPrefix>25.5.6</VersionPrefix>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
+        <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+        <FileVersion>$(VersionPrefix)</FileVersion>
+     
+  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <VersionPrefix>1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <VersionPrefix>1.0.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PackageOutputPath>$(SolutionDir)Output\</PackageOutputPath>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+     
+  </PropertyGroup>
 
-  <Target Name="CleanPackageFiles" BeforeTargets="Build">
-    <Message Text="Deleting packages ..." />
-    <ItemGroup>
-      <PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" />
-    </ItemGroup>
-    <Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
-  </Target>
+   <Target Name="CleanPackageFiles" BeforeTargets="Build">
+        <Message Text="Deleting packages ..." />
+        <ItemGroup>
+            <PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" /> 
+    </ItemGroup>
+        <Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
+     
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0-2.22527.10" />
@@ -40,9 +48,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.5.0-2.22527.10" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <PackageVersion>$(VersionPrefix)</PackageVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <PackageVersion>$(VersionPrefix)</PackageVersion>
+     
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(OutDir)GreenLight.DX.Hermes.dll" Pack="true" PackagePath="lib/$(TargetFramework)/" Condition="Exists('$(OutDir)GreenLight.DX.Hermes.dll')" />

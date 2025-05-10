@@ -14,7 +14,9 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 
         public void InitializeTypeParserService()
         {
+            Debug("Initializing type parser service", nameof(InitializeTypeParserService));
             _typeParserService = _services.GetRequiredService<ITypeParserService>();
+            Debug("Type parser service initialized", nameof(InitializeTypeParserService));
         }
     }
 }

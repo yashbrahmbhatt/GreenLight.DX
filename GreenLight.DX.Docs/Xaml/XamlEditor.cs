@@ -36,7 +36,7 @@ namespace GreenLight.DX.Docs.Xaml
         public string Class => XDocumentHelpers.GetAttribute(Document.Root, LocalNames.Class)?.Value
                                 ?? throw new InvalidOperationException("Invalid XAML");
 
-        public string Description => XDocumentHelpers.GetAttribute(Document.Root, LocalNames.Description)?.Value;
+        public string Description => XDocumentHelpers.GetAttribute(Document.Root, LocalNames.Description)?.Value ?? XDocumentHelpers.GetAttribute(Activities[0].ActivityElement, LocalNames.Description)?.Value;
 
         public List<Variable> Variables { get; set; }
 
@@ -44,7 +44,7 @@ namespace GreenLight.DX.Docs.Xaml
 
         public XamlEditor(string path) { FilePath = path; }
 
-        public async Task<string> GetOutline(string prefix, string suffix)
+        public string GetOutline(string prefix, string suffix)
         {
             if (Activities.Count == 0)
             {
@@ -52,8 +52,8 @@ namespace GreenLight.DX.Docs.Xaml
                 return "";
             }
             // Log($"Generating outline for workflow '{FilePath}'", // LogLevel.Debug);
-            await Task.Run(() =>
-                Outline = TraverseWorkflow(Activities.First(), prefix, "").markdown + suffix);
+
+            Outline = TraverseWorkflow(Activities.First(), prefix, "").markdown + suffix;
             // Log($"Outline generated for workflow '{FilePath}'", // LogLevel.Debug);
             return Outline;
         }
@@ -285,7 +285,7 @@ namespace GreenLight.DX.Docs.Xaml
                 .Replace("{Tests}", Helpers.GenerateMarkdownTable(tests, "Tests"));
         }
 
-        
+
     }
 }
 

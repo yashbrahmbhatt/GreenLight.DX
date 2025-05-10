@@ -24,9 +24,7 @@ namespace GreenLight.DX.Docs.Wizards
     {
         public static DocsService DocsService { get; set; }
         public static IHermesService HermesService { get; set; } = new HermesService(Application.Current.Dispatcher);
-        public static IServiceProvider Services { get; set; } = new ServiceCollection()
-            .AddSingleton<IHermesService>(HermesService)
-            .BuildServiceProvider();
+        public static IServiceProvider Services { get; set; }
 
         public static WizardDefinition DocumentWizard {get; set; } = new WizardDefinition()
         {
@@ -62,6 +60,10 @@ namespace GreenLight.DX.Docs.Wizards
         public static void Create(IWorkflowDesignApi workflowDesignApi)
         {
             Api = workflowDesignApi;
+            Services = new ServiceCollection()
+                .AddSingleton(Api)
+                .AddSingleton<IHermesService>(HermesService)
+                .BuildServiceProvider();
             try
             {
                 workflowDesignApi.Settings.TryGetValue<string>(SettingKeys.SettingKey_General_OutputRoot, out var outputRoot);

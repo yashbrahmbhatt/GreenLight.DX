@@ -20,29 +20,54 @@ using GreenLight.DX.Config.Settings;
 using Microsoft.Win32;
 using System.IO;
 using Newtonsoft.Json;
+using GreenLight.DX.Shared.Services.Orchestrator;
 
 namespace GreenLight.DX.Config.Wizards
 {
     public static class Wizard
     {
         public static IServiceProvider Services { get; set; }
+        public static ConfigurationService ConfigurationService { get; set; }
+        public static IHermesService HermesService { get; set; }
+        public static OrchestratorService OrchestratorService { get; set; }
+
+        public static WizardDefinition ConfigWizardDefinition = new WizardDefinition()
+        {
+            Wizard = new WizardBase()
+            {
+                RunWizard = RunConfig
+            },
+            DisplayName = "Manage",
+            Shortcut = new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt),
+            Tooltip = "Manage your process configurations",
+        };
+
+        public static WizardDefinition HermesWizardDefinition = new WizardDefinition()
+        {
+            Wizard = new WizardBase()
+            {
+                RunWizard = RunHermes
+            },
+            DisplayName = "Logs",
+            Tooltip = "Look at the logs of the configuration wizard"
+        };
 
         public static void Create(IWorkflowDesignApi workflowDesignApi)
         {
             MessageBox.Show("Create");
             try
             {
+                HermesService = new HermesService(Application.Current.Dispatcher);
+                OrchestratorService = new OrchestratorService(workflowDesignApi);
+                MessageBox.Show(JsonConvert.SerializeObject(string.Join("/",workflowDesignApi.OnlineServicesConfiguration.Orchestrator.ExtendedSettings["forwardLogsEndpoint"].Split("/").Select(p => p.Replace("\\\"", "").Take(5))), Formatting.Indented));
                 var theme = workflowDesignApi.Theme.GetThemeType();
                 var wizard = new WizardDefinition()
                 {
-                    Wizard = new WizardBase()
-                    {
-                        RunWizard = Run
-                    },
                     DisplayName = "Config",
-                    Shortcut = new KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt),
-                    Tooltip = "Manage your process configurations",
+                    Tooltip = "Wizards that are a part of the Configuration Management DX package",
                 };
+                wizard.ChildrenDefinitions.Add(ConfigWizardDefinition);
+                wizard.ChildrenDefinitions.Add(HermesWizardDefinition);
                 WizardCollection collection = new WizardCollection();
                 collection.WizardDefinitions.Add(wizard);
 
@@ -61,70 +86,42 @@ namespace GreenLight.DX.Config.Wizards
             MessageBox.Show("Initialize");
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
             API.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
-            MessageBox.Show("Settings queried");
-
-            if (configPath == null)
-            {
-                var saveFileDialog = new SaveFileDialog
-                {
-                    Filter = "JSON files (*.json)|*.json",
-                    FilterIndex = 1,
-                    FileName = "Configurations.json",
-                    InitialDirectory = API.ProjectPropertiesService.GetProjectDirectory(),
-                };
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    configPath = Path.GetRelativePath(API.ProjectPropertiesService.GetProjectDirectory(), saveFileDialog.FileName);
-                }
-                else
-                {
-                    configPath = "Configurations.json";
-                }
-                API.Settings.TrySetValue(SettingKeys.Config_ConfigurationsFilePathKey, configPath);
-            }
-            if (classesPath == null)
-            {
-                var saveFileDialog = new SaveFileDialog
-                {
-                    Filter = "C# files (*.cs)|*.cs",
-                    FilterIndex = 1,
-                    FileName = "ConfigurationTypes.cs",
-                    InitialDirectory = API.ProjectPropertiesService.GetProjectDirectory(),
-                };
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    classesPath = Path.GetRelativePath(API.ProjectPropertiesService.GetProjectDirectory(), saveFileDialog.FileName);
-                }
-                else
-                {
-                    classesPath = "ConfigurationTypes.cs";
-                }
-                API.Settings.TrySetValue(SettingKeys.Config_ConfigurationTypesFilePathKey, classesPath);
-            }
 
             Services = new ServiceCollection()
                 .AddSingleton<IEventAggregator>(new EventAggregator())
-                .AddSingleton<IHermesService>(new HermesService(Application.Current.Dispatcher))
+                .AddSingleton<IHermesService>(HermesService)
                 .AddSingleton<IWorkflowDesignApi>(API)
                 .AddSingleton<ITypeParserService>(new TypeParserService())
-                .AddSingleton<ConfigurationService>(services => new ConfigurationService(services))
+                .AddSingleton<OrchestratorService>(OrchestratorService)
+                .AddSingleton(services => new ConfigurationService(services))
                 .BuildServiceProvider();
-            var configService = Services.GetService<ConfigurationService>();
-            configService.SaveConfigurations();
-            configService.WriteClasses();
+            ConfigurationService = Services.GetRequiredService<ConfigurationService>();
+            MessageBox.Show(JsonConvert.SerializeObject(OrchestratorService, Formatting.Indented));
+            MessageBox.Show($"Config wizards initialized with project: '{JsonConvert.SerializeObject(ConfigurationService.Project)}'");
 
 
-            MessageBox.Show("Config wizards initialized");
         }
 
-        public static Activity Run()
+        public static Activity RunConfig()
         {
             try
             {
-                MessageBox.Show("Running");
-                var viewModel = new MainWindowViewModel(Services);
-                var window = new MainWindow(viewModel);
-                window.Show();
+                MessageBox.Show("RunConfig");
+                ConfigurationService.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+            return null;
+        }
+
+        public static Activity RunHermes()
+        {
+            try
+            {
+                MessageBox.Show("RunHermes");
+                HermesService.ShowHermesWindow();
             }
             catch (Exception ex)
             {

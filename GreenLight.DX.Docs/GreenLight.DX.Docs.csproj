@@ -35,12 +35,7 @@
     <Description>
       A package that provides an auto-doc tool at design time to create markdown outputs for every xaml workflow and the project overall. Can be easily fed into devops wikis or github pages. Currently supports only markdown outputs. Customizable templates.
     </Description>
-    <Authors>GreenLight Consulting</Authors>
-    <PackageTags>GreenLight,DX,Developer,Experience</PackageTags>
-    <PackageLicenseUrl>?</PackageLicenseUrl>
-    <SupportUrl>?</SupportUrl>
     <Product>GreenLight.DX.Docs</Product>
-    <PackageIconUrl>https://www.greenlightconsulting.com/app/uploads/2024/06/Frame-63.png</PackageIconUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
   </PropertyGroup>

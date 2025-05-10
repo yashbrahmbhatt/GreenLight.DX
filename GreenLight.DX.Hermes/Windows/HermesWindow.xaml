@@ -72,6 +72,12 @@
             <Button Content="Export" Width="75" Margin="10,0,0,0" Command="{Binding ExportCommand}" />
         </StackPanel>
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding FilteredLogs}" ItemContainerStyle="{StaticResource LogItemStyle}" />
+        <ListBox Grid.Row="1" ItemsSource="{Binding FilteredLogs}" ItemContainerStyle="{StaticResource LogItemStyle}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
     </Grid>
 </Window>

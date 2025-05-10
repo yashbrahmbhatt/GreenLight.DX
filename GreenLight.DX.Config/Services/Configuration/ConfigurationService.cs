@@ -14,11 +14,15 @@ using GreenLight.DX.Config.Services.Configuration.Helpers;
 using GreenLight.DX.Config.Settings;
 using GreenLight.DX.Config.Services.TypeParser;
 using GreenLight.DX.Config.Wizards.Configuration.Misc;
+using GreenLight.DX.Hermes.Services;
+using GreenLight.DX.Config.Wizards.Configuration.ViewModels;
+using GreenLight.DX.Config.Wizards.Configuration.Windows;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace GreenLight.DX.Config.Services.Configuration
 {
 
-    public class ConfigurationService
+    public class ConfigurationService : HermesConsumer
     {
         public ProjectModel Project { get; set; }
         public string ConfigurationsFile { get; set; } = null;
@@ -33,80 +37,76 @@ namespace GreenLight.DX.Config.Services.Configuration
             _services = services;
             _workflowDesignApi = services.GetRequiredService<IWorkflowDesignApi>();
             _typeParserService = services.GetRequiredService<ITypeParserService>();
+            InitializeLogger(services, "ConfigurationService");
+            _workflowDesignApi.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
+            ClassesFile = classesPath;
+            _workflowDesignApi.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
+            ConfigurationsFile = configPath;
+            ReadConfigurations();
+            Info($"Configuration Service initialized with parameters: '{JsonConvert.SerializeObject(this)}'", "Initialization");
+        }
+
+        public void ReadConfigurations(string filePath = null)
+        {
+            try
+            {
+                var settings = _workflowDesignApi.Settings;
+                settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
+                ConfigurationsFile = configPath;
+                filePath = filePath ?? ConfigurationsFile;
+                Info($"Reading configurations from path '{filePath}'", "ReadConfigurations");
+                if (!File.Exists(filePath))
+                {
+                    Debug($"Configuration file doesn't exist", "ReadConfigurations");
+                    Project = new ProjectModel(_services);
+                    var config = new ConfigurationModel(_services);
+                    var setting = new SettingItemModel(_services);
+                    setting.Key = "SampleKey";
+                    setting.StringValue = "SampleValue";
+                    setting.Description = "This is a sample setting configuration. A simple key-value pair.";
+                    setting.ValueType = typeof(string);
+                    Debug("Here", "ReadConfigurations");
+                    config.Settings.Add(setting);
+                    Project.Configurations.Add(config);
+                    SaveConfigurations();
+                    WriteClasses();
+                }
+                else
+                {
+                    Debug("Configuration file found", "ReadConfigurations");
+                    var raw = File.ReadAllText(filePath);
+                    Project = JsonConvert.DeserializeObject<ProjectModel>(raw) ?? throw new Exception("Could not parse configurations file");
+                    Project.InitializeServices(_services);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error("Error: " + ex.Message, "ReadConfigurations");
+            }
+        }
+
+        public void SaveConfigurations(string filePath = null)
+        {
             var settings = _workflowDesignApi.Settings;
             settings.TryGetValue<string>(SettingKeys.Config_ConfigurationsFilePathKey, out var configPath);
             ConfigurationsFile = configPath;
-            settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
+            filePath = filePath ?? ConfigurationsFile;
+            if (!File.Exists(filePath))
+            {
+                var folder = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+            }
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(Project, Formatting.Indented));
+
+        }
+
+        public void WriteClasses(string filePath = null)
+        {
+            _workflowDesignApi.Settings.TryGetValue<string>(SettingKeys.Config_ConfigurationTypesFilePathKey, out var classesPath);
             ClassesFile = classesPath;
-            Project = new ProjectModel();
-            Project.InitializeServices(services);
-            Project.Namespace = Strings.ToValidIdentifier(Path.GetRelativePath(_workflowDesignApi.ProjectPropertiesService.GetProjectDirectory(), ConfigurationsFile).Replace("\\", "."));
-        }
-
-        public async Task ReadConfigurations(string filePath = null)
-        {
-            var busy = await _workflowDesignApi.BusyService.Begin("Loading configurations...");
-            filePath = filePath ?? ConfigurationsFile;
-            if (filePath == null)
-            {
-                var openFileDialog = new OpenFileDialog
-                {
-                    Filter = "JSON files (*.json)|*.json",
-                    FilterIndex = 1,
-                };
-                if (openFileDialog.ShowDialog() == true)
-                {
-                    filePath = openFileDialog.FileName;
-                    ConfigurationsFile = filePath;
-                    _workflowDesignApi.Settings.TrySetValue(SettingKeys.Config_ConfigurationsFilePathKey, filePath);
-                }
-                else
-                {
-                    await busy.DisposeAsync();
-                    return;
-                }
-            }
-            var raw = await File.ReadAllTextAsync(filePath);
-            Project = JsonConvert.DeserializeObject<ProjectModel>(raw) ?? throw new Exception("Could not parse configurations file");
-            Project.InitializeServices(_services);
-            await busy.DisposeAsync();
-        }
-
-        public async Task SaveConfigurations(string filePath = null)
-        {
-            var busy = await _workflowDesignApi.BusyService.Begin("Saving configurations...");
-            filePath = filePath ?? ConfigurationsFile;
-            if (filePath == null)
-            {
-                var saveFileDialog = new SaveFileDialog
-                {
-                    Filter = "JSON files (*.json)|*.json",
-                    FilterIndex = 1,
-                };
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    filePath = saveFileDialog.FileName;
-                    ConfigurationsFile = filePath;
-                    _workflowDesignApi.Settings.TrySetValue(SettingKeys.Config_ConfigurationsFilePathKey, filePath);
-                }
-                else
-                {
-                    await busy.DisposeAsync();
-                    return;
-                }
-            }
-            var folder = Path.GetDirectoryName(filePath) ?? throw new Exception("Could not get directory path");
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-            await File.WriteAllTextAsync(filePath, JsonConvert.SerializeObject(Project));
-            await busy.DisposeAsync();
-        }
-
-        public async Task WriteClasses(string filePath = null)
-        {
-            var busy = await _workflowDesignApi.BusyService.Begin("Generating config classes...");
             filePath = filePath ?? ClassesFile;
             if (filePath == null)
             {
@@ -123,7 +123,6 @@ namespace GreenLight.DX.Config.Services.Configuration
                 }
                 else
                 {
-                    await busy.DisposeAsync();
                     return;
                 }
             }
@@ -132,10 +131,22 @@ namespace GreenLight.DX.Config.Services.Configuration
             {
                 Directory.CreateDirectory(configDir);
             }
-            await File.WriteAllTextAsync(filePath, Project.ToNamespaceString());
-            await busy.DisposeAsync();
+            File.WriteAllText(filePath, Project.ToNamespaceString());
+        }
 
-
+        public void Show()
+        {
+            try
+            {
+                Info("Showing window", "Show");
+                var vm = new MainWindowViewModel(_services);
+                var window = new MainWindow(vm);
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                Error("Error: " + ex.Message, "Show");
+            }
         }
 
         /// <summary>

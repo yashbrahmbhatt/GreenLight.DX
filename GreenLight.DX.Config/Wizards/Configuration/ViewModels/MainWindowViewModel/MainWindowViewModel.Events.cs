@@ -35,9 +35,11 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 
         public void InitializeEvents()
         {
+            Debug("Initializing events", nameof(InitializeEvents));
             _eventAggregator = _services.GetRequiredService<IEventAggregator>();
             _eventAggregator.GetEvent<ConfigurationDeletedEvent>().Subscribe(OnConfigurationDeleted);
             _eventAggregator.GetEvent<ConfigurationPropertyChangedEvent>().Subscribe(OnConfigurationPropertyChanged);
+            Debug("Events initialized", nameof(InitializeEvents));
         }
     }
 }

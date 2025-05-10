@@ -21,7 +21,7 @@ using GreenLight.DX.Shared.Commands;
 
 namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 {
-    public partial class MainWindowViewModel : INotifyPropertyChanged
+    public partial class MainWindowViewModel : HermesConsumer, INotifyPropertyChanged
     {
         #region Fields
         private readonly IServiceProvider _services;
@@ -51,11 +51,11 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
         public MainWindowViewModel(IServiceProvider services)
         {
             _services = services;
+            InitializeLogger(services, "MainWindowViewModel");
             Info("Initializing MainWindowViewModel", "Constructor");
             InitializeConfigurationService();
+            InitializeOrchestratorService();
             InitializeModelEventHandlers();
-            InitializeLogger();
-            InitializeStudioApis();
             InitializeEvents();
             InitializeCommands();
             InitializeConfigurations();

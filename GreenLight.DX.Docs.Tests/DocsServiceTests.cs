@@ -18,9 +18,9 @@ namespace GreenLight.DX.Docs.Tests
         {
             IgnoredPaths = new() { ".local" },
             OutputRoot = "C:\\Users\\yash.brahmbhatt\\Downloads\\Documentation",
-            ProjectName = "LazyFramework",
-            ProjectRoot = "C:\\Users\\yash.brahmbhatt\\Documents\\UiPath\\DocsTest",
-            TemplatesRoot = "C:\\Users\\yash.brahmbhatt\\Documents\\UiPath\\DocsTest\\.docs"
+            ProjectName = "Servus.DataPhile.Activities",
+            ProjectRoot = "C:\\Users\\yash.brahmbhatt\\Documents\\UiPath\\Servus.DataPhile.Activities",
+            TemplatesRoot = "C:\\Users\\yash.brahmbhatt\\Documents\\UiPath\\Servus.DataPhile.Activities\\.docs"
         };
         private DocsService _service { get; set; }
         private IServiceProvider _serviceProvider { get; set; }

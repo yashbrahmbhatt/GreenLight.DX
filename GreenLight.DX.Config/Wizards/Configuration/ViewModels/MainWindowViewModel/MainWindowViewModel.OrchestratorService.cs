@@ -1,5 +1,6 @@
 ﻿using GreenLight.DX.Shared.Services.Orchestrator;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,19 +13,24 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 {
     public partial class MainWindowViewModel
     {
-        private IWorkflowDesignApi? _workflowDesignApi;
         private OrchestratorService _orchestratorService;
 
 
-        public void InitializeStudioApis()
+        public void InitializeOrchestratorService()
         {
-            _workflowDesignApi = _services.GetRequiredService<IWorkflowDesignApi>();
-            LoadAssets().Await();
+            _orchestratorService = _services.GetRequiredService<OrchestratorService>();
+            Debug($"Initialized Orchestrator Service:\n{JsonConvert.SerializeObject(_orchestratorService, Formatting.Indented)}", nameof(InitializeOrchestratorService));
+            LoadAssets();
         }
 
-        public async Task LoadAssets()
+        public void LoadAssets()
         {
-            await _orchestratorService.RefreshAssets();
+            Debug("Loading assets", nameof(LoadAssets));
+            var foldersResponse = _orchestratorService.RefreshFolders();
+            var assetsResponses = _orchestratorService.RefreshAssets();
+            Debug($"{JsonConvert.SerializeObject(foldersResponse.Content, Formatting.Indented)}", nameof(foldersResponse));
+            Debug($"{JsonConvert.SerializeObject(assetsResponses.Select(r => r.Content), Formatting.Indented)}", nameof(assetsResponses));
+            Debug($"{_orchestratorService.Assets.Count} folders and {_orchestratorService.Assets.Aggregate(0, (agg, kvp) => agg + kvp.Value.Count)} assets loaded", nameof(LoadAssets));
             //if (_workflowDesignApi == null) return;
             //try
             //{

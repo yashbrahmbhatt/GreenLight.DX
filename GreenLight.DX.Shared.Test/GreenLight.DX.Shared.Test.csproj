@@ -1,14 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="MSTest" Version="3.6.4" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0-2.22527.10" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0-2.22527.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="UiPath.Activities.Api" Version="24.10.1" />
   </ItemGroup>
 
 
@@ -16,6 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\GreenLight.DX.Shared\GreenLight.DX.Shared.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
 
 </Project>

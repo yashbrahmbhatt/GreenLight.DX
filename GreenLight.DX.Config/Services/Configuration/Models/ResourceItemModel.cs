@@ -82,7 +82,8 @@ namespace GreenLight.DX.Config.Services.Configuration.Models
 
             // Download the file
             string tempFilePath = System.IO.Path.GetTempFileName();
-            if (!await _orchestratorService.DownloadBucketFile(bucket, bucketFile, tempFilePath))
+            var res = await _orchestratorService.DownloadBucketFile(bucket, bucketFile, tempFilePath);
+            if (!res.IsSuccessStatusCode)
             {
                 return null;
             }

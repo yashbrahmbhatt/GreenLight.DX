@@ -117,93 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Project" xml:space="preserve">
-    <value># {Name}
-Type: {Type}
-Version: {Version}
-Studio Version: {StudioVersion}
-Language: {Language}
-
-{Description}
-
-&lt;hr /&gt;
-
-## Project Details
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Dependencies&lt;/b&gt;
-    &lt;/summary&gt;
-
-{Dependencies}
-
-&lt;/details&gt;
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Entry Points&lt;/b&gt;
-    &lt;/summary&gt;
-
-{EntryPoints}
-
-&lt;/details&gt;</value>
-    <comment>The default template for documenting a project.</comment>
+  <data name="LoadConfig_Description" xml:space="preserve">
+    <value>Loads a configuration from a json file.</value>
   </data>
-  <data name="Workflow" xml:space="preserve">
-    <value># {WorkflowName}
-Class: {Class}
-
-{Description}
-
-&lt;hr /&gt;
-
-## Workflow Details
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Namespaces&lt;/b&gt;
-    &lt;/summary&gt;
-    
-{Namespaces}
-
-&lt;/details&gt;
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;References&lt;/b&gt;
-    &lt;/summary&gt;
-
-{References}
-
-&lt;/details&gt;
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Arguments&lt;/b&gt;
-    &lt;/summary&gt;
-
-{Arguments}
-    
-&lt;/details&gt;
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Workflows Interactions&lt;/b&gt;
-    &lt;/summary&gt;
-
-{WorkflowsUsed}
-
-{UsedByWorkflows}
-    
-&lt;/details&gt;
-&lt;details&gt;
-    &lt;summary&gt;
-    &lt;b&gt;Tests&lt;/b&gt;
-    &lt;/summary&gt;
-
-{Tests}
-    
-&lt;/details&gt;
-
-&lt;hr /&gt;
-
-## Outline (Beta)
-
-{Outline}</value>
-    <comment>The default template for documenting a workflow.</comment>
+  <data name="LoadConfig_DisplayName" xml:space="preserve">
+    <value>Load Configuration</value>
+  </data>
+  <data name="REFramework_Description" xml:space="preserve">
+    <value>An activity that consolidates the REFramework into an activity.</value>
+  </data>
+  <data name="REFramework_DisplayName" xml:space="preserve">
+    <value>REFramework</value>
   </data>
 </root>

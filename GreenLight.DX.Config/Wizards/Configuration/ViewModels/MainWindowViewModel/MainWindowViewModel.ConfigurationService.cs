@@ -14,7 +14,18 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 
         public void InitializeConfigurationService()
         {
-            _configurationService = _services.GetRequiredService<ConfigurationService>();
+            Debug("Entering InitializeConfigurationService", nameof(InitializeConfigurationService)); // Added logging
+
+            try
+            {
+                _configurationService = _services.GetRequiredService<ConfigurationService>();
+                Debug("Successfully obtained ConfigurationService via dependency injection", nameof(InitializeConfigurationService)); // Added logging
+            }
+            catch (Exception ex)
+            {
+                Error($"Failed to obtain ConfigurationService: {ex.Message}", nameof(InitializeConfigurationService)); // Using Debug as an example if Error doesn't exist
+                throw; // Re-throw the exception as the ViewModel cannot function without the service
+            }
         }
     }
 }

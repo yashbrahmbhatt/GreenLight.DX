@@ -10,8 +10,8 @@ namespace GreenLight.DX.Hermes.Services
 {
     public class HermesConsumer
     {
-        private static IHermesService? _logger;
-        private static string? _logContext;
+        public IHermesService? _logger { get; set; }
+        private string? _logContext { get; set; }
 
         public void Info(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Info);
         public void Error(string message, string context) => _logger?.Log(message, $"{_logContext}.{context}", LogLevel.Error);
