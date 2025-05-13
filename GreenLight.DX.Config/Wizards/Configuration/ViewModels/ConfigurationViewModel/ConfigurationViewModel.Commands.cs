@@ -21,30 +21,30 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 
         public void InitializeCommands()
         {
-            DeleteConfigurationCommand = new AsyncRelayCommand(OnDeleteConfiguration);
-            AddSettingsRowCommand = new AsyncRelayCommand(OnSettingRowAdded);
-            AddAssetsRowCommand = new AsyncRelayCommand(OnAssetRowAdded);
-            AddResourcesRowCommand = new AsyncRelayCommand(OnResourceRowAdded);
+            DeleteConfigurationCommand = new RelayCommand(OnDeleteConfiguration);
+            AddSettingsRowCommand = new RelayCommand(OnSettingRowAdded);
+            AddAssetsRowCommand = new RelayCommand(OnAssetRowAdded);
+            AddResourcesRowCommand = new RelayCommand(OnResourceRowAdded);
         }
-        public async Task OnSettingRowAdded()
+        public void OnSettingRowAdded()
         {
-            var newSetting = new SettingItemModel(); // Create a new Model instance
+            var newSetting = new SettingItemModel(_services); // Create a new Model instance
             Model.Settings.Add(newSetting); // Add it directly to the Model
         }
 
-        public async Task OnAssetRowAdded()
+        public void OnAssetRowAdded()
         {
-            var newAsset = new AssetItemModel();
+            var newAsset = new AssetItemModel(_services);
             Model.Assets.Add(newAsset);
         }
 
-        public async Task OnResourceRowAdded()
+        public void OnResourceRowAdded()
         {
-            var newResource = new ResourceItemModel();
+            var newResource = new ResourceItemModel(_services);
             Model.Resources.Add(newResource);
         }
 
-        public async Task OnDeleteConfiguration()
+        public void OnDeleteConfiguration()
         {
             _eventAggregator.GetEvent<ConfigurationDeletedEvent>().Publish(this);
         }

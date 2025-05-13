@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.Controls"
              xmlns:viewmodels="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.ViewModels"
-             xmlns:converters="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.Converters"
+             xmlns:converters="clr-namespace:GreenLight.DX.Config.Wizards.Configuration.Converters" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:AssetRowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="38" d:DesignWidth="1000">
     <UserControl.Resources>
@@ -41,8 +42,8 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ComboBox Grid.Column="2" ItemsSource="{Binding AssetFolders}" SelectedItem="{Binding AssetFolder, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <ComboBox Grid.Column="3" ItemsSource="{Binding AssetNames}" Text="Select a folder" SelectedItem="{Binding AssetName, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <ComboBox Grid.Column="2" ItemsSource="{Binding Folders}" SelectedItem="{Binding AssetFolder, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DisplayMemberPath="DisplayName" />
+        <ComboBox Grid.Column="3" ItemsSource="{Binding Assets}" Text="Select a folder" SelectedItem="{Binding AssetName, Mode=TwoWay, ValidatesOnDataErrors=True}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <TextBox Grid.Column="4" Text="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Button Grid.Column="5" Content="X" Style="{StaticResource DangerButton}" Command="{Binding DeleteRowCommand}" />
 

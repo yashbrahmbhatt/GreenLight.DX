@@ -40,7 +40,7 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
             try
             {
                 BaseURL = string.Join("/", _workflowDesignApi.OnlineServicesConfiguration.Orchestrator.ExtendedSettings["forwardLogsEndpoint"].Split("/").Select(p => p.Replace("\"", "")).Take(5)).Replace("\"", "").TrimEnd('/');
-                UpdateToken();
+                Initialize();
             }
             catch (Exception ex)
             {
@@ -53,6 +53,16 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
             BaseURL = baseUrl;
             ClientId = clientId;
             ClientSecret = clientSecret;
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            UpdateToken();
+            RefreshFolders();
+            RefreshAssets();
+            RefreshBuckets();
+            RefreshBucketFiles();
         }
         public void UpdateToken(bool force = false)
         {
@@ -87,7 +97,6 @@ namespace GreenLight.DX.Shared.Services.Orchestrator
             var responses = new List<RestResponse>();
             foreach (var folder in Folders)
             {
-                throw new Exception($"{BaseURL}/odata/Assets");
                 var url = $"{BaseURL}/odata/Assets";
                 var request = new RestRequest(url, Method.Get);
                 UpdateToken();

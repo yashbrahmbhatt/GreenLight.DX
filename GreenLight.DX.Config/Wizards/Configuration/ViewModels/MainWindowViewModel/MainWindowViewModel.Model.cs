@@ -10,15 +10,6 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 {
     public partial class MainWindowViewModel
     {
-        // Assuming Debug and Info methods exist within this class or a base class.
-        // Example stubs (replace with your actual logging implementation if needed):
-        // private void Debug(string message, string callerName) { /* Your debug logging here */ }
-        // private void Info(string message, string callerName) { /* Your info logging here */ }
-        // private IConfigurationService _configurationService; // Assuming this service exists
-        // private IServiceProvider _services; // Assuming this service provider exists
-        // public ConfigurationViewModel SelectedConfig { get; set; } // Assuming this property exists
-        // private void ValidateUniqueNames() { /* Assuming this method exists */ }
-
 
         public ObservableCollection<ConfigurationViewModel> Configurations { get; } = new ObservableCollection<ConfigurationViewModel>();
 

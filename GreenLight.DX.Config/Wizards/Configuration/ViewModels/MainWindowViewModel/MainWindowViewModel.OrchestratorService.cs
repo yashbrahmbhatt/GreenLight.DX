@@ -14,7 +14,17 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
     public partial class MainWindowViewModel
     {
         private OrchestratorService _orchestratorService;
-
+        public string Namespace
+        {
+            get
+            {
+                return _configurationService.Project.Namespace;
+            }
+            set
+            {
+                _configurationService.Project.Namespace = value;
+            }
+        }
 
         public void InitializeOrchestratorService()
         {

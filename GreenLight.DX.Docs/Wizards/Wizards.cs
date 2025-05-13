@@ -26,15 +26,12 @@ namespace GreenLight.DX.Docs.Wizards
         public static IHermesService HermesService { get; set; } = new HermesService(Application.Current.Dispatcher);
         public static IServiceProvider Services { get; set; }
 
-        public static WizardDefinition DocumentWizard {get; set; } = new WizardDefinition()
+        public static WizardDefinition DocumentWizard { get; set; } = new WizardDefinition()
         {
             Wizard = new WizardBase()
             {
                 RunWizard = Document,
-                RunWizardSettings = new()
-                {
-                    HasProxySequenceSupport = false
-                }
+
             },
             DisplayName = "Generate Documentation",
             Shortcut = new KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Alt),
@@ -46,12 +43,9 @@ namespace GreenLight.DX.Docs.Wizards
             Wizard = new WizardBase()
             {
                 RunWizard = ShowHermes,
-                RunWizardSettings = new()
-                {
-                    HasProxySequenceSupport = false
-                }
+
             },
-            DisplayName = "Hermes",
+            DisplayName = "Logs",
             Shortcut = new KeyGesture(Key.L, ModifierKeys.Control | ModifierKeys.Alt),
             Tooltip = "Open the Hermes window to see the logs of DX packages"
         };
@@ -80,8 +74,14 @@ namespace GreenLight.DX.Docs.Wizards
                 DocsService = new DocsService(settings, Services);
 
                 WizardCollection collection = new WizardCollection();
-                collection.WizardDefinitions.Add(DocumentWizard);
-                collection.WizardDefinitions.Add(HermesWizard);
+                var allWizards = new WizardDefinition()
+                {
+                    DisplayName = "Docs",
+                    Tooltip = "Documentation wizards",
+                };
+                allWizards.ChildrenDefinitions.Add(DocumentWizard);
+                allWizards.ChildrenDefinitions.Add(HermesWizard);
+                collection.WizardDefinitions.Add(allWizards);
                 workflowDesignApi.Wizards.Register(collection);
             }
             catch (Exception ex)

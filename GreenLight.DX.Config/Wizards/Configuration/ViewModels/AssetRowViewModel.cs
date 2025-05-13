@@ -1,5 +1,6 @@
 ﻿using GreenLight.DX.Config.Services.Configuration.Models;
 using GreenLight.DX.Config.Services.TypeParser;
+using GreenLight.DX.Shared.Commands;
 using GreenLight.DX.Shared.Services.Orchestrator.GetAssets;
 using GreenLight.DX.Shared.Services.Orchestrator.GetFolders;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,45 +20,45 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
 {
     public class AssetRowViewModel : ConfigurationRowViewModel<AssetItemModel>
     {
-
-        public ObservableCollection<Folder> AssetFolders
+        public ObservableCollection<Folder> Folders
         {
             get
             {
                 return Model._orchestratorService.Folders;
             }
         }
-        public ObservableCollection<Asset> AssetNames
+        public ObservableCollection<Asset>? Assets
         {
             get
             {
-                return Model._orchestratorService.Assets.FirstOrDefault(f => f.Key.DisplayName == AssetFolder).Value;
+                return Model._orchestratorService.Assets.FirstOrDefault(kvp => kvp.Key == AssetFolder).Value;
             }
         }
 
-        public string AssetName
+        public Asset? AssetName
         {
-            get => Model.AssetName;
+            get => Model.AssetObject;
             set
             {
-                if (Model.AssetName != value)
+                if (Model.AssetObject != value)
                 {
-                    Model.AssetName = value;
+                    Model.AssetObject = value;
                     OnPropertyChanged();
                     ValidateRequired(value);
                 }
             }
         }
 
-        public string AssetFolder
+        public Folder? AssetFolder
         {
-            get => Model.AssetFolder;
+            get => Model.FolderObject;
             set
             {
-                if (Model.AssetFolder != value)
+                if (Model.FolderObject != value)
                 {
-                    Model.AssetFolder = value;
+                    Model.FolderObject = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Assets));
                     ValidateRequired(value);
                 }
             }
@@ -66,6 +67,8 @@ namespace GreenLight.DX.Config.Wizards.Configuration.ViewModels
             : base(_services, model, row)
         {
             Model = model;
+            Model._orchestratorService.Folders.CollectionChanged += (object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Folders));
+            Model._orchestratorService.Assets.CollectionChanged += (object ? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(Assets));
         }
         public AssetRowViewModel() : this(
             new ServiceCollection()

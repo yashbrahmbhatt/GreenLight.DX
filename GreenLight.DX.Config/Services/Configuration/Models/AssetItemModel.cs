@@ -1,6 +1,9 @@
 ﻿using GreenLight.DX.Shared.Services.Orchestrator;
+using GreenLight.DX.Shared.Services.Orchestrator.GetAssets;
+using GreenLight.DX.Shared.Services.Orchestrator.GetFolders;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Math.EC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +19,42 @@ namespace GreenLight.DX.Config.Services.Configuration.Models
     public class AssetItemModel : ConfigItemModel
     {
         [JsonProperty(nameof(AssetName))]
-        public string AssetName { get; set; } = "AssetName";
+        public string AssetName {
+            get {
+                return AssetObject.Name;
+            }
+            set
+            {
+                if(_orchestratorService.Assets.FirstOrDefault(kvp => kvp.Key.DisplayName == AssetFolder).Value.FirstOrDefault(a => a.Name == value) != null)
+                {
+                    AssetObject = _orchestratorService.Assets.FirstOrDefault(kvp => kvp.Key.DisplayName == AssetFolder).Value.FirstOrDefault(a => a.Name == value);
+                }
+            }
+        }
 
         [JsonProperty(nameof(AssetFolder))]
-        public string AssetFolder { get; set; } = "AssetFolder";
+        public string AssetFolder
+        {
+            get
+            {
+                return FolderObject.DisplayName;
+            }
+            set
+            {
+                if (_orchestratorService.Folders.FirstOrDefault(f => f.DisplayName == value) != null)
+                {
+                    FolderObject = _orchestratorService.Folders.FirstOrDefault(f => f.DisplayName == value);
+                }
+            }
+        }
+
+        [JsonIgnore]
+        [XmlIgnore]
+        public Asset AssetObject { get; set; }
+
+        [JsonIgnore]
+        [XmlIgnore]
+        public Folder FolderObject { get; set; }
 
         [JsonIgnore]
         [XmlIgnore]

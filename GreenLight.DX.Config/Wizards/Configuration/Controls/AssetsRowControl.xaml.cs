@@ -30,6 +30,9 @@ namespace GreenLight.DX.Config.Wizards.Configuration.Controls
             {
                 control.Model = (AssetRowViewModel)e.NewValue;
                 control.DataContext = (AssetRowViewModel)e.NewValue;
+            } else
+            {
+                throw new Exception("Invalid data context");
             }
         }
     });
